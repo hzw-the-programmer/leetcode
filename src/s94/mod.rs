@@ -11,10 +11,8 @@ pub struct TreeNode {
     right: Tree,
 }
 
-impl TreeNode {
-    fn new(val: i32, left: Tree, right: Tree) -> Self {
-        Self { val, left, right }
-    }
+fn new_tree(val: i32, left: Tree, right: Tree) -> Tree {
+    Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }
 
 // mod recursive;
