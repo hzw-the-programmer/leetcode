@@ -1,6 +1,6 @@
-use super::*;
+use crate::binary_tree::*;
 
-pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+pub fn is_valid_bst(root: Tree) -> bool {
     is_valid_bst_recursive(root, i32::MIN, i32::MAX)
 }
 

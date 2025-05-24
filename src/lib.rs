@@ -1,5 +1,6 @@
 pub struct Solution;
 
+mod binary_tree;
 mod dfa;
 pub mod s1052;
 pub mod s11;

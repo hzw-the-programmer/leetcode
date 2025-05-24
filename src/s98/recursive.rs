@@ -1,6 +1,8 @@
-use super::*;
+use crate::binary_tree::*;
+use std::cell::RefCell;
+use std::rc::Rc;
 
-pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+pub fn is_valid_bst(root: Tree) -> bool {
     is_valid_bst_recursive(&root)
 }
 

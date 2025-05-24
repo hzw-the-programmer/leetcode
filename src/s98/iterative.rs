@@ -1,6 +1,6 @@
-use super::*;
+use crate::binary_tree::*;
 
-pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+pub fn is_valid_bst(root: Tree) -> bool {
     let mut inorder = i32::MIN;
     let mut tree = root;
     let mut stack = vec![];
