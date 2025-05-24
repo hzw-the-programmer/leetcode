@@ -1,7 +1,7 @@
 // 95. Unique Binary Search Trees II
 
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 type Tree = Option<Rc<RefCell<TreeNode>>>;
 
