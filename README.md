@@ -40,4 +40,5 @@
 
 # Tree
 95. Unique Binary Search Trees II
+96. Unique Binary Search Trees
 98. Validate Binary Search Tree
