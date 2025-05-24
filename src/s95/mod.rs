@@ -5,10 +5,15 @@ use std::rc::Rc;
 
 type Tree = Option<Rc<RefCell<TreeNode>>>;
 
-struct TreeNode {
+#[derive(PartialEq, Debug)]
+pub struct TreeNode {
     val: i32,
     left: Tree,
     right: Tree,
+}
+
+fn new_tree(val: i32, left: Tree, right: Tree) -> Tree {
+    Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }
 
 mod backtrack;
