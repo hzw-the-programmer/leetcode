@@ -6,8 +6,11 @@
 // mod iterative;
 // pub use iterative::preorder_traversal;
 
-mod iterative2;
-pub use iterative2::preorder_traversal;
+// mod iterative2;
+// pub use iterative2::preorder_traversal;
+
+mod morris;
+pub use morris::preorder_traversal;
 
 #[cfg(test)]
 mod tests;
