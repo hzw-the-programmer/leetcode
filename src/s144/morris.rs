@@ -17,9 +17,9 @@ pub fn preorder_traversal(mut root: Tree) -> Vec<i32> {
                 predecessor = right_node;
             }
             if predecessor.borrow().right.is_none() {
+                predecessor.borrow_mut().right = Some(node.clone());
                 res.push(node.borrow().val);
                 root = node.borrow().left.clone();
-                predecessor.borrow_mut().right = Some(node.clone());
             } else {
                 predecessor.borrow_mut().right = None;
                 root = node.borrow().right.clone();
