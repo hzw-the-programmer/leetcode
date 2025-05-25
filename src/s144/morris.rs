@@ -2,33 +2,30 @@ use crate::binary_tree::*;
 
 pub fn preorder_traversal(mut root: Tree) -> Vec<i32> {
     let mut res = vec![];
-    while let Some(root_node) = root.clone() {
-        if let Some(mut node) = root_node.borrow().left.clone() {
-            while node.borrow().right.is_some()
-                && !std::rc::Rc::ptr_eq(
-                    node.borrow().right.as_ref().unwrap(),
-                    root.as_ref().unwrap(),
-                )
-            {
-                let t = node.borrow().right.clone();
-                node = t.unwrap();
+
+    while let Some(node) = root {
+        if let Some(mut predecessor) = node.borrow().left.clone() {
+            while predecessor.borrow().right.is_some() {
+                let right_node = predecessor.borrow().right.clone().unwrap();
+                if std::rc::Rc::ptr_eq(&right_node, &node) {
+                    break;
+                }
+                predecessor = right_node;
             }
 
-            if node.borrow().right.is_none() {
-                res.push(root_node.borrow().val);
-                node.borrow_mut().right = root.clone();
-                root = root_node.borrow().left.clone();
-            } else if std::rc::Rc::ptr_eq(
-                node.borrow().right.as_ref().unwrap(),
-                root.as_ref().unwrap(),
-            ) {
-                node.borrow_mut().right.take();
-                root = root_node.borrow().right.clone();
+            if predecessor.borrow().right.is_none() {
+                res.push(node.borrow().val);
+                root = node.borrow().left.clone();
+                predecessor.borrow_mut().right = Some(node.clone());
+            } else {
+                predecessor.borrow_mut().right = None;
+                root = node.borrow().right.clone();
             }
         } else {
-            res.push(root_node.borrow().val);
-            root = root_node.borrow().right.clone();
+            res.push(node.borrow().val);
+            root = node.borrow().right.clone();
         }
     }
+
     res
 }
