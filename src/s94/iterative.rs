@@ -1,6 +1,6 @@
-use super::*;
+use crate::binary_tree::*;
 
-pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+pub fn inorder_traversal(root: Tree) -> Vec<i32> {
     let mut res = Vec::new();
 
     let mut stack = vec![];

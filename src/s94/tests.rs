@@ -1,4 +1,5 @@
 use super::*;
+use crate::binary_tree::*;
 
 #[test]
 fn test_inorder_traversal() {
