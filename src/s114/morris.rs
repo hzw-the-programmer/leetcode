@@ -4,12 +4,14 @@ pub fn flatten(root: &mut Tree) {
     let mut root = root.clone();
     while let Some(node) = root {
         if node.borrow().left.is_some() {
-            let mut cur = node.borrow().left.clone().unwrap();
-            while cur.borrow().right.is_some() {
-                let n = cur.borrow().right.clone().unwrap();
-                cur = n;
+            let mut rightmost = node.borrow().left.clone().unwrap();
+            while let Some(right) = {
+                let temp = rightmost.borrow().right.clone();
+                temp
+            } {
+                rightmost = right;
             }
-            cur.borrow_mut().right = node.borrow().right.clone();
+            rightmost.borrow_mut().right = node.borrow().right.clone();
 
             let left = node.borrow().left.clone();
             node.borrow_mut().left = None;
