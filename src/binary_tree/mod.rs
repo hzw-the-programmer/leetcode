@@ -3,6 +3,7 @@ use std::rc::Rc;
 
 pub type Tree = Option<Rc<RefCell<TreeNode>>>;
 
+#[derive(PartialEq, Debug)]
 pub struct TreeNode {
     pub val: i32,
     pub left: Tree,
