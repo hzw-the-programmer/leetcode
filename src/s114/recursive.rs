@@ -1,4 +1,4 @@
-use crate::binary_tree::*;
+use crate::utils::binary_tree::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 

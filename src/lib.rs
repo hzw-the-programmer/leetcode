@@ -1,6 +1,5 @@
 pub struct Solution;
 
-mod binary_tree;
 mod dfa;
 pub mod s1052;
 pub mod s11;
@@ -38,3 +37,4 @@ pub mod s95;
 pub mod s96;
 pub mod s98;
 pub mod sliding_window;
+pub mod utils;

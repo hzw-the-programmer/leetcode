@@ -1,4 +1,4 @@
-use crate::binary_tree::*;
+use crate::utils::binary_tree::*;
 
 pub fn is_valid_bst(root: Tree) -> bool {
     is_valid_bst_recursive(root, i32::MIN, i32::MAX)

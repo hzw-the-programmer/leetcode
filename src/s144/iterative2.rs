@@ -1,4 +1,4 @@
-use crate::binary_tree::*;
+use crate::utils::binary_tree::*;
 
 pub fn preorder_traversal(root: Tree) -> Vec<i32> {
     let mut res = vec![];

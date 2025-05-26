@@ -1,4 +1,4 @@
-use crate::binary_tree::*;
+use crate::utils::binary_tree::*;
 
 pub fn is_valid_bst(root: Tree) -> bool {
     let mut inorder = i32::MIN;
