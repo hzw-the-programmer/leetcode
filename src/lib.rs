@@ -1,6 +1,5 @@
 pub struct Solution;
 
-mod dfa;
 pub mod s1052;
 pub mod s11;
 pub mod s1100;
@@ -31,6 +30,7 @@ pub mod s45;
 pub mod s5;
 pub mod s55;
 pub mod s643;
+pub mod s65;
 pub mod s714;
 pub mod s77;
 pub mod s8;
