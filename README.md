@@ -44,3 +44,6 @@
 98. Validate Binary Search Tree
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
+
+# Automaton
+8. String to Integer (atoi)
