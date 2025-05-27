@@ -40,5 +40,6 @@ pub mod s94;
 pub mod s95;
 pub mod s96;
 pub mod s98;
+pub mod s99;
 pub mod sliding_window;
 pub mod utils;
