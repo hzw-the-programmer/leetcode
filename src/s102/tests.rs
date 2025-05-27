@@ -25,3 +25,32 @@ fn test_3() {
     let expected: Vec<Vec<i32>> = vec![];
     assert_eq!(level_order(root), expected);
 }
+
+#[test]
+fn test_4() {
+    let root = new_tree(1, None, new_tree(2, None, None));
+    let expected: Vec<Vec<i32>> = vec![vec![1], vec![2]];
+    assert_eq!(level_order(root), expected);
+}
+
+#[test]
+fn test_5() {
+    let root = new_tree(
+        1,
+        new_tree(2, new_tree(4, None, None), new_tree(5, None, None)),
+        new_tree(3, None, None),
+    );
+    let expected: Vec<Vec<i32>> = vec![vec![1], vec![2, 3], vec![4, 5]];
+    assert_eq!(level_order(root), expected);
+}
+
+#[test]
+fn test_6() {
+    let root = new_tree(
+        1,
+        new_tree(2, new_tree(4, None, None), None),
+        new_tree(3, None, new_tree(5, None, None)),
+    );
+    let expected: Vec<Vec<i32>> = vec![vec![1], vec![2, 3], vec![4, 5]];
+    assert_eq!(level_order(root), expected);
+}

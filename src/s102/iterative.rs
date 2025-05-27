@@ -3,20 +3,23 @@ use crate::utils::binary_tree::*;
 pub fn level_order(root: Tree) -> Vec<Vec<i32>> {
     let mut res = Vec::<Vec<i32>>::new();
 
-    let mut stack = vec![root];
-    while !stack.is_empty() {
-        let n = stack.len();
-        for i in 0..n {
-            if let Some(node) = stack.pop().unwrap() {
+    if let Some(node) = root {
+        let mut queue = std::collections::VecDeque::new();
+        queue.push_back(node);
+        while !queue.is_empty() {
+            res.push(vec![]);
+            let v = res.last_mut().unwrap();
+            let n = queue.len();
+            for _ in 0..n {
+                let node = queue.pop_front().unwrap();
                 let node = node.borrow();
-                if i == 0 {
-                    res.push(vec![]);
+                v.push(node.val);
+                if node.left.is_some() {
+                    queue.push_back(node.left.clone().unwrap());
                 }
-                let len = res.len();
-                res[len - 1].push(node.val);
-
-                stack.push(node.right.clone());
-                stack.push(node.left.clone());
+                if node.right.is_some() {
+                    queue.push_back(node.right.clone().unwrap());
+                }
             }
         }
     }
