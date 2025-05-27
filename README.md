@@ -46,6 +46,7 @@
 99. Recover Binary Search Tree
 100. Same Tree
 101. Symmetric Tree
+102. Binary Tree Level Order Traversal
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
 
