@@ -14,10 +14,9 @@ pub fn recover_tree(root: &mut Tree) {
             inordered.push(node);
         }
     }
-    let mut j = usize::MAX;
-    let mut k = usize::MAX;
+    let (mut j, mut k) = (usize::MAX, 0);
     for i in 1..inordered.len() {
-        if inordered[i].borrow().val < inordered[i - 1].borrow().val {
+        if inordered[i - 1].borrow().val > inordered[i].borrow().val {
             if j == usize::MAX {
                 j = i - 1;
                 k = i;
@@ -28,7 +27,10 @@ pub fn recover_tree(root: &mut Tree) {
         }
     }
 
-    let temp = inordered[j].borrow().val;
-    inordered[j].borrow_mut().val = inordered[k].borrow().val;
-    inordered[k].borrow_mut().val = temp;
+    if j != usize::MAX {
+        std::mem::swap(
+            &mut inordered[j].borrow_mut().val,
+            &mut inordered[k].borrow_mut().val,
+        );
+    }
 }
