@@ -2,8 +2,8 @@ use crate::utils::binary_tree::*;
 
 pub fn is_same_tree(p: Tree, q: Tree) -> bool {
     let mut stack = vec![(p, q)];
-    while let Some((p, q)) = stack.pop() {
-        match (p, q) {
+    while let Some(pair) = stack.pop() {
+        match pair {
             (Some(p), Some(q)) => {
                 let (mut p, mut q) = (p.borrow_mut(), q.borrow_mut());
                 if p.val != q.val {
