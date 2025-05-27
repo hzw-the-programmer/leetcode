@@ -43,6 +43,7 @@
 96. Unique Binary Search Trees
 98. Validate Binary Search Tree
 100. Same Tree
+101. Symmetric Tree
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
 

@@ -1,6 +1,7 @@
 pub struct Solution;
 
 pub mod s100;
+pub mod s101;
 pub mod s1052;
 pub mod s11;
 pub mod s1100;
