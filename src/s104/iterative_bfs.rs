@@ -11,10 +11,10 @@ pub fn max_depth(root: Tree) -> i32 {
             for _ in 0..n {
                 let node = queue.pop_front().unwrap();
                 if node.borrow().left.is_some() {
-                    queue.push_front(node.borrow().left.clone().unwrap());
+                    queue.push_back(node.borrow().left.clone().unwrap());
                 }
                 if node.borrow().right.is_some() {
-                    queue.push_front(node.borrow().right.clone().unwrap());
+                    queue.push_back(node.borrow().right.clone().unwrap());
                 }
             }
         }

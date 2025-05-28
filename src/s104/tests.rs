@@ -10,3 +10,8 @@ fn test_1() {
 fn test_2() {
     assert_eq!(max_depth(build!([1, null, 2])), 2);
 }
+
+#[test]
+fn test_3() {
+    assert_eq!(max_depth(build!([1, 2, 3, 4, null, null, 5])), 3);
+}
