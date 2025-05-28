@@ -48,6 +48,7 @@
 101. Symmetric Tree
 102. Binary Tree Level Order Traversal
 104. Maximum Depth of Binary Tree
+111. Minimum Depth of Binary Tree
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
 

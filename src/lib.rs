@@ -7,6 +7,7 @@ pub mod s104;
 pub mod s1052;
 pub mod s11;
 pub mod s1100;
+pub mod s111;
 pub mod s114;
 pub mod s1151;
 pub mod s1176;
