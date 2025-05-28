@@ -10,9 +10,11 @@ pub struct TreeNode {
     pub right: Tree,
 }
 
-pub fn new_tree(val: i32, left: Tree, right: Tree) -> Tree {
+pub fn new(val: i32, left: Tree, right: Tree) -> Tree {
     Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }
+
+pub use new as new_tree;
 
 macro_rules! option_array {
     // 主规则：匹配数组并处理每个元素
@@ -35,7 +37,7 @@ pub fn build(arr: &[Option<i32>]) -> Tree {
 
 fn build_recursive(arr: &[Option<i32>], index: usize) -> Tree {
     if index < arr.len() && arr[index].is_some() {
-        new_tree(
+        new(
             arr[index].unwrap(),
             build_recursive(arr, 2 * index + 1),
             build_recursive(arr, 2 * index + 2),
