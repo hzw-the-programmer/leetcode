@@ -7,9 +7,8 @@ pub fn level_order(root: Tree) -> Vec<Vec<i32>> {
         let mut queue = std::collections::VecDeque::new();
         queue.push_back(node);
         while !queue.is_empty() {
-            res.push(vec![]);
-            let v = res.last_mut().unwrap();
             let n = queue.len();
+            let mut v = Vec::with_capacity(n);
             for _ in 0..n {
                 let node = queue.pop_front().unwrap();
                 let node = node.borrow();
@@ -21,6 +20,7 @@ pub fn level_order(root: Tree) -> Vec<Vec<i32>> {
                     queue.push_back(node.right.clone().unwrap());
                 }
             }
+            res.push(v);
         }
     }
 
