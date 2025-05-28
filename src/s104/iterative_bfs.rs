@@ -7,8 +7,7 @@ pub fn max_depth(root: Tree) -> i32 {
         queue.push_back(node);
         while !queue.is_empty() {
             res += 1;
-            let n = queue.len();
-            for _ in 0..n {
+            for _ in 0..queue.len() {
                 let node = queue.pop_front().unwrap();
                 if node.borrow().left.is_some() {
                     queue.push_back(node.borrow().left.clone().unwrap());
