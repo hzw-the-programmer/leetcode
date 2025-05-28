@@ -13,9 +13,25 @@ pub struct TreeNode {
 pub fn new(val: i32, left: Tree, right: Tree) -> Tree {
     Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }
-
 pub use new as new_tree;
 
+pub fn from(arr: &[Option<i32>]) -> Tree {
+    from_recursive(arr, 0)
+}
+
+fn from_recursive(arr: &[Option<i32>], index: usize) -> Tree {
+    if index < arr.len() && arr[index].is_some() {
+        new(
+            arr[index].unwrap(),
+            from_recursive(arr, 2 * index + 1),
+            from_recursive(arr, 2 * index + 2),
+        )
+    } else {
+        None
+    }
+}
+
+#[macro_export]
 macro_rules! option_array {
     // 主规则：匹配数组并处理每个元素
     ([ $($elem:tt),* ]) => {
@@ -30,22 +46,18 @@ macro_rules! option_array {
         Some($num)
     }
 }
+pub use option_array;
 
-pub fn build(arr: &[Option<i32>]) -> Tree {
-    build_recursive(arr, 0)
+#[macro_export]
+macro_rules! build {
+    ([ $($elem:tt),* ]) => {
+        $crate::utils::binary_tree::from(&[ $($crate::utils::binary_tree::option_array!(@parse $elem)),* ])
+    };
 }
+pub use build;
 
-fn build_recursive(arr: &[Option<i32>], index: usize) -> Tree {
-    if index < arr.len() && arr[index].is_some() {
-        new(
-            arr[index].unwrap(),
-            build_recursive(arr, 2 * index + 1),
-            build_recursive(arr, 2 * index + 2),
-        )
-    } else {
-        None
-    }
-}
+#[cfg(test)]
+mod tests;
 
 // macro_rules! binary_tree {
 //     ([ $($elem:tt),* ]) => {{
@@ -93,6 +105,3 @@ fn build_recursive(arr: &[Option<i32>], index: usize) -> Tree {
 //         }
 //     }};
 // }
-
-#[cfg(test)]
-mod tests;

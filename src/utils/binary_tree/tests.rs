@@ -23,5 +23,5 @@ fn test_binary_tree() {
     );
     // assert_eq!(binary_tree!([3, 9, 20, null, null, 15, 7]), wanted);
     // assert_eq!(binary_tree!(["3", "9", "20", "null", "null", "15", "7"]), wanted);
-    assert_eq!(build(&option_array!([3, 9, 20, null, null, 15, 7])), wanted);
+    assert_eq!(build!([3, 9, 20, null, null, 15, 7]), wanted);
 }
