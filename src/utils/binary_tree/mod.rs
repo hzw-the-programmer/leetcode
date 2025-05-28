@@ -29,5 +29,68 @@ macro_rules! option_array {
     }
 }
 
+pub fn build(arr: &[Option<i32>]) -> Tree {
+    build_recursive(arr, 0)
+}
+
+fn build_recursive(arr: &[Option<i32>], index: usize) -> Tree {
+    if index < arr.len() && arr[index].is_some() {
+        new_tree(
+            arr[index].unwrap(),
+            build_recursive(arr, 2 * index + 1),
+            build_recursive(arr, 2 * index + 2),
+        )
+    } else {
+        None
+    }
+}
+
+// macro_rules! binary_tree {
+//     ([ $($elem:tt),* ]) => {{
+//         let elements = [ $(binary_tree!(@parse $elem)),* ];
+//         binary_tree!(@build 0, &elements)
+//     }};
+//     (@parse null) => {
+//         None
+//     };
+//     (@parse $num:expr) => {
+//         Some($num)
+//     };
+//     (@build $index:expr, $elements:expr) => {{
+//         if $index >= $elements.len() {
+//             None
+//         } else {
+//             if let Some(val) = $elements[$index] {
+//                 // $crate::utils::binary_tree::new_tree(val, None, None)
+//                 $crate::utils::binary_tree::new_tree(val, binary_tree!(@build 2 * $index + 1, $elements), binary_tree!(@build 2 * $index + 2, $elements))
+//             } else {
+//                 None
+//             }
+//         }
+//     }}
+// }
+
+// macro_rules! binary_tree {
+//     // 入口点：匹配数组并初始化递归处理
+//     ([ $($elements:tt),* ]) => {{
+//         let elements = [$($elements),*];
+//         binary_tree!(@build 0, &elements)
+//     }};
+
+//     // 递归构建节点：通过索引访问数组元素
+//     (@build $index:expr, $elements:expr) => {{
+//         if $index >= $elements.len() || $elements[$index] == "null" {
+//             None
+//         } else {
+//             let val = $elements[$index].parse::<i32>().unwrap();
+//             Some(Box::new(TreeNode {
+//                 val,
+//                 left: binary_tree!(@build 2 * $index + 1, $elements),
+//                 right: binary_tree!(@build 2 * $index + 2, $elements),
+//             }))
+//         }
+//     }};
+// }
+
 #[cfg(test)]
 mod tests;
