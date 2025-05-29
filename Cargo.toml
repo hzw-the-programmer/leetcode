@@ -1,3 +1,3 @@
 [package]
-name = "solution"
-edition = "2021"
+name = "leetcode"
+edition = "2024"
