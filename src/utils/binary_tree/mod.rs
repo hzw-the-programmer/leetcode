@@ -77,6 +77,14 @@ macro_rules! build {
 }
 pub use build;
 
+#[macro_export]
+macro_rules! bst {
+    ($($input:tt)*) => {
+        $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!([$($input)*]))
+    };
+}
+pub use bst;
+
 // macro_rules! binary_tree {
 //     ([ $($elem:tt),* ]) => {{
 //         let elements = [ $(binary_tree!(@parse $elem)),* ];
