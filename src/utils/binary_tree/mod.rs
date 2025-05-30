@@ -33,25 +33,46 @@ fn from_recursive(arr: &[Option<i32>], index: usize) -> Tree {
 
 #[macro_export]
 macro_rules! option_array {
-    // 主规则：匹配数组并处理每个元素
-    ([ $($elem:tt),* ]) => {
-        [ $(option_array!(@parse $elem)),* ]
+    // 入口点：匹配数组字面量
+    ([$($input:tt)*]) => {
+        $crate::utils::binary_tree::option_array_inner!([] $($input)*)
     };
-    // 内部规则：处理 `null` 转换为 `None`
-    (@parse null) => {
-        None
-    };
-    // 内部规则：处理非 `null` 元素，包裹为 `Some`
-    (@parse $num:expr) => {
-        Some($num)
-    }
 }
 pub use option_array;
 
 #[macro_export]
+macro_rules! option_array_inner {
+    // 终止条件：所有元素处理完成，返回结果数组
+    ([$($output:expr,)*]) => {
+        [$($output,)*]
+    };
+
+    // 处理 null 元素（后面有逗号）
+    ([$($output:expr,)*] null, $($rest:tt)*) => {
+        option_array_inner!([$($output,)* None,] $($rest)*)
+    };
+
+    // 处理普通表达式元素（后面有逗号）
+    ([$($output:expr,)*] $element:expr, $($rest:tt)*) => {
+        option_array_inner!([$($output,)* Some($element),] $($rest)*)
+    };
+
+    // 处理最后一个 null 元素
+    ([$($output:expr,)*] null) => {
+        option_array_inner!([$($output,)* None,])
+    };
+
+    // 处理最后一个普通表达式元素
+    ([$($output:expr,)*] $element:expr) => {
+        option_array_inner!([$($output,)* Some($element),])
+    };
+}
+pub use option_array_inner;
+
+#[macro_export]
 macro_rules! build {
-    ([ $($elem:tt),* ]) => {
-        $crate::utils::binary_tree::from(&[ $($crate::utils::binary_tree::option_array!(@parse $elem)),* ])
+    ($($input:tt)*) => {
+        $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!($($input)*))
     };
 }
 pub use build;
@@ -103,39 +124,20 @@ pub use build;
 //     }};
 // }
 
-macro_rules! some_array {
-    // 入口点：匹配数组字面量
-    ([$($input:tt)*]) => {
-        some_array_inner!([]; $($input)*)
-    };
-}
-
-macro_rules! some_array_inner {
-    // 终止条件：所有元素处理完成，返回结果数组
-    ([$($output:expr,)*]) => {
-        [$($output,)*]
-    };
-
-    // 处理 null 元素（后面有逗号）
-    ([$($output:expr,)*]; null, $($rest:tt)*) => {
-        some_array_inner!([$($output,)* None,]; $($rest)*)
-    };
-
-    // 处理普通表达式元素（后面有逗号）
-    ([$($output:expr,)*]; $element:expr, $($rest:tt)*) => {
-        some_array_inner!([$($output,)* Some($element),]; $($rest)*)
-    };
-
-    // 处理最后一个 null 元素
-    ([$($output:expr,)*]; null) => {
-        some_array_inner!([$($output,)* None,])
-    };
-
-    // 处理最后一个普通表达式元素
-    ([$($output:expr,)*]; $element:expr) => {
-        some_array_inner!([$($output,)* Some($element),])
-    };
-}
+// macro_rules! option_array {
+//     // 主规则：匹配数组并处理每个元素
+//     ([ $($elem:tt),* ]) => {
+//         [ $(option_array!(@parse $elem)),* ]
+//     };
+//     // 内部规则：处理 `null` 转换为 `None`
+//     (@parse null) => {
+//         None
+//     };
+//     // 内部规则：处理非 `null` 元素，包裹为 `Some`
+//     (@parse $num:expr) => {
+//         Some($num)
+//     };
+// }
 
 #[cfg(test)]
 mod tests;
