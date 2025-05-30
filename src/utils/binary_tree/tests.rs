@@ -15,6 +15,16 @@ fn test_option_array_2() {
 }
 
 #[test]
+fn test_option_array_3() {
+    // assert_eq!(
+    //     some_array!([3, -9, 20, null, null, 15, 7]),
+    //     [Some(3), Some(-9), Some(20), None, None, Some(15), Some(7)]
+    // );
+    assert_eq!(some_array!([1, null]), [Some(1), None]);
+    assert_eq!(some_array!([-1, null]), [Some(-1), None]);
+}
+
+#[test]
 fn test_binary_tree() {
     let wanted = new(
         3,

@@ -56,9 +56,6 @@ macro_rules! build {
 }
 pub use build;
 
-#[cfg(test)]
-mod tests;
-
 // macro_rules! binary_tree {
 //     ([ $($elem:tt),* ]) => {{
 //         let elements = [ $(binary_tree!(@parse $elem)),* ];
@@ -105,3 +102,40 @@ mod tests;
 //         }
 //     }};
 // }
+
+macro_rules! some_array {
+    // 入口点：匹配数组字面量
+    ([$($input:tt)*]) => {
+        some_array_inner!([]; $($input)*)
+    };
+}
+
+macro_rules! some_array_inner {
+    // 终止条件：所有元素处理完成，返回结果数组
+    ([$($output:expr,)*]) => {
+        [$($output,)*]
+    };
+
+    // 处理 null 元素（后面有逗号）
+    ([$($output:expr,)*]; null, $($rest:tt)*) => {
+        some_array_inner!([$($output,)* None,]; $($rest)*)
+    };
+
+    // 处理普通表达式元素（后面有逗号）
+    ([$($output:expr,)*]; $element:expr, $($rest:tt)*) => {
+        some_array_inner!([$($output,)* Some($element),]; $($rest)*)
+    };
+
+    // 处理最后一个 null 元素
+    ([$($output:expr,)*]; null) => {
+        some_array_inner!([$($output,)* None,])
+    };
+
+    // 处理最后一个普通表达式元素
+    ([$($output:expr,)*]; $element:expr) => {
+        some_array_inner!([$($output,)* Some($element),])
+    };
+}
+
+#[cfg(test)]
+mod tests;
