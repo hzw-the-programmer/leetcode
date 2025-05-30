@@ -54,6 +54,7 @@
 111. Minimum Depth of Binary Tree
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
+1382. Balance a Binary Search Tree
 
 # Automaton
 8. String to Integer (atoi)

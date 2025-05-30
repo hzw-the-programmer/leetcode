@@ -18,6 +18,7 @@ pub mod s122;
 pub mod s134;
 pub mod s1343;
 pub mod s135;
+pub mod s1382;
 pub mod s1423;
 pub mod s144;
 pub mod s1456;
