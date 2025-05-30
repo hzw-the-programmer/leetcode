@@ -7,8 +7,10 @@ fn test() {
         sorted_array_to_bst(vec![-10, -3, 0, 5, 9]),
         build!([0, -10, 5, null, -3, null, 9])
     );
+    assert_eq!(sorted_array_to_bst(vec![1, 3]), build!([1, null, 3]));
     assert_eq!(
         sorted_array_to_bst_2(vec![-10, -3, 0, 5, 9]),
         build!([0, -3, 9, -10, null, 5])
     );
+    assert_eq!(sorted_array_to_bst_2(vec![1, 3]), build!([3, 1]));
 }
