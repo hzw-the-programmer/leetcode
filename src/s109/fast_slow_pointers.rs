@@ -9,23 +9,15 @@ pub fn sorted_list_to_bst(head: Option<Box<ListNode>>) -> Option<Rc<RefCell<Tree
 }
 
 fn recursive(start: Option<&ListNode>, end: Option<&ListNode>) -> Option<Rc<RefCell<TreeNode>>> {
-    let finish = |cursor: Option<&ListNode>| match (cursor, end) {
-        (Some(f), Some(e)) if ptr::eq(f, e) => true,
-        (None, None) => true,
-        (Some(_), Some(_)) => false,
-        (Some(_), None) => false,
-        (None, Some(_)) => unreachable!(),
-    };
-
-    if finish(start) {
+    if finish(start, end) {
         return None;
     }
 
     let mut fast = start;
     let mut slow = start;
-    while !finish(fast) {
+    while !finish(fast, end) {
         fast = fast.unwrap().next.as_deref();
-        if !finish(fast) {
+        if !finish(fast, end) {
             fast = fast.unwrap().next.as_deref();
             slow = slow.unwrap().next.as_deref();
         }
@@ -36,4 +28,14 @@ fn recursive(start: Option<&ListNode>, end: Option<&ListNode>) -> Option<Rc<RefC
         left: recursive(start, slow),
         right: recursive(slow.unwrap().next.as_deref(), end),
     })))
+}
+
+fn finish(cursor: Option<&ListNode>, end: Option<&ListNode>) -> bool {
+    match (cursor, end) {
+        (Some(f), Some(e)) if ptr::eq(f, e) => true,
+        (None, None) => true,
+        (Some(_), Some(_)) => false,
+        (Some(_), None) => false,
+        (None, Some(_)) => unreachable!(),
+    }
 }
