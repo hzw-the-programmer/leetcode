@@ -49,12 +49,12 @@ macro_rules! option_array_inner {
 
     // 处理 null 元素（后面有逗号）
     ([$($output:expr,)*] null, $($rest:tt)*) => {
-        option_array_inner!([$($output,)* None,] $($rest)*)
+        $crate::utils::binary_tree::option_array_inner!([$($output,)* None,] $($rest)*)
     };
 
     // 处理普通表达式元素（后面有逗号）
     ([$($output:expr,)*] $element:expr, $($rest:tt)*) => {
-        option_array_inner!([$($output,)* Some($element),] $($rest)*)
+        $crate::utils::binary_tree::option_array_inner!([$($output,)* Some($element),] $($rest)*)
     };
 
     // 处理最后一个 null 元素
@@ -64,7 +64,7 @@ macro_rules! option_array_inner {
 
     // 处理最后一个普通表达式元素
     ([$($output:expr,)*] $element:expr) => {
-        option_array_inner!([$($output,)* Some($element),])
+        $crate::utils::binary_tree::option_array_inner!([$($output,)* Some($element),])
     };
 }
 pub use option_array_inner;
