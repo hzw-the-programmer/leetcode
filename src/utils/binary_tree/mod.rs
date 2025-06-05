@@ -10,6 +10,16 @@ pub struct TreeNode {
     pub right: Tree,
 }
 
+impl TreeNode {
+    pub fn new(val: i32) -> Self {
+        Self {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+
 pub fn new(val: i32, left: Tree, right: Tree) -> Tree {
     Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }

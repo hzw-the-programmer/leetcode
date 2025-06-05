@@ -6,6 +6,7 @@ use crate::utils::singly_linked_list as sll;
 fn test_1() {
     let head = sll::new_from(&[-10, -3, 0, 5, 9]);
     let wanted = bt::btree![0, -3, 9, -10, null, 5];
+    // let wanted = bt::btree![0, -10, 5, null, -3, null, 9];
     assert_eq!(sorted_list_to_bst(head), wanted);
 }
 
