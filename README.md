@@ -56,6 +56,7 @@
 111. Minimum Depth of Binary Tree
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
+145. Binary Tree Postorder Traversal
 1382. Balance a Binary Search Tree
 
 # Automaton
