@@ -5,22 +5,20 @@ use std::rc::Rc;
 // time  : O(n)
 // space : O(n)
 pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-    height(root.as_deref()) != -1
+    check_balanced(root.as_deref()).is_ok()
 }
 
-fn height(root: Option<&RefCell<TreeNode>>) -> i32 {
+fn check_balanced(root: Option<&RefCell<TreeNode>>) -> Result<i32, ()> {
     match root {
-        None => 0,
+        None => Ok(0),
         Some(node) => {
             let node = node.borrow();
-            let left = height(node.left.as_deref());
-            let right = height(node.right.as_deref());
-            if left == -1 || right == -1 {
-                -1
-            } else if (left - right).abs() > 1 {
-                -1
+            let left = check_balanced(node.left.as_deref())?;
+            let right = check_balanced(node.right.as_deref())?;
+            if (left - right).abs() > 1 {
+                Err(())
             } else {
-                1 + left.max(right)
+                Ok(1 + left.max(right))
             }
         }
     }
