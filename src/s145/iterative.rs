@@ -18,14 +18,14 @@ pub fn postorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         }
 
         if let Some(node) = stack.pop() {
-            if node.borrow().right.is_none()
-                || ptr::eq(node.borrow().right.as_deref().unwrap(), pre)
+            if node.borrow().right.is_some()
+                && !ptr::eq(node.borrow().right.as_deref().unwrap(), pre)
             {
-                res.push(node.borrow().val);
-                pre = &*node;
-            } else {
                 current = node.borrow().right.clone();
                 stack.push(node);
+            } else {
+                res.push(node.borrow().val);
+                pre = &*node;
             }
         }
     }
