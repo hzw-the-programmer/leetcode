@@ -2,6 +2,8 @@ use crate::utils::{binary_tree::*, singly_linked_list::*};
 use std::cell::RefCell;
 use std::rc::Rc;
 
+// time  : O(n)
+// space : O(logn)
 pub fn sorted_list_to_bst(head: Option<Box<ListNode>>) -> Option<Rc<RefCell<TreeNode>>> {
     let mut head = head.as_deref();
     let n = len(head);
