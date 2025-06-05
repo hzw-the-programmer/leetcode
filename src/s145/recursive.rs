@@ -2,6 +2,8 @@ use crate::utils::binary_tree::TreeNode;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+// time  : O(n)
+// space : O(n)
 pub fn postorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
     let mut res = vec![];
     recursive(root.as_deref(), &mut res);
