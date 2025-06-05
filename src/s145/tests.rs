@@ -15,4 +15,6 @@ fn test() {
     );
     assert_eq!(postorder_traversal(btree![]), vec![]);
     assert_eq!(postorder_traversal(btree![1]), vec![1]);
+
+    assert_eq!(postorder_traversal(btree![1, 2, 2]), vec![2, 2, 1]);
 }
