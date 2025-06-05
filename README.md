@@ -52,6 +52,7 @@
 107. Binary Tree Level Order Traversal II
 108. Convert Sorted Array to Binary Search Tree
 109. Convert Sorted List to Binary Search Tree
+110. Balanced Binary Tree
 111. Minimum Depth of Binary Tree
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
