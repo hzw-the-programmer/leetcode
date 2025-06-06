@@ -11,21 +11,21 @@ pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             res.push(node.borrow().val);
             current = node.borrow().right.clone();
         } else {
-            let mut predecessor = node.borrow().left.clone().unwrap();
-            while predecessor.borrow().right.is_some() {
-                let right_node = predecessor.borrow().right.clone().unwrap();
-                if std::rc::Rc::ptr_eq(&right_node, &node) {
+            let mut rightmost = node.borrow().left.clone().unwrap();
+            while rightmost.borrow().right.is_some() {
+                let right = rightmost.borrow().right.clone().unwrap();
+                if std::rc::Rc::ptr_eq(&right, &node) {
                     break;
                 }
-                predecessor = right_node;
+                rightmost = right;
             }
-            if predecessor.borrow().right.is_none() {
+            if rightmost.borrow().right.is_none() {
                 res.push(node.borrow().val);
                 current = node.borrow().left.clone();
-                predecessor.borrow_mut().right = Some(node);
+                rightmost.borrow_mut().right = Some(node);
             } else {
                 current = node.borrow().right.clone();
-                predecessor.borrow_mut().right = None;
+                rightmost.borrow_mut().right = None;
             }
         }
     }
