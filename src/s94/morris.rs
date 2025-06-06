@@ -1,28 +1,31 @@
-use crate::utils::binary_tree::*;
+use crate::utils::binary_tree::TreeNode;
+use std::cell::RefCell;
+use std::rc::Rc;
 
-pub fn inorder_traversal(mut root: Tree) -> Vec<i32> {
+pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
     let mut res = vec![];
 
-    while let Some(node) = root {
+    let mut current = root.clone();
+    while let Some(node) = current {
         if node.borrow().left.is_none() {
             res.push(node.borrow().val);
-            root = node.borrow().right.clone();
+            current = node.borrow().right.clone();
         } else {
-            let mut predecessor = node.borrow().left.clone().unwrap();
-            while predecessor.borrow().right.is_some() {
-                let right_node = predecessor.borrow().right.clone().unwrap();
-                if std::rc::Rc::ptr_eq(&right_node, &node) {
+            let mut rightmost = node.borrow().left.clone().unwrap();
+            while rightmost.borrow().right.is_some() {
+                let right = rightmost.borrow().right.clone().unwrap();
+                if std::rc::Rc::ptr_eq(&right, &node) {
                     break;
                 }
-                predecessor = right_node;
+                rightmost = right;
             }
-            if predecessor.borrow().right.is_none() {
-                predecessor.borrow_mut().right = Some(node.clone());
-                root = node.borrow().left.clone();
+            if rightmost.borrow().right.is_none() {
+                current = node.borrow().left.clone();
+                rightmost.borrow_mut().right = Some(node);
             } else {
-                predecessor.borrow_mut().right = None;
                 res.push(node.borrow().val);
-                root = node.borrow().right.clone();
+                current = node.borrow().right.clone();
+                rightmost.borrow_mut().right = None;
             }
         }
     }
