@@ -3,6 +3,8 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+// time  : O(n)
+// space : O(n)
 pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
     let mut map = HashMap::new();
     for (i, &n) in inorder.iter().enumerate() {
