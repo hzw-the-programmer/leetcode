@@ -1,12 +1,15 @@
-use crate::utils::binary_tree::*;
+use crate::utils::binary_tree::TreeNode;
+use std::cell::RefCell;
+use std::rc::Rc;
 
-pub fn preorder_traversal(mut root: Tree) -> Vec<i32> {
+pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
     let mut res = vec![];
 
-    while let Some(node) = root {
+    let mut current = root.clone();
+    while let Some(node) = current {
         if node.borrow().left.is_none() {
             res.push(node.borrow().val);
-            root = node.borrow().right.clone();
+            current = node.borrow().right.clone();
         } else {
             let mut predecessor = node.borrow().left.clone().unwrap();
             while predecessor.borrow().right.is_some() {
@@ -17,12 +20,12 @@ pub fn preorder_traversal(mut root: Tree) -> Vec<i32> {
                 predecessor = right_node;
             }
             if predecessor.borrow().right.is_none() {
-                predecessor.borrow_mut().right = Some(node.clone());
                 res.push(node.borrow().val);
-                root = node.borrow().left.clone();
+                current = node.borrow().left.clone();
+                predecessor.borrow_mut().right = Some(node);
             } else {
+                current = node.borrow().right.clone();
                 predecessor.borrow_mut().right = None;
-                root = node.borrow().right.clone();
             }
         }
     }
