@@ -6,10 +6,7 @@ use std::rc::Rc;
 // time  : O(n)
 // space : O(n)
 pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
-    let mut map = HashMap::new();
-    for (i, &n) in inorder.iter().enumerate() {
-        map.insert(n, i);
-    }
+    let map: HashMap<_, _> = inorder.iter().enumerate().map(|(i, &n)| (n, i)).collect();
     recursive(&preorder, &map, 0)
 }
 
