@@ -3,11 +3,14 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+// time  : O(n)
+// space : O(n)
 pub fn build_tree(inorder: Vec<i32>, postorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
-    let mut map = HashMap::new();
-    for (i, &n) in inorder.iter().enumerate() {
-        map.insert(n, i);
-    }
+    let map = inorder
+        .iter()
+        .enumerate()
+        .map(|(i, &n)| (n, i))
+        .collect::<HashMap<_, _>>();
     recursive(&postorder, &map, 0)
 }
 
