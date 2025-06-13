@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! nested_vec {
+macro_rules! vec_2d {
     ( $($elem:tt),* ) => {
         vec![ $(vec!$elem),* ]
     };
@@ -19,4 +19,4 @@ macro_rules! nested_vec {
 //     };
 // }
 
-pub use nested_vec;
+pub use vec_2d;
