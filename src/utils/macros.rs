@@ -1,11 +1,8 @@
 #[macro_export]
 macro_rules! nested_vec {
-    ([ $($elem:tt),* ]) => {
-        vec![ $(nested_vec!($elem)),* ]
+    ( $($elem:tt),* ) => {
+        vec![ $(vec!$elem),* ]
     };
-    ($($elem:tt),*) => {
-        $($elem),*
-    }
 }
 
 // #[macro_export]
