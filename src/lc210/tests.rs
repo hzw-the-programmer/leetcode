@@ -9,4 +9,6 @@ fn test() {
         vec![0, 1, 2, 3]
     );
     assert_eq!(find_order(1, vec_2d![]), vec![0]);
+
+    assert_eq!(find_order(3, vec_2d![[1, 0], [1, 2], [0, 1]]), vec![]);
 }
