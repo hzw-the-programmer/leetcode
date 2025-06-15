@@ -3,6 +3,7 @@ pub struct Solution;
 pub mod lc105;
 pub mod lc106;
 pub mod lc107;
+pub mod lc112;
 pub mod lc191;
 pub mod lc207;
 pub mod lc210;
