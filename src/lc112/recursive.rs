@@ -2,6 +2,8 @@ use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+// time : O(n)
+// space: O(h)
 pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
     recursive(root.as_deref(), target_sum)
 }
