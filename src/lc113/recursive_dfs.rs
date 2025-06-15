@@ -20,13 +20,16 @@ fn recursive(
         let node = node.borrow();
         temp.push(node.val);
         target_sum -= node.val;
-        if node.left.is_none() && node.right.is_none() {
-            if target_sum == 0 {
-                res.push(temp.clone());
+        match (node.left.as_deref(), node.right.as_deref()) {
+            (None, None) => {
+                if target_sum == 0 {
+                    res.push(temp.clone());
+                }
             }
-        } else {
-            recursive(node.left.as_deref(), target_sum, temp, res);
-            recursive(node.right.as_deref(), target_sum, temp, res);
+            (left, right) => {
+                recursive(left, target_sum, temp, res);
+                recursive(right, target_sum, temp, res);
+            }
         }
         temp.pop();
     }
