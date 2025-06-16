@@ -61,6 +61,7 @@
 114. Flatten Binary Tree to Linked List
 144. Binary Tree Preorder Traversal
 145. Binary Tree Postorder Traversal
+173. Binary Search Tree Iterator
 1382. Balance a Binary Search Tree
 
 # Automaton
