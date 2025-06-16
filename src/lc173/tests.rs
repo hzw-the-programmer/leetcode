@@ -2,7 +2,7 @@ use super::BSTIterator;
 use crate::utils::binary_tree::btree;
 
 #[test]
-fn test() {
+fn finish() {
     let mut iter = BSTIterator::new(btree![7, 3, 15, null, null, 9, 20]);
     assert_eq!(iter.next(), 3);
     assert_eq!(iter.next(), 7);
@@ -13,4 +13,10 @@ fn test() {
     assert!(iter.has_next());
     assert_eq!(iter.next(), 20);
     assert!(!iter.has_next());
+}
+
+#[test]
+fn no_finish() {
+    let mut iter = BSTIterator::new(btree![7, 3, 15, null, null, 9, 20]);
+    assert_eq!(iter.next(), 3);
 }
