@@ -16,10 +16,7 @@ pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<Tr
             stack.push(left.clone());
             node.borrow_mut().left = Some(left);
         } else {
-            while let Some(top) = stack.last() {
-                if top.borrow().val != inorder[index] {
-                    break;
-                }
+            while !stack.is_empty() && stack.last().unwrap().borrow().val == inorder[index] {
                 node = stack.pop().unwrap();
                 index += 1;
             }
