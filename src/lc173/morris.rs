@@ -4,11 +4,15 @@ use std::rc::Rc;
 
 pub struct BSTIterator {
     current: Option<Rc<RefCell<TreeNode>>>,
+    links: usize,
 }
 
 impl BSTIterator {
     pub fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
-        Self { current: root }
+        Self {
+            current: root,
+            links: 0,
+        }
     }
 
     pub fn next(&mut self) -> i32 {
@@ -27,10 +31,12 @@ impl BSTIterator {
                 if rightmost.borrow().right.is_none() {
                     rightmost.borrow_mut().right = Some(node.clone());
                     current = Some(left);
+                    self.links += 1;
                 } else {
                     rightmost.borrow_mut().right = None;
                     current = node.borrow().right.clone();
                     res = node.borrow().val;
+                    self.links -= 1;
                     break;
                 }
             } else {
@@ -51,7 +57,7 @@ impl BSTIterator {
 
 impl Drop for BSTIterator {
     fn drop(&mut self) {
-        while self.has_next() {
+        while self.links != 0 {
             self.next();
         }
     }
