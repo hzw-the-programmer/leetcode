@@ -8,15 +8,15 @@ pub fn merge_trees(
 ) -> Option<Rc<RefCell<TreeNode>>> {
     let root = match (root1, root2) {
         (None, None) => None,
-        (Some(root1), None) => Some(root1),
-        (None, Some(root2)) => Some(root2),
-        (Some(root1), Some(root2)) => {
-            root1.borrow_mut().val += root2.borrow().val;
-            let left = root1.borrow_mut().left.take();
-            root1.borrow_mut().left = merge_trees(left, root2.borrow_mut().left.take());
-            let right = root1.borrow_mut().right.take();
-            root1.borrow_mut().right = merge_trees(right, root2.borrow_mut().right.take());
-            Some(root1)
+        (Some(node), None) | (None, Some(node)) => Some(node),
+        (Some(node1), Some(node2)) => {
+            {
+                let (mut node1, mut node2) = (node1.borrow_mut(), node2.borrow_mut());
+                node1.val += node2.val;
+                node1.left = merge_trees(node1.left.take(), node2.left.take());
+                node1.right = merge_trees(node1.right.take(), node2.right.take());
+            }
+            Some(node1)
         }
     };
     root
