@@ -23,8 +23,6 @@ impl Codec {
                     match node {
                         None => {
                             res.push_str(",null");
-                            queue.push_back(None);
-                            queue.push_back(None);
                         }
                         Some(node) => {
                             let mut node = node.borrow_mut();
@@ -53,21 +51,42 @@ impl Codec {
                 _ => s.parse().ok(),
             })
             .collect::<Vec<Option<i32>>>();
-        Self::recursive(&values, 0)
+        Self::from_slice(&values)
     }
 
-    fn recursive(values: &[Option<i32>], idx: usize) -> Option<Rc<RefCell<TreeNode>>> {
-        if idx >= values.len() {
+    fn from_slice(mut values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
+        if values.is_empty() || values[0].is_none() {
             return None;
         }
 
-        match values[idx] {
-            None => None,
-            Some(val) => Some(Rc::new(RefCell::new(TreeNode {
-                val,
-                left: Self::recursive(values, 2 * idx + 1),
-                right: Self::recursive(values, 2 * idx + 2),
-            }))),
+        let root = Rc::new(RefCell::new(TreeNode::new(values[0].unwrap())));
+        let mut queue = VecDeque::from(vec![root.clone()]);
+        values = &values[1..];
+
+        while let Some(node) = queue.pop_front() {
+            let mut node = node.borrow_mut();
+
+            if values.is_empty() {
+                break;
+            }
+            if let Some(val) = values[0] {
+                let left = Rc::new(RefCell::new(TreeNode::new(val)));
+                node.left = Some(left.clone());
+                queue.push_back(left);
+            }
+            values = &values[1..];
+
+            if values.is_empty() {
+                break;
+            }
+            if let Some(val) = values[0] {
+                let right = Rc::new(RefCell::new(TreeNode::new(val)));
+                node.right = Some(right.clone());
+                queue.push_back(right);
+            }
+            values = &values[1..];
         }
+
+        Some(root)
     }
 }
