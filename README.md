@@ -62,6 +62,7 @@
 144. Binary Tree Preorder Traversal
 145. Binary Tree Postorder Traversal
 173. Binary Search Tree Iterator
+226. Invert Binary Tree
 617. Merge Two Binary Trees
 1022. Sum of Root To Leaf Binary Numbers
 1382. Balance a Binary Search Tree
