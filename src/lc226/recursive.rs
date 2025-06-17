@@ -2,6 +2,8 @@ use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+// time : O(n)
+// space: O(n)
 pub fn invert_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
     match root {
         None => None,
