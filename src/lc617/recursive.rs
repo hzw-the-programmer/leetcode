@@ -2,6 +2,8 @@ use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+// time : O(min(m, n))
+// space: O(mind(m, n))
 pub fn merge_trees(
     root1: Option<Rc<RefCell<TreeNode>>>,
     root2: Option<Rc<RefCell<TreeNode>>>,
