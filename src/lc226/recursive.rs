@@ -7,11 +7,8 @@ pub fn invert_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<Tre
         None => None,
         Some(node) => {
             {
-                let mut node = node.borrow_mut();
-                let left = node.left.take();
-                let right = node.right.take();
-                node.left = invert_tree(right);
-                node.right = invert_tree(left);
+                let mut b = node.borrow_mut();
+                (b.left, b.right) = (invert_tree(b.right.take()), invert_tree(b.left.take()));
             }
             Some(node)
         }
