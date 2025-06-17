@@ -62,6 +62,7 @@
 144. Binary Tree Preorder Traversal
 145. Binary Tree Postorder Traversal
 173. Binary Search Tree Iterator
+617. Merge Two Binary Trees
 1382. Balance a Binary Search Tree
 
 # Automaton
