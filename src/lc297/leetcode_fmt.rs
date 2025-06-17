@@ -16,10 +16,9 @@ impl Codec {
         match root {
             None => {}
             Some(node) => {
-                res.push_str(&node.borrow().val.to_string());
-                let mut queue = VecDeque::new();
-                queue.push_back(node.borrow_mut().left.take());
-                queue.push_back(node.borrow_mut().right.take());
+                let mut node = node.borrow_mut();
+                res.push_str(&node.val.to_string());
+                let mut queue = VecDeque::from(vec![node.left.take(), node.right.take()]);
                 while let Some(node) = queue.pop_front() {
                     match node {
                         None => {
@@ -45,7 +44,7 @@ impl Codec {
         res
     }
 
-    fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
+    pub fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
         None
     }
 }
