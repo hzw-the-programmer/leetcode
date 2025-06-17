@@ -45,6 +45,29 @@ impl Codec {
     }
 
     pub fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
-        None
+        let values = data
+            .trim_matches(&['[', ']'])
+            .split(',')
+            .map(|s| match s {
+                "null" => None,
+                _ => s.parse().ok(),
+            })
+            .collect::<Vec<Option<i32>>>();
+        Self::recursive(&values, 0)
+    }
+
+    fn recursive(values: &[Option<i32>], idx: usize) -> Option<Rc<RefCell<TreeNode>>> {
+        if idx >= values.len() {
+            return None;
+        }
+
+        match values[idx] {
+            None => None,
+            Some(val) => Some(Rc::new(RefCell::new(TreeNode {
+                val,
+                left: Self::recursive(values, 2 * idx + 1),
+                right: Self::recursive(values, 2 * idx + 2),
+            }))),
+        }
     }
 }
