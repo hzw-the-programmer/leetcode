@@ -1,4 +1,4 @@
-use super::{build, new_tree as new};
+use super::{btree, new_tree as new};
 
 #[test]
 fn test_option_array_1() {
@@ -37,5 +37,5 @@ fn test_binary_tree() {
     );
     // assert_eq!(binary_tree!([3, 9, 20, null, null, 15, 7]), wanted);
     // assert_eq!(binary_tree!(["3", "9", "20", "null", "null", "15", "7"]), wanted);
-    assert_eq!(build!([3, 9, 20, null, null, 15, 7]), wanted);
+    assert_eq!(btree![3, 9, 20, null, null, 15, 7], wanted);
 }
