@@ -46,11 +46,11 @@ impl Codec {
                     res.push_str(&self.delimiter);
                 }
                 Some(node) => {
-                    let mut node = node.borrow_mut();
+                    let node = node.borrow();
                     res.push_str(&node.val.to_string());
                     res.push_str(&self.delimiter);
-                    stack.push(node.right.take());
-                    stack.push(node.left.take());
+                    stack.push(node.right.clone());
+                    stack.push(node.left.clone());
                 }
             }
         }

@@ -54,14 +54,14 @@ fn deserialize() {
     );
 }
 
-// #[test]
-// fn t1() {
-//     let tree = btree![
-//         4, -7, -3, null, null, -9, -3, 9, -7, -4, null, 6, null, -6, -6, null, null, 0, 6, 5, null,
-//         9, null, null, -1, -4, null, null, null, -2
-//     ];
-//     let codec = Codec::new();
-//     let serialized = codec.serialize(tree.clone());
-//     // codec.deserialize(serialized);
-//     assert_eq!(codec.deserialize(serialized), tree);
-// }
+#[test]
+fn t1() {
+    let tree = btree![
+        4, -7, -3, null, null, -9, -3, 9, -7, -4, null, 6, null, -6, -6, null, null, 0, 6, 5, null,
+        9, null, null, -1, -4, null, null, null, -2
+    ];
+
+    let codec = Codec::new();
+    let text = codec.serialize(tree.clone());
+    assert_eq!(codec.deserialize(text), tree);
+}
