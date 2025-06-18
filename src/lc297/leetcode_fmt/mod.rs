@@ -3,6 +3,9 @@ use core::cell::{RefCell, RefMut};
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+#[cfg(test)]
+mod tests;
+
 pub struct Codec {}
 
 impl Codec {
