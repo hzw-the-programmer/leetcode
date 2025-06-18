@@ -1,4 +1,5 @@
-use std::cell::RefCell;
+use std::cell::{RefCell, RefMut};
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub type Tree = Option<Rc<RefCell<TreeNode>>>;
@@ -39,6 +40,36 @@ fn from_recursive(arr: &[Option<i32>], index: usize) -> Tree {
     } else {
         None
     }
+}
+
+pub fn from_slice(mut values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
+    if values.is_empty() || values[0].is_none() {
+        return None;
+    }
+
+    let root = Rc::new(RefCell::new(TreeNode::new(values[0].unwrap())));
+    values = &values[1..];
+
+    let mut queue = VecDeque::from(vec![root.clone()]);
+    while let Some(node) = queue.pop_front() {
+        let node = node.borrow_mut();
+        let children = RefMut::map_split(node, |node| (&mut node.left, &mut node.right));
+        let children = vec![children.0, children.1];
+
+        for mut child in children {
+            if values.is_empty() {
+                break;
+            }
+            if let Some(val) = values[0] {
+                let node = Rc::new(RefCell::new(TreeNode::new(val)));
+                *child = Some(node.clone());
+                queue.push_back(node);
+            }
+            values = &values[1..];
+        }
+    }
+
+    Some(root)
 }
 
 #[macro_export]
@@ -87,10 +118,18 @@ macro_rules! build {
 }
 pub use build;
 
+// #[macro_export]
+// macro_rules! btree {
+//     ($($input:tt)*) => {
+//         $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!([$($input)*]))
+//     };
+// }
+// pub use btree;
+
 #[macro_export]
 macro_rules! btree {
     ($($input:tt)*) => {
-        $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!([$($input)*]))
+        $crate::utils::binary_tree::from_slice(&$crate::utils::binary_tree::option_array!([$($input)*]))
     };
 }
 pub use btree;

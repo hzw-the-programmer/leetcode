@@ -5,10 +5,7 @@ use crate::utils::macros::vec_2d;
 #[test]
 fn test() {
     assert_eq!(
-        path_sum(
-            btree![5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, null, 5, 1],
-            22
-        ),
+        path_sum(btree![5, 4, 8, 11, null, 13, 4, 7, 2, null, null, 5, 1], 22),
         vec_2d![[5, 4, 11, 2], [5, 8, 4, 5]]
     );
     // assert_eq!(
