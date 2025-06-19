@@ -1,5 +1,5 @@
 use crate::utils::binary_tree::TreeNode;
-use core::cell::{RefCell, RefMut};
+use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -50,42 +50,47 @@ impl Codec {
     // time : O(n)
     // space: O(n)
     pub fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
-        let values = data
-            .trim_matches(&['[', ']'])
-            .split(',')
-            .map(|s| match s {
-                "null" => None,
-                _ => s.parse().ok(),
-            })
-            .collect::<Vec<Option<i32>>>();
+        let iter = data.trim_matches(&['[', ']']).split(',').map(|s| match s {
+            "null" => None,
+            _ => s.parse().ok(),
+        });
 
-        Self::from_slice(&values)
+        Self::from_iter(iter)
     }
 
-    fn from_slice(mut values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
-        if values.is_empty() || values[0].is_none() {
-            return None;
-        }
-
-        let root = Rc::new(RefCell::new(TreeNode::new(values[0].unwrap())));
-        values = &values[1..];
+    fn from_iter(mut iter: impl Iterator<Item = Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let root = match iter.next() {
+            None | Some(None) => return None,
+            Some(Some(val)) => Rc::new(RefCell::new(TreeNode::new(val))),
+        };
 
         let mut queue = VecDeque::from(vec![root.clone()]);
-        while let Some(node) = queue.pop_front() {
-            let node = node.borrow_mut();
-            let children = RefMut::map_split(node, |node| (&mut node.left, &mut node.right));
-            let children = vec![children.0, children.1];
+        let mut none_count = 0;
+        for value in iter {
+            if queue.front().is_none() {
+                break;
+            }
 
-            for mut child in children {
-                if values.is_empty() {
-                    break;
+            let front = queue.front().unwrap();
+            match value {
+                None => {
+                    none_count += 1;
+                    if none_count == 2 || front.borrow().left.is_some() {
+                        queue.pop_front();
+                        none_count = 0;
+                    }
                 }
-                if let Some(val) = values[0] {
+                Some(val) => {
                     let node = Rc::new(RefCell::new(TreeNode::new(val)));
-                    *child = Some(node.clone());
+                    if none_count == 1 || front.borrow().left.is_some() {
+                        front.borrow_mut().right = Some(node.clone());
+                        queue.pop_front();
+                        none_count = 0;
+                    } else {
+                        front.borrow_mut().left = Some(node.clone());
+                    }
                     queue.push_back(node);
                 }
-                values = &values[1..];
             }
         }
 
