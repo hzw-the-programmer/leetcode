@@ -71,7 +71,7 @@ impl Codec {
         }
     }
 
-    fn deserialize_recursive(mut values: &mut &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
+    fn deserialize_recursive(values: &mut &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
         if values.is_empty() {
             return None;
         }
@@ -80,12 +80,11 @@ impl Codec {
         *values = &values[1..];
         match val {
             None => None,
-            Some(val) => {
-                let mut node = TreeNode::new(val);
-                node.left = Self::deserialize_recursive(&mut values);
-                node.right = Self::deserialize_recursive(&mut values);
-                Some(Rc::new(RefCell::new(node)))
-            }
+            Some(val) => Some(Rc::new(RefCell::new(TreeNode {
+                val,
+                left: Self::deserialize_recursive(values),
+                right: Self::deserialize_recursive(values),
+            }))),
         }
     }
 }
