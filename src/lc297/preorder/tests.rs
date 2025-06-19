@@ -25,7 +25,13 @@ fn serialize() {
 fn deserialize() {
     let codec = Codec::new();
     assert_eq!(codec.deserialize("#".to_string()), btree![]);
+    assert_eq!(codec.deserialize("1,#,#".to_string()), btree![1]);
     assert_eq!(codec.deserialize("1,2,#,#,#".to_string()), btree![1, 2]);
+    assert_eq!(
+        codec.deserialize("1,2,#,#,3,#,#".to_string()),
+        btree![1, 2, 3]
+    );
+
     assert_eq!(
         codec.deserialize("1,#,2,#,#".to_string()),
         btree![1, null, 2]

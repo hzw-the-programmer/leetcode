@@ -1,3 +1,4 @@
+use super::super::parse_i32;
 use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -42,18 +43,8 @@ impl Codec {
     // time : O(n)
     // space: O(n)
     pub fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
-        let values = data
-            .trim_start_matches(&self.start)
-            .trim_end_matches(&self.end)
-            .split(&self.delimiter)
-            .map(|s| match s {
-                "#" => None,
-                _ => s.parse().ok(),
-            })
-            .collect::<Vec<Option<i32>>>();
-
-        let mut values = &values[..];
-        Self::deserialize_recursive(&mut values)
+        let mut data = &data[self.start.len()..];
+        self.deserialize_recursive(&mut data).unwrap()
     }
 
     fn serialize_recursive(&self, root: Option<&RefCell<TreeNode>>, res: &mut String) {
@@ -71,20 +62,20 @@ impl Codec {
         }
     }
 
-    fn deserialize_recursive(values: &mut &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
-        if values.is_empty() {
-            return None;
+    fn deserialize_recursive(&self, data: &mut &str) -> Result<Option<Rc<RefCell<TreeNode>>>, u8> {
+        if data.len() >= self.delimiter.len() && data[..self.delimiter.len()] == self.delimiter {
+            *data = &data[self.delimiter.len()..];
         }
 
-        let val = values[0];
-        *values = &values[1..];
-        match val {
-            None => None,
-            Some(val) => Some(Rc::new(RefCell::new(TreeNode {
-                val,
-                left: Self::deserialize_recursive(values),
-                right: Self::deserialize_recursive(values),
-            }))),
+        if data.len() >= self.none.len() && data[..self.none.len()] == self.none {
+            *data = &data[self.none.len()..];
+            Ok(None)
+        } else {
+            Ok(Some(Rc::new(RefCell::new(TreeNode {
+                val: parse_i32(data)?,
+                left: self.deserialize_recursive(data)?,
+                right: self.deserialize_recursive(data)?,
+            }))))
         }
     }
 }
