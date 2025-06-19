@@ -1,4 +1,3 @@
-use super::super::parse_i32;
 use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -43,8 +42,16 @@ impl Codec {
     // time : O(n)
     // space: O(n)
     pub fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
-        let mut data = &data[self.start.len()..];
-        self.deserialize_recursive(&mut data).unwrap()
+        let mut iter = data
+            .trim_start_matches(&self.start)
+            .trim_end_matches(&self.end)
+            .split(&self.delimiter)
+            .map(|s| match s {
+                "#" => None,
+                _ => s.parse().ok(),
+            });
+
+        Self::deserialize_recursive(&mut iter)
     }
 
     fn serialize_recursive(&self, root: Option<&RefCell<TreeNode>>, res: &mut String) {
@@ -62,20 +69,16 @@ impl Codec {
         }
     }
 
-    fn deserialize_recursive(&self, data: &mut &str) -> Result<Option<Rc<RefCell<TreeNode>>>, u8> {
-        if data.len() >= self.delimiter.len() && data[..self.delimiter.len()] == self.delimiter {
-            *data = &data[self.delimiter.len()..];
-        }
-
-        if data.len() >= self.none.len() && data[..self.none.len()] == self.none {
-            *data = &data[self.none.len()..];
-            Ok(None)
-        } else {
-            Ok(Some(Rc::new(RefCell::new(TreeNode {
-                val: parse_i32(data)?,
-                left: self.deserialize_recursive(data)?,
-                right: self.deserialize_recursive(data)?,
-            }))))
+    fn deserialize_recursive(
+        iter: &mut impl Iterator<Item = Option<i32>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        match iter.next() {
+            None | Some(None) => None,
+            Some(Some(val)) => Some(Rc::new(RefCell::new(TreeNode {
+                val: val,
+                left: Self::deserialize_recursive(iter),
+                right: Self::deserialize_recursive(iter),
+            }))),
         }
     }
 }
