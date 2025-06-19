@@ -4,7 +4,7 @@ pub mod inorder;
 pub mod levelorder;
 pub mod preorder;
 
-fn parse_i32(data: &mut &str) -> Result<i32, u8> {
+pub fn parse_i32(data: &mut &str) -> Result<i32, u8> {
     let (mut n, mut sign, mut len) = (0, 1, 0);
 
     let mut bytes = data.as_bytes();
@@ -37,7 +37,7 @@ fn parse_i32(data: &mut &str) -> Result<i32, u8> {
     Ok(n * sign)
 }
 
-fn to_digit(b: u8) -> Option<i32> {
+pub fn to_digit(b: u8) -> Option<i32> {
     let i = b as i32 - b'0' as i32;
     if i >= 0 && i <= 10 { Some(i) } else { None }
 }
