@@ -58,15 +58,14 @@ impl Codec {
     fn deserialize_recursive(&self, data: &mut &str) -> Result<Option<Rc<RefCell<TreeNode>>>, u8> {
         if data.len() >= self.none.len() && data[..self.none.len()] == self.none {
             *data = &data[self.none.len()..];
-            return Ok(None);
+            Ok(None)
+        } else {
+            Ok(Some(Rc::new(RefCell::new(TreeNode {
+                left: self.subtree(data)?,
+                val: parse_i32(data)?,
+                right: self.subtree(data)?,
+            }))))
         }
-
-        let left = self.subtree(data)?;
-        let (val, len) = parse_i32(data.as_bytes())?;
-        *data = &data[len..];
-        let right = self.subtree(data)?;
-
-        Ok(Some(Rc::new(RefCell::new(TreeNode { val, left, right }))))
     }
 
     fn subtree(&self, data: &mut &str) -> Result<Option<Rc<RefCell<TreeNode>>>, u8> {
@@ -86,8 +85,10 @@ impl Codec {
     }
 }
 
-fn parse_i32(mut bytes: &[u8]) -> Result<(i32, usize), u8> {
+fn parse_i32(data: &mut &str) -> Result<i32, u8> {
     let (mut n, mut sign, mut len) = (0, 1, 0);
+
+    let mut bytes = data.as_bytes();
 
     if bytes.is_empty() {
         return Err(3);
@@ -112,7 +113,9 @@ fn parse_i32(mut bytes: &[u8]) -> Result<(i32, usize), u8> {
         }
     }
 
-    Ok((n * sign, len))
+    *data = &data[len..];
+
+    Ok(n * sign)
 }
 
 fn to_digit(b: u8) -> Option<i32> {
