@@ -21,27 +21,27 @@ impl Codec {
         res.push('[');
         match root {
             None => {}
-            Some(node) => {
-                let mut node = node.borrow_mut();
-                res.push_str(&node.val.to_string());
-                let mut queue = VecDeque::from(vec![node.left.take(), node.right.take()]);
+            root => {
+                let mut queue = VecDeque::new();
+                queue.push_back(root);
                 while let Some(node) = queue.pop_front() {
                     match node {
                         None => {
-                            res.push_str(",null");
+                            res.push_str("null,");
                         }
                         Some(node) => {
-                            let mut node = node.borrow_mut();
-                            res.push(',');
+                            let node = node.borrow();
                             res.push_str(&node.val.to_string());
-                            queue.push_back(node.left.take());
-                            queue.push_back(node.right.take());
+                            res.push(',');
+                            queue.push_back(node.left.clone());
+                            queue.push_back(node.right.clone());
                         }
                     }
                     if queue.iter().all(|node| node.is_none()) {
                         break;
                     }
                 }
+                res.truncate(res.len() - 1);
             }
         }
         res.push(']');
