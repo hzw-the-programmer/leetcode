@@ -69,31 +69,19 @@ impl Codec {
         };
 
         let mut queue = VecDeque::from(vec![root.clone()]);
-        let mut none_count = 0;
-        for value in iter {
-            if queue.front().is_none() {
-                break;
-            }
-
-            let front = queue.front().unwrap();
-            match value? {
-                None => {
-                    none_count += 1;
-                    if none_count == 2 || front.borrow().left.is_some() {
-                        queue.pop_front();
-                        none_count = 0;
-                    }
-                }
-                Some(val) => {
+        while let Some(front) = queue.pop_front() {
+            if let Some(value) = iter.next() {
+                if let Some(val) = value? {
                     let node = Rc::new(RefCell::new(TreeNode::new(val)));
-                    if none_count == 1 || front.borrow().left.is_some() {
-                        front.borrow_mut().right = Some(node.clone());
-                        queue.pop_front();
-                        none_count = 0;
-                    } else {
-                        front.borrow_mut().left = Some(node.clone());
-                    }
+                    front.borrow_mut().left = Some(node.clone());
                     queue.push_back(node);
+                }
+                if let Some(value) = iter.next() {
+                    if let Some(val) = value? {
+                        let node = Rc::new(RefCell::new(TreeNode::new(val)));
+                        front.borrow_mut().right = Some(node.clone());
+                        queue.push_back(node);
+                    }
                 }
             }
         }
