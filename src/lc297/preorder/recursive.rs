@@ -1,5 +1,6 @@
 use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
+use core::num::ParseIntError;
 use std::rc::Rc;
 
 pub struct Codec {
@@ -47,11 +48,11 @@ impl Codec {
             .trim_end_matches(&self.end)
             .split(&self.delimiter)
             .map(|s| match s {
-                "#" => None,
-                _ => s.parse().ok(),
+                "#" | "" => Ok(None),
+                _ => s.parse().map(|val| Some(val)),
             });
 
-        Self::deserialize_recursive(&mut iter)
+        Self::deserialize_recursive(&mut iter).unwrap()
     }
 
     fn serialize_recursive(&self, root: Option<&RefCell<TreeNode>>, res: &mut String) {
@@ -70,15 +71,16 @@ impl Codec {
     }
 
     fn deserialize_recursive(
-        iter: &mut impl Iterator<Item = Option<i32>>,
-    ) -> Option<Rc<RefCell<TreeNode>>> {
+        iter: &mut impl Iterator<Item = Result<Option<i32>, ParseIntError>>,
+    ) -> Result<Option<Rc<RefCell<TreeNode>>>, ParseIntError> {
         match iter.next() {
-            None | Some(None) => None,
-            Some(Some(val)) => Some(Rc::new(RefCell::new(TreeNode {
+            None | Some(Ok(None)) => Ok(None),
+            Some(Ok(Some(val))) => Ok(Some(Rc::new(RefCell::new(TreeNode {
                 val: val,
-                left: Self::deserialize_recursive(iter),
-                right: Self::deserialize_recursive(iter),
-            }))),
+                left: Self::deserialize_recursive(iter)?,
+                right: Self::deserialize_recursive(iter)?,
+            })))),
+            Some(Err(err)) => Err(err),
         }
     }
 }

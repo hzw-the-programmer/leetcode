@@ -72,3 +72,10 @@ fn t1() {
     let text = codec.serialize(tree.clone());
     assert_eq!(codec.deserialize(text), tree);
 }
+
+#[test]
+#[should_panic]
+fn e1() {
+    let codec = Codec::new();
+    codec.deserialize("1,#,2,abc,#,#,#".to_string());
+}
