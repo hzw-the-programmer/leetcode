@@ -79,3 +79,34 @@ fn e1() {
     let codec = Codec::new();
     codec.deserialize("1,#,2,abc,#,#,#".to_string());
 }
+
+#[test]
+fn d1() {
+    let codec = Codec::new();
+    assert_eq!(codec.deserialize("1,,".to_string()), btree![1]);
+    assert_eq!(codec.deserialize("1,2,,,".to_string()), btree![1, 2]);
+    assert_eq!(codec.deserialize("1,2,,,3,,".to_string()), btree![1, 2, 3]);
+
+    assert_eq!(codec.deserialize("1,,2,,".to_string()), btree![1, null, 2]);
+    assert_eq!(
+        codec.deserialize("1,,2,3,,,".to_string()),
+        btree![1, null, 2, 3]
+    );
+    assert_eq!(
+        codec.deserialize("1,2,,,3,4,,,5,,".to_string()),
+        btree![1, 2, 3, null, null, 4, 5]
+    );
+    assert_eq!(
+        codec.deserialize("9,3,4,,,1,,,2,,6,,".to_string()),
+        btree![9, 3, 2, 4, 1, null, 6]
+    );
+    assert_eq!(
+        codec.deserialize(
+            "4,-7,,,-3,-9,9,6,0,,-1,,,6,-4,,,,,-7,-6,5,,,,-6,9,-2,,,,,-3,-4,,,".to_string()
+        ),
+        btree![
+            4, -7, -3, null, null, -9, -3, 9, -7, -4, null, 6, null, -6, -6, null, null, 0, 6, 5,
+            null, 9, null, null, -1, -4, null, null, null, -2
+        ]
+    );
+}
