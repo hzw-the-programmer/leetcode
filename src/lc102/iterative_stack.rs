@@ -1,6 +1,8 @@
-use crate::utils::binary_tree::*;
+use crate::utils::binary_tree::TreeNode;
+use core::cell::RefCell;
+use std::rc::Rc;
 
-pub fn level_order(root: Tree) -> Vec<Vec<i32>> {
+pub fn level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
     let mut res: Vec<Vec<i32>> = vec![];
 
     let mut stack = vec![(0, root)];
