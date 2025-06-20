@@ -83,24 +83,26 @@ impl Codec {
         };
 
         let mut stack = vec![root.clone()];
-        let mut none_count = 0;
-        for value in iter {
-            let top = stack.last().unwrap();
-            if let Some(val) = value? {
-                let node = Rc::new(RefCell::new(TreeNode::new(val)));
-                if none_count == 1 || top.borrow().left.is_some() {
-                    top.borrow_mut().right = Some(node.clone());
-                    stack.pop();
-                    none_count = 0;
-                } else {
-                    top.borrow_mut().left = Some(node.clone());
-                }
-                stack.push(node);
-            } else {
-                none_count += 1;
-                if none_count == 2 || top.borrow().left.is_some() {
-                    stack.pop();
-                    none_count = 0;
+        while let Some(top) = stack.pop() {
+            if let Some(value) = iter.next() {
+                if let Some(val) = value? {
+                    let node = Rc::new(RefCell::new(TreeNode::new(val)));
+                    if top.borrow().left.is_none() {
+                        top.borrow_mut().left = Some(node.clone());
+                        stack.push(top);
+                        stack.push(node);
+                    } else {
+                        top.borrow_mut().right = Some(node.clone());
+                        stack.push(node);
+                    }
+                } else if top.borrow().left.is_none() {
+                    if let Some(value) = iter.next() {
+                        if let Some(val) = value? {
+                            let node = Rc::new(RefCell::new(TreeNode::new(val)));
+                            top.borrow_mut().right = Some(node.clone());
+                            stack.push(node);
+                        }
+                    }
                 }
             }
         }
