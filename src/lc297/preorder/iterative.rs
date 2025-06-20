@@ -1,5 +1,6 @@
 use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
+use core::num::ParseIntError;
 use std::rc::Rc;
 
 pub struct Codec {
@@ -65,24 +66,27 @@ impl Codec {
             .trim_end_matches(&self.end)
             .split(&self.delimiter)
             .map(|s| match s {
-                "#" => None,
-                _ => s.parse().ok(),
+                "#" | "" => Ok(None),
+                _ => s.parse().map(|val| Some(val)),
             });
 
-        Self::from_iter(iter)
+        Self::from_iter(iter).unwrap()
     }
 
-    fn from_iter(mut iter: impl Iterator<Item = Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
+    fn from_iter(
+        mut iter: impl Iterator<Item = Result<Option<i32>, ParseIntError>>,
+    ) -> Result<Option<Rc<RefCell<TreeNode>>>, ParseIntError> {
         let root = match iter.next() {
-            None | Some(None) => return None,
-            Some(Some(val)) => Rc::new(RefCell::new(TreeNode::new(val))),
+            None | Some(Ok(None)) => return Ok(None),
+            Some(Ok(Some(val))) => Rc::new(RefCell::new(TreeNode::new(val))),
+            Some(Err(err)) => return Err(err),
         };
 
         let mut stack = vec![root.clone()];
         let mut none_count = 0;
         for value in iter {
             let top = stack.last().unwrap();
-            if let Some(val) = value {
+            if let Some(val) = value? {
                 let node = Rc::new(RefCell::new(TreeNode::new(val)));
                 if none_count == 1 || top.borrow().left.is_some() {
                     top.borrow_mut().right = Some(node.clone());
@@ -101,6 +105,6 @@ impl Codec {
             }
         }
 
-        Some(root)
+        Ok(Some(root))
     }
 }
