@@ -42,3 +42,24 @@ fn t1() {
     let tree = codec.deserialize(text.to_string());
     assert_eq!(codec.serialize(tree), text);
 }
+
+#[test]
+#[should_panic]
+fn e1() {
+    let codec = Codec::new();
+    codec.deserialize("[1,2,3,null,null,abc,5]".to_string());
+}
+
+#[test]
+fn d1() {
+    let codec = Codec::new();
+    assert_eq!(codec.deserialize("[1,,2]".to_string()), btree![1, null, 2]);
+    assert_eq!(
+        codec.deserialize("[1,,2,3]".to_string()),
+        btree![1, null, 2, 3]
+    );
+    assert_eq!(
+        codec.deserialize("[1,2,3,,,4,5]".to_string()),
+        btree![1, 2, 3, null, null, 4, 5]
+    );
+}

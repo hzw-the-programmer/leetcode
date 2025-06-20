@@ -1,5 +1,6 @@
 use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
+use core::num::ParseIntError;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -51,17 +52,20 @@ impl Codec {
     // space: O(n)
     pub fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
         let iter = data.trim_matches(&['[', ']']).split(',').map(|s| match s {
-            "null" => None,
-            _ => s.parse().ok(),
+            "null" | "" => Ok(None),
+            _ => s.parse().map(|val| Some(val)),
         });
 
-        Self::from_iter(iter)
+        Self::from_iter(iter).unwrap()
     }
 
-    fn from_iter(mut iter: impl Iterator<Item = Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
+    fn from_iter(
+        mut iter: impl Iterator<Item = Result<Option<i32>, ParseIntError>>,
+    ) -> Result<Option<Rc<RefCell<TreeNode>>>, ParseIntError> {
         let root = match iter.next() {
-            None | Some(None) => return None,
-            Some(Some(val)) => Rc::new(RefCell::new(TreeNode::new(val))),
+            None | Some(Ok(None)) => return Ok(None),
+            Some(Ok(Some(val))) => Rc::new(RefCell::new(TreeNode::new(val))),
+            Some(Err(err)) => return Err(err),
         };
 
         let mut queue = VecDeque::from(vec![root.clone()]);
@@ -72,7 +76,7 @@ impl Codec {
             }
 
             let front = queue.front().unwrap();
-            match value {
+            match value? {
                 None => {
                     none_count += 1;
                     if none_count == 2 || front.borrow().left.is_some() {
@@ -94,6 +98,6 @@ impl Codec {
             }
         }
 
-        Some(root)
+        Ok(Some(root))
     }
 }
