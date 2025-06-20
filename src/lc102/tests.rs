@@ -14,6 +14,10 @@ fn t1() {
             btree![1, 2, 3, 4, null, null, 5],
             vec_2d![[1], [2, 3], [4, 5]],
         ),
+        (
+            btree![1, 2, 3, 4, 5, 6, 7],
+            vec_2d![[1], [2, 3], [4, 5, 6, 7]],
+        ),
     ];
 
     for (i, test) in tests.iter().cloned().enumerate() {
