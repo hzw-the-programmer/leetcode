@@ -8,6 +8,8 @@ fn t1() {
         (btree![1], vec!["1"]),
     ];
     for (i, test) in tests.iter().enumerate() {
-        assert_eq!(binary_tree_paths(test.0.clone()), test.1, "{}", i);
+        let mut res = binary_tree_paths(test.0.clone());
+        res.sort();
+        assert_eq!(res, test.1, "{}", i);
     }
 }
