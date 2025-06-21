@@ -5,9 +5,8 @@ pub fn is_valid_serialization(preorder: String) -> bool {
         if slots < 0 {
             return false;
         }
-        match s {
-            "#" => {}
-            _ => slots += 2,
+        if s != "#" {
+            slots += 2;
         }
     }
     slots == 0
