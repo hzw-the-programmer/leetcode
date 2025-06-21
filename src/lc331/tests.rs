@@ -6,6 +6,7 @@ fn t1() {
         ("9,3,4,#,#,1,#,#,2,#,6,#,#", true),
         ("1,#", false),
         ("9,#,#,1", false),
+        ("#,7,6,9,#,#,#", false),
     ];
 
     for (i, test) in tests.iter().enumerate() {
