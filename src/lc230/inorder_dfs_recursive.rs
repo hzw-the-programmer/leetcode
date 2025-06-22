@@ -15,14 +15,14 @@ fn recursive(root: Option<&RefCell<TreeNode>>, k: &mut i32, res: &mut i32) {
         Some(node) => {
             let node = node.borrow();
             recursive(node.left.as_deref(), k, res);
-            *k -= 1;
-            if *k == 0 {
-                *res = node.val;
-                return;
-            } else if *k < 0 {
-                return;
+            if *k > 0 {
+                *k -= 1;
+                if *k == 0 {
+                    *res = node.val;
+                } else {
+                    recursive(node.right.as_deref(), k, res);
+                }
             }
-            recursive(node.right.as_deref(), k, res);
         }
     }
 }
