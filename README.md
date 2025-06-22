@@ -63,9 +63,10 @@
 145. Binary Tree Postorder Traversal
 173. Binary Search Tree Iterator
 226. Invert Binary Tree
+230. Kth Smallest Element in a BST
 257. Binary Tree Paths
-331. Verify Preorder Serialization of a Binary Tree
 297. Serialize and Deserialize Binary Tree
+331. Verify Preorder Serialization of a Binary Tree
 617. Merge Two Binary Trees
 1022. Sum of Root To Leaf Binary Numbers
 1382. Balance a Binary Search Tree
