@@ -15,14 +15,10 @@ pub fn binary_tree_paths(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<String> {
                 while let Some(node) = current.take() {
                     let node = node.borrow();
                     temp.push_str(&node.val.to_string());
-                    temp.push_str("->");
                     match (node.left.clone(), node.right.clone()) {
-                        (None, None) => {
-                            let mut t = temp.clone();
-                            t.truncate(t.len() - 2);
-                            res.push(t);
-                        }
+                        (None, None) => res.push(temp.clone()),
                         (left, right) => {
+                            temp.push_str("->");
                             current = left;
                             if let Some(node) = right {
                                 stack.push((node, temp.len()));
