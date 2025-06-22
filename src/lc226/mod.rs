@@ -1,7 +1,7 @@
 // 226. Invert Binary Tree
 
-mod recursive;
-pub use recursive::invert_tree;
+mod dfs_recursive;
+pub use dfs_recursive::invert_tree;
 
 #[cfg(test)]
 mod tests;
