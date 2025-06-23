@@ -64,6 +64,7 @@
 173. Binary Search Tree Iterator
 226. Invert Binary Tree
 230. Kth Smallest Element in a BST
+235. Lowest Common Ancestor of a Binary Search Tree
 257. Binary Tree Paths
 297. Serialize and Deserialize Binary Tree
 331. Verify Preorder Serialization of a Binary Tree
