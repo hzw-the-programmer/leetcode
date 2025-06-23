@@ -8,7 +8,7 @@ use std::rc::Rc;
 enum TraversalStep {
     First(Rc<RefCell<TreeNode>>),
     Second(Rc<RefCell<TreeNode>>),
-    Third(Rc<RefCell<TreeNode>>),
+    Third,
 }
 
 use TraversalStep::*;
@@ -31,11 +31,11 @@ pub fn sum_root_to_leaf(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
                 if node.borrow().right.is_none() {
                     n >>= 1;
                 } else {
-                    stack.push(Third(node.clone()));
+                    stack.push(Third);
                     stack.extend(node.borrow().right.clone().map(First));
                 }
             }
-            Third(node) => {
+            Third => {
                 n >>= 1;
             }
         }
