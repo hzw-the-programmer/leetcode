@@ -27,6 +27,7 @@ pub mod lc297;
 pub mod lc331;
 pub mod lc538;
 pub mod lc617;
+pub mod lc993;
 pub mod lcr152;
 pub mod s100;
 pub mod s1052;
