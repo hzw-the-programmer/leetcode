@@ -1,7 +1,7 @@
 // 538. Convert BST to Greater Tree
 
-mod recursive;
-pub use recursive::convert_bst;
+mod inorder_rev_dfs_recursive;
+pub use inorder_rev_dfs_recursive::convert_bst;
 
 #[cfg(test)]
 mod tests;
