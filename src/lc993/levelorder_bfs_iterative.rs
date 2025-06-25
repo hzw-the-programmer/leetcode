@@ -38,6 +38,9 @@ pub fn is_cousins(root: Option<Rc<RefCell<TreeNode>>>, x: i32, y: i32) -> bool {
                         return true;
                     }
                 }
+                if find_x != find_y {
+                    return false;
+                }
             }
         }
     }
