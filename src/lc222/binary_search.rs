@@ -49,6 +49,12 @@ pub fn count_nodes(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         None => 0,
         Some(root) => {
             let mut level = 0;
+            // let mut current = root.clone();
+            // while current.borrow().left.is_some() {
+            //     level += 1;
+            //     let left = current.borrow().left.clone().unwrap();
+            //     current = left;
+            // }
             let mut left = root.borrow().left.clone();
             while let Some(node) = left {
                 level += 1;
