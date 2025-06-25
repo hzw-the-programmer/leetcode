@@ -39,8 +39,6 @@ pub fn count_nodes(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         }
     }
 
-    println!("{max_depth} {leaf_count}");
-
     match max_depth {
         -1 => 0,
         0 => 1,
