@@ -62,6 +62,7 @@
 144. Binary Tree Preorder Traversal
 145. Binary Tree Postorder Traversal
 173. Binary Search Tree Iterator
+222. Count Complete Tree Nodes
 226. Invert Binary Tree
 230. Kth Smallest Element in a BST
 235. Lowest Common Ancestor of a Binary Search Tree
