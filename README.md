@@ -71,6 +71,7 @@
 257. Binary Tree Paths
 297. Serialize and Deserialize Binary Tree
 331. Verify Preorder Serialization of a Binary Tree
+404. Sum of Left Leaves
 538. Convert BST to Greater Tree
 617. Merge Two Binary Trees
 993. Cousins in Binary Tree
