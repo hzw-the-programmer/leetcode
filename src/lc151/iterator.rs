@@ -7,8 +7,6 @@ pub fn reverse_words(s: String) -> String {
             acc.push(' ');
             acc
         });
-    if s.len() > 0 {
-        s.truncate(s.len() - 1);
-    }
+    s.pop();
     s
 }
