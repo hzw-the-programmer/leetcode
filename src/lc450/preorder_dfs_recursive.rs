@@ -30,11 +30,12 @@ pub fn delete_node(root: Option<Rc<RefCell<TreeNode>>>, key: i32) -> Option<Rc<R
 
 fn find_min(root: Rc<RefCell<TreeNode>>) -> Rc<RefCell<TreeNode>> {
     let mut current = root;
-    while let Some(node) = {
-        let t = current.borrow().left.clone();
-        t
-    } {
-        current = node
+    loop {
+        let node = current.borrow().left.clone();
+        match node {
+            None => break,
+            Some(node) => current = node,
+        }
     }
     current
 }
