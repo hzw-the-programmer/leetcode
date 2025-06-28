@@ -11,6 +11,22 @@ pub fn single_number(nums: Vec<i32>) -> i32 {
     res
 }
 
+// pub fn single_number(nums: Vec<i32>) -> i32 {
+//     nums.iter()
+//         .fold(vec![0; 32], |mut acc, &n| {
+//             for (i, e) in acc.iter_mut().enumerate() {
+//                 *e += (n as u32 & (1 << i)) >> i;
+//             }
+//             acc
+//         })
+//         .iter()
+//         .enumerate()
+//         .fold(0, |mut acc, (i, n)| {
+//             acc |= ((n % 3) << i) as i32;
+//             acc
+//         })
+// }
+
 #[cfg(test)]
 mod tests {
     use super::single_number;
