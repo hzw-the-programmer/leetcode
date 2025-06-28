@@ -2,7 +2,7 @@
 
 pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
     let mask = nums.iter().fold(0, |acc, n| acc ^ n);
-    let mask = 1 << mask.trailing_zeros();
+    let mask = mask & -mask;
     nums.iter().fold(vec![0, 0], |mut acc, n| {
         if n & mask == 0 {
             acc[0] ^= n;
