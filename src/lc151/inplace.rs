@@ -1,13 +1,35 @@
 pub fn reverse_words(mut s: String) -> String {
     let begin = s.as_mut_ptr();
-    let mut end = unsafe { begin.add(s.len()) };
+
+    s.truncate(trim_right(begin, s.len()));
+
+    let (mut b, mut len) = (begin, s.len());
+    while len > 0 {
+        (b, len) = reverse_word(b, len);
+    }
+
+    reverse(begin, s.len());
 
     s
 }
 
-fn reverse(mut begin: *mut u8, mut end: *mut u8) {
+fn reverse_word(begin: *mut u8, mut len: usize) -> (*mut u8, len) {
+    let mut end = begin;
+    while len > 0 {
+        if *end == b' ' {
+            break;
+        }
+        end = end.add(1);
+        len -= 1;
+    }
+    let word_len = end.offset_from(begin) as usize;
+    reverse(begin, word_len);
+    (e, len)
+}
+
+fn reverse(mut begin: *mut u8, len: usize) {
     unsafe {
-        end = end.sub(1);
+        let mut end = begin.add(len).sub(1);
         while begin < end {
             let b = *begin;
             *begin = *end;
@@ -18,38 +40,38 @@ fn reverse(mut begin: *mut u8, mut end: *mut u8) {
     }
 }
 
-fn trim_left(begin: *mut u8, end: *mut u8) -> usize {
+fn trim_left(begin: *mut u8, mut len: usize) -> usize {
     unsafe {
         let mut b = begin;
-        while b < end {
+        while len > 0 {
             if *b != b' ' {
                 break;
             }
             b = b.add(1);
+            len -= 1;
         }
-        let len = end.offset_from(b) as usize;
         begin.copy_from(b, len);
         len
     }
 }
 
-fn trim_right(begin: *mut u8, end: *mut u8) -> usize {
+fn trim_right(begin: *mut u8, mut len: usize) -> usize {
     unsafe {
-        let mut e = end;
-        while begin < e {
-            e = e.sub(1);
-            if *e != b' ' {
-                e = e.add(1);
+        let mut end = begin.add(len);
+        while len > 0 {
+            end = end.sub(1);
+            if *end != b' ' {
                 break;
             }
+            len -= 1;
         }
-        e.offset_from(begin) as usize
+        len
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{reverse, trim_left, trim_right};
+    use super::{reverse, trim_extra, trim_left, trim_right};
 
     #[test]
     fn test_reverse() {
@@ -58,8 +80,7 @@ mod tests {
         for (i, test) in tests.iter().enumerate() {
             let mut s = test.0.to_string();
             let begin = s.as_mut_ptr();
-            let end = unsafe { begin.add(s.len()) };
-            reverse(begin, end);
+            reverse(begin, s.len());
             assert_eq!(s, test.1, "{}", i);
         }
     }
@@ -77,8 +98,7 @@ mod tests {
         for (i, test) in tests.iter().enumerate() {
             let mut s = test.0.to_string();
             let begin = s.as_mut_ptr();
-            let end = unsafe { begin.add(s.len()) };
-            s.truncate(trim_left(begin, end));
+            s.truncate(trim_left(begin, s.len()));
             assert_eq!(s, test.1, "{}", i);
         }
     }
@@ -96,8 +116,7 @@ mod tests {
         for (i, test) in tests.iter().enumerate() {
             let mut s = test.0.to_string();
             let begin = s.as_mut_ptr();
-            let end = unsafe { begin.add(s.len()) };
-            s.truncate(trim_right(begin, end));
+            s.truncate(trim_right(begin, s.len()));
             assert_eq!(s, test.1, "{}", i);
         }
     }
