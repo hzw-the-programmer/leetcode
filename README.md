@@ -94,3 +94,6 @@
 
 # Two Pointers, String
 151. Reverse Words in a String
+
+# Bit Manipulation, Array
+136. Single Number
