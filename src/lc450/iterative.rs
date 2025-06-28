@@ -2,6 +2,8 @@ use crate::utils::binary_tree::TreeNode;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+// time : O(n)
+// space: O(1)
 pub fn delete_node(root: Option<Rc<RefCell<TreeNode>>>, key: i32) -> Option<Rc<RefCell<TreeNode>>> {
     let (mut current, mut parent) = (root.clone(), None);
 
