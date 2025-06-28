@@ -1,9 +1,7 @@
 // 136. Single Number
 
 pub fn single_number(nums: Vec<i32>) -> i32 {
-    let mut res = 0;
-    nums.iter().for_each(|&n| res ^= n);
-    res
+    nums.iter().fold(0, |acc, n| acc ^ n)
 }
 
 #[cfg(test)]
