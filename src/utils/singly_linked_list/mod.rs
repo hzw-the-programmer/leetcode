@@ -1,6 +1,6 @@
 use std::ptr;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct ListNode {
     pub val: i32,
     pub next: Option<Box<ListNode>>,
