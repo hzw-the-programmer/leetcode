@@ -1,16 +1,23 @@
 use std::ptr;
 
+#[derive(Clone)]
 pub struct ListNode {
-    pub(crate) val: i32,
-    pub(crate) next: Option<Box<ListNode>>,
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
 }
 
-pub fn new_from(arr: &[i32]) -> Option<Box<ListNode>> {
+impl ListNode {
+    pub fn new(val: i32) -> Self {
+        ListNode { val, next: None }
+    }
+}
+
+pub fn from_slice(vals: &[i32]) -> Option<Box<ListNode>> {
     let mut head = None;
     let mut tail: *mut ListNode = ptr::null_mut();
-    for &val in arr {
-        let mut node = Box::new(ListNode { val, next: None });
-        let raw = &mut *node as *mut ListNode;
+    for &val in vals {
+        let mut node = Box::new(ListNode::new(val));
+        let raw = &mut *node as _;
         if tail.is_null() {
             head = Some(node);
         } else {
@@ -20,3 +27,11 @@ pub fn new_from(arr: &[i32]) -> Option<Box<ListNode>> {
     }
     head
 }
+
+#[macro_export]
+macro_rules! list {
+    [$($input:tt)*] => {
+        $crate::utils::singly_linked_list::from_slice(&[$($input)*][..])
+    }
+}
+pub use list;
