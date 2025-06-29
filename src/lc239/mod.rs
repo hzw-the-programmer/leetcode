@@ -4,8 +4,8 @@ use std::collections::VecDeque;
 
 pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
     let k = k as usize;
-    let mut res = vec![];
-    let mut queue = VecDeque::new();
+    let mut res = Vec::with_capacity(nums.len() - k + 1);
+    let mut queue = VecDeque::with_capacity(k);
     for i in 0..nums.len() {
         if let Some(front) = queue.front() {
             if front + k <= i {
