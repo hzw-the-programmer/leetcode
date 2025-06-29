@@ -1,5 +1,3 @@
-use std::ptr;
-
 #[derive(Clone, PartialEq, Debug)]
 pub struct ListNode {
     pub val: i32,
@@ -13,18 +11,20 @@ impl ListNode {
 }
 
 pub fn from_slice(vals: &[i32]) -> Option<Box<ListNode>> {
-    let mut head = None;
-    let mut tail: *mut ListNode = ptr::null_mut();
+    let (mut head, mut tail) = (None, None);
+
     for &val in vals {
-        let mut node = Box::new(ListNode::new(val));
-        let raw = &mut *node as _;
-        if tail.is_null() {
+        let node = Box::new(ListNode::new(val));
+        if tail.is_none() {
             head = Some(node);
+            tail = head.as_mut();
         } else {
-            unsafe { (*tail).next = Some(node) };
+            let t = tail.unwrap();
+            t.next = Some(node);
+            tail = t.next.as_mut();
         }
-        tail = raw;
     }
+
     head
 }
 
