@@ -1,0 +1,51 @@
+// 239. Sliding Window Maximum
+
+use std::collections::VecDeque;
+
+pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
+    let k = k as usize;
+    let mut res = vec![];
+    let mut queue = VecDeque::new();
+    for i in 0..nums.len() + 1 {
+        if let Some(front) = queue.front() {
+            if i >= k {
+                res.push(nums[*front]);
+            }
+            if front + k <= i {
+                queue.pop_front();
+            }
+        }
+
+        if i == nums.len() {
+            break;
+        }
+
+        while let Some(back) = queue.back() {
+            if nums[*back] < nums[i] {
+                queue.pop_back();
+            } else {
+                break;
+            }
+        }
+        queue.push_back(i);
+    }
+    res
+}
+
+#[cfg(test)]
+mod tests {
+    use super::max_sliding_window;
+
+    #[test]
+    fn t1() {
+        let tests = [
+            (vec![1, 3, -1, -3, 5, 3, 6, 7], 3, vec![3, 3, 5, 5, 6, 7]),
+            (vec![1], 1, vec![1]),
+            (vec![10, 9, 8, 7, 6], 3, vec![10, 9, 8]),
+        ];
+
+        for (i, test) in tests.iter().enumerate() {
+            assert_eq!(max_sliding_window(test.0.clone(), test.1), test.2, "{}", i);
+        }
+    }
+}
