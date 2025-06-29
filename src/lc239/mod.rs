@@ -6,18 +6,11 @@ pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
     let k = k as usize;
     let mut res = vec![];
     let mut queue = VecDeque::new();
-    for i in 0..nums.len() + 1 {
+    for i in 0..nums.len() {
         if let Some(front) = queue.front() {
-            if i >= k {
-                res.push(nums[*front]);
-            }
             if front + k <= i {
                 queue.pop_front();
             }
-        }
-
-        if i == nums.len() {
-            break;
         }
 
         while let Some(back) = queue.back() {
@@ -28,6 +21,12 @@ pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
             }
         }
         queue.push_back(i);
+
+        if i + 1 >= k {
+            if let Some(&front) = queue.front() {
+                res.push(nums[front]);
+            }
+        }
     }
     res
 }
