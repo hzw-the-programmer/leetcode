@@ -13,8 +13,8 @@ pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
             }
         }
 
-        while let Some(back) = queue.back() {
-            if nums[*back] < nums[i] {
+        while let Some(&back) = queue.back() {
+            if nums[back] < nums[i] {
                 queue.pop_back();
             } else {
                 break;
