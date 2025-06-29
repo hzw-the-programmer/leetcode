@@ -1,7 +1,10 @@
 // LCR 136. 删除链表的节点
 
-mod recursive;
-pub use recursive::delete_node;
+// mod recursive;
+// pub use recursive::delete_node;
+
+mod iterative;
+pub use iterative::delete_node;
 
 #[cfg(test)]
 mod tests {
