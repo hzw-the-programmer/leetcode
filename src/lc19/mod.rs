@@ -3,36 +3,70 @@
 use crate::utils::singly_linked_list::ListNode;
 
 pub fn remove_nth_from_end(mut head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
-    if n < 1 || head.is_none() {
+    if n < 1 {
         return None;
     }
 
-    let mut fast: *mut ListNode = &mut **head.as_mut().unwrap();
-    let mut slow: *mut ListNode = fast;
+    let mut fast: *mut Option<Box<ListNode>> = &mut head;
+    let mut slow: _ = fast;
 
     unsafe {
-        for i in 0..n {
-            if (*fast).next.is_some() {
-                fast = &mut **(*fast).next.as_mut().unwrap();
+        for _ in 0..n {
+            if (*fast).is_some() {
+                fast = &mut (*fast).as_mut().unwrap().next;
             } else {
-                if i == n - 1 {
-                    return head.unwrap().next.take();
-                } else {
-                    return None;
-                }
+                return None;
             }
         }
 
-        while (*fast).next.is_some() {
-            fast = &mut **(*fast).next.as_mut().unwrap();
-            slow = &mut **(*slow).next.as_mut().unwrap();
+        if (*fast).is_none() {
+            return head.unwrap().next.take();
         }
 
-        (*slow).next = (*slow).next.take().unwrap().next.take();
+        let mut fast = (*fast).as_mut().unwrap();
+        while (*fast).next.is_some() {
+            fast = (*fast).next.as_mut().unwrap();
+            slow = &mut (*slow).as_mut().unwrap().next;
+        }
+
+        let slow = (*slow).as_mut().unwrap();
+        slow.next = slow.next.take().unwrap().next.take();
     }
 
     head
 }
+
+// pub fn remove_nth_from_end(mut head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+//     if n < 1 || head.is_none() {
+//         return None;
+//     }
+
+//     let mut fast: *mut ListNode = &mut **head.as_mut().unwrap();
+//     let mut slow: *mut ListNode = fast;
+
+//     unsafe {
+//         for i in 0..n {
+//             if (*fast).next.is_some() {
+//                 fast = &mut **(*fast).next.as_mut().unwrap();
+//             } else {
+//                 if i == n - 1 {
+//                     return head.unwrap().next.take();
+//                 } else {
+//                     return None;
+//                 }
+//             }
+//         }
+
+//         while (*fast).next.is_some() {
+//             fast = &mut **(*fast).next.as_mut().unwrap();
+//             slow = &mut **(*slow).next.as_mut().unwrap();
+//         }
+
+//         (*slow).next = (*slow).next.take().unwrap().next.take();
+//     }
+
+//     head
+// }
 
 // pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
 //     let mut dummy = ListNode { val: 0, next: head };
