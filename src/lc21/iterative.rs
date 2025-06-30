@@ -18,12 +18,11 @@ pub fn merge_two_lists(
                 if node1.val < node2.val {
                     (list1, list2) = (node1.next.take(), Some(node2));
                     *current = Some(node1);
-                    current = &mut (*current).as_mut().unwrap().next;
                 } else {
                     (list1, list2) = (Some(node1), node2.next.take());
                     *current = Some(node2);
-                    current = &mut (*current).as_mut().unwrap().next;
                 }
+                current = &mut (*current).as_mut().unwrap().next;
             }
         }
     }
