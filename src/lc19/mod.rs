@@ -7,10 +7,9 @@ pub fn remove_nth_from_end(mut head: Option<Box<ListNode>>, n: i32) -> Option<Bo
         return None;
     }
 
-    let mut fast: *mut Option<Box<ListNode>> = &mut head;
-    let mut slow: _ = fast;
-
     unsafe {
+        let mut fast: *mut Option<Box<ListNode>> = &mut head;
+
         for _ in 0..n {
             if (*fast).is_some() {
                 fast = &mut (*fast).as_mut().unwrap().next;
@@ -24,12 +23,12 @@ pub fn remove_nth_from_end(mut head: Option<Box<ListNode>>, n: i32) -> Option<Bo
         }
 
         let mut fast = (*fast).as_mut().unwrap();
+        let mut slow = head.as_mut().unwrap();
         while (*fast).next.is_some() {
             fast = (*fast).next.as_mut().unwrap();
-            slow = &mut (*slow).as_mut().unwrap().next;
+            slow = slow.next.as_mut().unwrap();
         }
 
-        let slow = (*slow).as_mut().unwrap();
         slow.next = slow.next.take().unwrap().next.take();
     }
 
