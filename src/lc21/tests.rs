@@ -1,4 +1,3 @@
-
 use super::merge_two_lists;
 use crate::utils::singly_linked_list::list;
 
