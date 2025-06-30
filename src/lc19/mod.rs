@@ -2,39 +2,30 @@
 
 use crate::utils::singly_linked_list::ListNode;
 
-pub fn remove_nth_from_end(head: Option<Box<ListNode>>, mut n: i32) -> Option<Box<ListNode>> {
-    if n < 1 {
-        return None;
-    }
+pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+    let mut dummy = ListNode { val: 0, next: head };
 
-    let mut fast = head.as_ref();
-    while n > 0 {
-        if let Some(node) = fast {
-            fast = node.next.as_ref();
-            n -= 1;
-        } else {
-            return None;
-        }
-    }
+    let mut fast: *mut ListNode = &mut dummy;
+    let mut slow: *mut ListNode = fast;
 
-    if fast.is_none() {
-        return head.unwrap().next.take();
-    }
-
-    let mut fast = fast.unwrap();
-    let mut slow = head.as_ref().unwrap();
-    while fast.next.is_some() {
-        fast = fast.next.as_ref().unwrap();
-        slow = slow.next.as_ref().unwrap();
-    }
-
-    let slow = &**slow as *const ListNode as *mut ListNode;
     unsafe {
-        let mut next = (*slow).next.take().unwrap();
-        (*slow).next = next.next.take();
+        for _ in 0..n {
+            if (*fast).next.is_some() {
+                fast = &mut **(*fast).next.as_mut().unwrap();
+            } else {
+                return None;
+            }
+        }
+
+        while (*fast).next.is_some() {
+            fast = &mut **(*fast).next.as_mut().unwrap();
+            slow = &mut **(*slow).next.as_mut().unwrap();
+        }
+
+        (*slow).next = (*slow).next.take().unwrap().next.take();
     }
 
-    head
+    dummy.next
 }
 
 #[cfg(test)]
