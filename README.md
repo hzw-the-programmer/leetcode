@@ -105,6 +105,7 @@
 
 # Linked List
 237. Delete Node in a Linked List
+83. Remove Duplicates from Sorted List
 
 # Linked List, Two Pointers
 19. Remove Nth Node From End of List
