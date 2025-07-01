@@ -15,6 +15,7 @@ pub mod lc113;
 pub mod lc136;
 pub mod lc137;
 pub mod lc1382;
+pub mod lc141;
 pub mod lc145;
 pub mod lc151;
 pub mod lc173;
