@@ -8,6 +8,7 @@ fn t1() {
         (list![1, 2], false),
         (list![1], true),
         (list![1, 0, 1], true),
+        (list![1, 1, 2, 1], false),
     ];
 
     for (i, test) in tests.iter().enumerate() {
