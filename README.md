@@ -113,5 +113,6 @@
 234. Palindrome Linked List (Stack, Recursion, Linked List, Two Pointers)
 237. Delete Node in a Linked List (Linked List)
 622. Design Circular Queue (Design, Queue, Array, Linked List)
+641. Design Circular Deque (Design, Queue, Array, Linked List)
 876. Middle of the Linked List (Linked List, Two Pointers)
 1290. Convert Binary Number in a Linked List to Integer (Linked List, Math)
