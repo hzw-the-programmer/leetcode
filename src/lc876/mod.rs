@@ -2,23 +2,38 @@
 
 use crate::utils::singly_linked_list::ListNode;
 
-pub fn middle_node(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-    let mut fast: *mut ListNode = head.as_deref_mut()?;
-    let mut dummy = ListNode { val: 0, next: head };
-    let mut slow = &mut dummy;
+pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    let mut fast = head.as_ref()?;
+    let mut slow = fast;
 
-    unsafe {
-        while let Some(node) = (*fast).next.as_deref_mut() {
+    while let Some(node) = fast.next.as_ref() {
+        fast = node;
+        slow = slow.next.as_ref().unwrap();
+        if let Some(node) = fast.next.as_ref() {
             fast = node;
-            slow = (*slow).next.as_deref_mut().unwrap();
-            if let Some(node) = (*fast).next.as_deref_mut() {
-                fast = node;
-            }
         }
-
-        (*slow).next.take()
     }
+
+    Some(slow.clone())
 }
+
+// pub fn middle_node(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+//     let mut fast: *mut ListNode = head.as_deref_mut()?;
+//     let mut dummy = ListNode { val: 0, next: head };
+//     let mut slow = &mut dummy;
+
+//     unsafe {
+//         while let Some(node) = (*fast).next.as_deref_mut() {
+//             fast = node;
+//             slow = (*slow).next.as_deref_mut().unwrap();
+//             if let Some(node) = (*fast).next.as_deref_mut() {
+//                 fast = node;
+//             }
+//         }
+
+//         (*slow).next.take()
+//     }
+// }
 
 // pub fn middle_node(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
 //     let mut fast: *mut ListNode = head.as_deref_mut()?;
