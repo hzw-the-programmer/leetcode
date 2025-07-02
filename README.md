@@ -104,16 +104,10 @@
 239. Sliding Window Maximum
 
 # Linked List
-237. Delete Node in a Linked List
-83. Remove Duplicates from Sorted List
-
-# Linked List, Two Pointers
-19. Remove Nth Node From End of List
-
-# Recursion, Linked List
-21. Merge Two Sorted Lists
-203. Remove Linked List Elements
-206. Reverse Linked List
-
-# Hash Table, Linked List, Two Pointers
-141. Linked List Cycle
+19. Remove Nth Node From End of List (Linked List, Two Pointers)
+21. Merge Two Sorted Lists (Recursion, Linked List)
+83. Remove Duplicates from Sorted List (Linked List)
+141. Linked List Cycle (Hash Table, Linked List, Two Pointers)
+203. Remove Linked List Elements (Recursion, Linked List)
+206. Reverse Linked List (Recursion, Linked List)
+237. Delete Node in a Linked List (Linked List)
