@@ -113,6 +113,7 @@
 # Recursion, Linked List
 21. Merge Two Sorted Lists
 203. Remove Linked List Elements
+206. Reverse Linked List
 
 # Hash Table, Linked List, Two Pointers
 141. Linked List Cycle
