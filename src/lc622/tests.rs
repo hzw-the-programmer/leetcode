@@ -13,3 +13,13 @@ fn t1() {
     assert!(que.en_queue(4));
     assert_eq!(que.rear(), 4);
 }
+
+#[test]
+fn t2() {
+    let mut que = MyCircularQueue::new(3);
+    assert!(que.en_queue(1));
+    assert!(que.en_queue(2));
+    assert!(que.en_queue(3));
+    assert!(que.de_queue());
+    assert_eq!(que.front(), 2);
+}

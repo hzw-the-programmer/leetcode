@@ -2,8 +2,7 @@
 
 pub struct MyCircularQueue {
     elements: Vec<i32>,
-    front: usize,
-    back: usize,
+    rear: usize,
     len: usize,
 }
 
@@ -11,8 +10,7 @@ impl MyCircularQueue {
     pub fn new(k: i32) -> Self {
         Self {
             elements: vec![0; k as usize],
-            front: 0,
-            back: 0,
+            rear: 0,
             len: 0,
         }
     }
@@ -21,8 +19,8 @@ impl MyCircularQueue {
         if self.is_full() {
             false
         } else {
-            self.elements[self.back] = value;
-            self.back = (self.back + 1) % self.elements.len();
+            self.elements[self.rear] = value;
+            self.rear = (self.rear + 1) % self.elements.len();
             self.len += 1;
             true
         }
@@ -32,7 +30,6 @@ impl MyCircularQueue {
         if self.is_empty() {
             false
         } else {
-            self.front = (self.front + 1) % self.elements.len();
             self.len -= 1;
             true
         }
@@ -42,7 +39,7 @@ impl MyCircularQueue {
         if self.is_empty() {
             -1
         } else {
-            self.elements[self.front]
+            self.elements[(self.rear + self.elements.len() - self.len) % self.elements.len()]
         }
     }
 
@@ -50,12 +47,7 @@ impl MyCircularQueue {
         if self.is_empty() {
             -1
         } else {
-            let idx = if self.back == 0 {
-                self.elements.len() - 1
-            } else {
-                self.back - 1
-            };
-            self.elements[idx]
+            self.elements[(self.rear + self.elements.len() - 1) % self.elements.len()]
         }
     }
 
