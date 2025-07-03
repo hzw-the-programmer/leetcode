@@ -29,3 +29,12 @@ fn t2() {
     assert_eq!(deque.get_front(), 9);
     assert!(deque.insert_front(6));
 }
+
+#[test]
+fn t3() {
+    let mut deque = MyCircularDeque::new(4);
+    assert!(deque.insert_front(1));
+    assert!(deque.insert_front(2));
+    assert!(deque.delete_front());
+    assert!(deque.delete_last());
+}
