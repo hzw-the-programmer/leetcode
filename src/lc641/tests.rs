@@ -38,3 +38,17 @@ fn t3() {
     assert!(deque.delete_front());
     assert!(deque.delete_last());
 }
+
+#[test]
+fn t4() {
+    let mut deque = MyCircularDeque::new(3);
+    assert!(deque.insert_last(1));
+    assert!(deque.insert_last(2));
+    assert!(deque.insert_front(3));
+    assert!(!deque.insert_front(4));
+    assert_eq!(deque.get_rear(), 2);
+    assert!(deque.is_full());
+    assert!(deque.delete_last());
+    assert!(deque.insert_front(4));
+    assert_eq!(deque.get_front(), 4);
+}
