@@ -6,6 +6,7 @@
 // mod doubly_linked_list_rc;
 // pub use doubly_linked_list_rc::MyCircularDeque;
 
+// leetcode error at first test case: process exited with signal SIGSEGV
 // mod doubly_linked_list_box;
 // pub use doubly_linked_list_box::MyCircularDeque;
 
