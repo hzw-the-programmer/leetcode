@@ -36,89 +36,94 @@ impl MyCircularDeque {
 
     pub fn insert_front(&mut self, value: i32) -> bool {
         if self.is_full() {
-            false
-        } else {
-            let node = Rc::new(RefCell::new(ListNode::new(value)));
-            if self.head.is_none() {
-                self.head = Some(node);
-                self.tail = self.head.clone();
-            } else {
-                let head = self.head.take().unwrap();
+            return false;
+        }
+
+        let node = Rc::new(RefCell::new(ListNode::new(value)));
+
+        match self.head.take() {
+            None => self.tail = Some(node.clone()),
+            Some(head) => {
                 head.borrow_mut().pre = Some(Rc::downgrade(&node));
                 node.borrow_mut().next = Some(head);
-                self.head = Some(node);
             }
-            self.len += 1;
-            true
         }
+
+        self.head = Some(node);
+        self.len += 1;
+
+        true
     }
 
     pub fn insert_last(&mut self, value: i32) -> bool {
         if self.is_full() {
-            false
-        } else {
-            let node = Rc::new(RefCell::new(ListNode::new(value)));
-            if self.head.is_none() {
-                self.head = Some(node);
-                self.tail = self.head.clone();
-            } else {
-                let tail = self.tail.take().unwrap();
+            return false;
+        }
+
+        let node = Rc::new(RefCell::new(ListNode::new(value)));
+
+        match self.tail.take() {
+            None => self.head = Some(node.clone()),
+            Some(tail) => {
                 node.borrow_mut().pre = Some(Rc::downgrade(&tail));
                 tail.borrow_mut().next = Some(node.clone());
-                self.tail = Some(node);
             }
-            self.len += 1;
-            true
         }
+
+        self.tail = Some(node);
+        self.len += 1;
+
+        true
     }
 
     pub fn delete_front(&mut self) -> bool {
-        if self.is_empty() {
-            false
-        } else {
-            let head = self.head.take().unwrap();
-            if let Some(node) = head.borrow_mut().next.take() {
-                node.borrow_mut().pre = None;
-                self.head = Some(node);
-            } else {
-                self.tail = None;
-            }
-            self.len -= 1;
-            true
-        }
+        self.head
+            .take()
+            .map(|node| {
+                self.head = node.borrow_mut().next.take();
+
+                match self.head.as_mut() {
+                    None => self.tail = None,
+                    Some(head) => head.borrow_mut().pre = None,
+                }
+
+                self.len -= 1;
+                node
+            })
+            .is_some()
     }
 
     pub fn delete_last(&mut self) -> bool {
-        if self.is_empty() {
-            false
-        } else {
-            let tail = self.tail.take().unwrap();
-            if let Some(node) = tail.borrow_mut().pre.take() {
-                let node = node.upgrade().unwrap();
-                node.borrow_mut().next = None;
-                self.tail = Some(node);
-            } else {
-                self.head = None;
-            }
-            self.len -= 1;
-            true
-        }
+        self.tail
+            .take()
+            .map(|node| {
+                match node.borrow_mut().pre.take() {
+                    None => self.head = None,
+                    Some(pre) => {
+                        let pre = pre.upgrade().unwrap();
+                        pre.borrow_mut().next = None;
+                        self.tail = Some(pre);
+                    }
+                }
+
+                self.len -= 1;
+                node
+            })
+            .is_some()
     }
 
     pub fn get_front(&self) -> i32 {
-        if self.is_empty() {
-            -1
-        } else {
-            self.head.as_ref().unwrap().borrow().val
-        }
+        self.head
+            .as_ref()
+            .map(|node| node.borrow().val)
+            .unwrap_or(-1)
     }
 
     pub fn get_rear(&self) -> i32 {
-        if self.is_empty() {
-            -1
-        } else {
-            self.tail.as_ref().unwrap().borrow().val
-        }
+        self.tail
+            .as_ref()
+            .map(|node| node.borrow().val)
+            .unwrap_or(-1)
     }
 
     pub fn is_empty(&self) -> bool {
