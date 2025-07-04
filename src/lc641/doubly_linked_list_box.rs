@@ -60,13 +60,12 @@ impl MyCircularDeque {
         }
 
         let mut node = Box::new(ListNode::new(value));
+        let tail = self.tail;
+        self.tail = &mut *node;
 
-        if self.head.is_none() {
-            self.tail = &mut *node;
+        if tail.is_null() {
             self.head = Some(node);
         } else {
-            let tail = self.tail;
-            self.tail = &mut *node;
             node.pre = tail;
             unsafe { (*tail).next = Some(node) };
         }
@@ -93,21 +92,25 @@ impl MyCircularDeque {
     }
 
     pub fn delete_last(&mut self) -> bool {
-        if self.is_empty() {
-            false
-        } else {
-            if unsafe { !(*self.tail).pre.is_null() } {
-                unsafe {
-                    (*(*self.tail).pre).next = None;
-                    self.tail = (*self.tail).pre;
-                }
-            } else {
-                self.head = None;
-                self.tail = ptr::null_mut();
-            }
-            self.len -= 1;
-            true
+        let tail = self.tail;
+        if tail.is_null() {
+            return false;
         }
+
+        unsafe {
+            let pre = (*tail).pre;
+
+            if pre.is_null() {
+                self.head = None;
+            } else {
+                (*pre).next = None;
+            }
+
+            self.tail = pre;
+        }
+
+        self.len -= 1;
+        true
     }
 
     pub fn get_front(&self) -> i32 {
