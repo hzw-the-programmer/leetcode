@@ -1,9 +1,9 @@
-use core::ptr;
+use core::ptr::NonNull;
 
 struct ListNode {
     val: i32,
     next: Option<Box<ListNode>>,
-    pre: *mut ListNode,
+    pre: Option<NonNull<ListNode>>,
 }
 
 impl ListNode {
@@ -11,14 +11,14 @@ impl ListNode {
         Self {
             val,
             next: None,
-            pre: ptr::null_mut(),
+            pre: None,
         }
     }
 }
 
 pub struct MyCircularDeque {
     head: Option<Box<ListNode>>,
-    tail: *mut ListNode,
+    tail: Option<NonNull<ListNode>>,
     capacity: usize,
     len: usize,
 }
@@ -27,7 +27,7 @@ impl MyCircularDeque {
     pub fn new(k: i32) -> Self {
         Self {
             head: None,
-            tail: ptr::null_mut(),
+            tail: None,
             capacity: k as usize,
             len: 0,
         }
@@ -41,9 +41,9 @@ impl MyCircularDeque {
         let mut node = Box::new(ListNode::new(value));
 
         match self.head.take() {
-            None => self.tail = &mut *node,
+            None => self.tail = Some(NonNull::from(&mut *node)),
             Some(mut head) => {
-                head.pre = &mut *node;
+                head.pre = Some(NonNull::from(&mut *node));
                 node.next = Some(head);
             }
         }
@@ -61,13 +61,16 @@ impl MyCircularDeque {
 
         let mut node = Box::new(ListNode::new(value));
         let tail = self.tail;
-        self.tail = &mut *node;
+        self.tail = Some(NonNull::from(&mut *node));
 
-        if tail.is_null() {
-            self.head = Some(node);
-        } else {
-            node.pre = tail;
-            unsafe { (*tail).next = Some(node) };
+        unsafe {
+            match tail {
+                None => self.head = Some(node),
+                Some(mut tail) => {
+                    node.pre = Some(tail);
+                    tail.as_mut().next = Some(node);
+                }
+            }
         }
 
         self.len += 1;
@@ -81,8 +84,8 @@ impl MyCircularDeque {
                 self.head = node.next.take();
 
                 match self.head.as_mut() {
-                    None => self.tail = ptr::null_mut(),
-                    Some(head) => head.pre = ptr::null_mut(),
+                    None => self.tail = None,
+                    Some(head) => head.pre = None,
                 }
 
                 self.len -= 1;
@@ -92,25 +95,19 @@ impl MyCircularDeque {
     }
 
     pub fn delete_last(&mut self) -> bool {
-        let tail = self.tail;
-        if tail.is_null() {
-            return false;
-        }
+        self.tail
+            .map(|node| unsafe {
+                self.tail = (*node.as_ptr()).pre;
 
-        unsafe {
-            let pre = (*tail).pre;
+                let node = match self.tail {
+                    None => self.head.take().unwrap(),
+                    Some(tail) => (*tail.as_ptr()).next.take().unwrap(),
+                };
 
-            if pre.is_null() {
-                self.head = None;
-            } else {
-                (*pre).next = None;
-            }
-
-            self.tail = pre;
-        }
-
-        self.len -= 1;
-        true
+                self.len -= 1;
+                node
+            })
+            .is_some()
     }
 
     pub fn get_front(&self) -> i32 {
@@ -118,11 +115,9 @@ impl MyCircularDeque {
     }
 
     pub fn get_rear(&self) -> i32 {
-        if self.is_empty() {
-            -1
-        } else {
-            unsafe { (*self.tail).val }
-        }
+        self.tail
+            .map(|node| unsafe { (*node.as_ptr()).val })
+            .unwrap_or(-1)
     }
 
     pub fn is_empty(&self) -> bool {
