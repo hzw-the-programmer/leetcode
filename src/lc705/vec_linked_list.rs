@@ -9,7 +9,7 @@ impl MyHashSet {
 
     pub fn new() -> Self {
         Self {
-            data: vec![Default::default(); Self::BASE],
+            data: vec![LinkedList::new(); Self::BASE],
         }
     }
 
