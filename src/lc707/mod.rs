@@ -1,10 +1,10 @@
 // 707. Design Linked List
 
-// mod singly_non_null;
-// pub use singly_non_null::MyLinkedList;
+mod singly;
+pub use singly::MyLinkedList;
 
-mod doubly;
-pub use doubly::MyLinkedList;
+// mod doubly;
+// pub use doubly::MyLinkedList;
 
 #[cfg(test)]
 mod tests;

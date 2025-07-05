@@ -17,7 +17,7 @@ impl MyLinkedList {
     }
 
     pub fn get(&self, index: i32) -> i32 {
-        self.iter().nth(index as usize).map_or(-1, |node| node.val)
+        self.iter().nth(index as usize).map_or(-1, |&val| val)
     }
 
     pub fn add_at_head(&mut self, val: i32) {
@@ -41,10 +41,7 @@ impl MyLinkedList {
         unsafe {
             match self.tail {
                 None => self.head = Some(node),
-                Some(tail) => {
-                    println!("{val}, {}", (*tail.as_ptr()).val);
-                    (*tail.as_ptr()).next = Some(node)
-                }
+                Some(tail) => (*tail.as_ptr()).next = Some(node),
             }
 
             self.tail = Some(node);
@@ -55,15 +52,29 @@ impl MyLinkedList {
 
     pub fn add_at_index(&mut self, index: i32, val: i32) {
         let index = index as usize;
+
+        if index > self.len {
+            return;
+        }
+
         if index == 0 {
             self.add_at_head(val);
         } else if index == self.len {
             self.add_at_tail(val);
         } else {
-            if let Some(pre) = self.iter_mut().nth(index - 1) {
-                let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
-                unsafe { (*node.as_ptr()).next = pre.next };
-                pre.next = Some(node);
+            let mut iter = self.iter_mut();
+            for _ in 0..index - 1 {
+                iter.next();
+            }
+            let mut prev = iter.head.unwrap();
+            let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+            unsafe {
+                node.as_mut().next = prev.as_ref().next;
+                prev.as_mut().next = Some(node);
+                match node.as_ref().next {
+                    None => self.tail = Some(node),
+                    _ => {}
+                }
                 self.len += 1;
             }
         }
@@ -71,6 +82,11 @@ impl MyLinkedList {
 
     pub fn delete_at_index(&mut self, index: i32) {
         let index = index as usize;
+
+        if index >= self.len {
+            return;
+        }
+
         if index == 0 {
             self.delete_at_head();
         } else {
@@ -86,14 +102,16 @@ impl MyLinkedList {
                 cur = unsafe { (*node.as_ptr()).next };
             }
             match (pre, cur) {
-                (Some(pre), Some(cur)) => {
-                    let node = unsafe { Box::from_raw(cur.as_ptr()) };
-                    unsafe { (*pre.as_ptr()).next = node.next };
-                    if node.next.is_none() {
-                        self.tail = Some(pre);
+                (Some(mut pre), Some(cur)) => unsafe {
+                    let node = Box::from_raw(cur.as_ptr());
+                    pre.as_mut().next = node.next;
+                    match node.next {
+                        None => self.tail = Some(pre),
+                        // Some(node) => node.as_mut().pre = node.pre,
+                        _ => {}
                     }
                     self.len -= 1;
-                }
+                },
                 _ => {}
             }
         }
@@ -155,18 +173,19 @@ impl<'a> Iter<'a> {
 }
 
 impl<'a> Iterator for Iter<'a> {
-    type Item = &'a Node;
+    type Item = &'a i32;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.head.map(|node| unsafe {
-            self.head = (*node.as_ptr()).next;
-            node.as_ref()
+            let node = node.as_ref();
+            self.head = node.next;
+            &node.val
         })
     }
 }
 
 impl<'a> IntoIterator for &'a MyLinkedList {
-    type Item = &'a Node;
+    type Item = &'a i32;
     type IntoIter = Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -174,7 +193,7 @@ impl<'a> IntoIterator for &'a MyLinkedList {
     }
 }
 
-struct IterMut<'a> {
+pub struct IterMut<'a> {
     head: Option<NonNull<Node>>,
     marker: PhantomData<&'a mut Node>,
 }
@@ -189,12 +208,22 @@ impl<'a> IterMut<'a> {
 }
 
 impl<'a> Iterator for IterMut<'a> {
-    type Item = &'a mut Node;
+    type Item = &'a mut i32;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.head.map(|mut node| unsafe {
-            self.head = (*node.as_ptr()).next;
-            node.as_mut()
+            let node = node.as_mut();
+            self.head = node.next;
+            &mut node.val
         })
+    }
+}
+
+impl<'a> IntoIterator for &'a mut MyLinkedList {
+    type Item = &'a mut i32;
+    type IntoIter = IterMut<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
     }
 }
