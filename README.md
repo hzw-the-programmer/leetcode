@@ -116,5 +116,6 @@
 641. Design Circular Deque (Design, Queue, Array, Linked List)
 705. Design HashSet (Design, Array, Hash Table, Linked List, Hash Function)
 706. Design HashMap (Design, Array, Hash Table, Linked List, Hash Function)
+707. Design Linked List (Design, Linked List)
 876. Middle of the Linked List (Linked List, Two Pointers)
 1290. Convert Binary Number in a Linked List to Integer (Linked List, Math)
