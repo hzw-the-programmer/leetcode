@@ -70,3 +70,30 @@ fn t5() {
 
     list.delete_at_index(3);
 }
+
+#[test]
+fn iter() {
+    let mut list = MyLinkedList::new();
+    list.add_at_head(3);
+    list.add_at_head(2);
+    list.add_at_head(1);
+
+    let mut v = vec![];
+    for &n in &list {
+        v.push(n);
+    }
+    assert_eq!(v, [1, 2, 3]);
+}
+
+#[test]
+fn iter_mut() {
+    let mut list = MyLinkedList::new();
+    list.add_at_tail(1);
+    list.add_at_tail(2);
+    list.add_at_tail(3);
+
+    for n in &mut list {
+        *n += 1;
+    }
+    assert_eq!(list.iter().copied().collect::<Vec<i32>>(), [2, 3, 4]);
+}
