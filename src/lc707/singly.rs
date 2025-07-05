@@ -90,29 +90,20 @@ impl MyLinkedList {
         if index == 0 {
             self.delete_at_head();
         } else {
-            let mut cur = self.head;
-            let mut pre = None;
-            let mut i = 0;
-            while let Some(node) = cur {
-                if index == i {
-                    break;
-                }
-                i += 1;
-                pre = Some(node);
-                cur = unsafe { (*node.as_ptr()).next };
+            let mut iter = self.iter_mut();
+            for _ in 0..index - 1 {
+                iter.next();
             }
-            match (pre, cur) {
-                (Some(mut pre), Some(cur)) => unsafe {
-                    let node = Box::from_raw(cur.as_ptr());
-                    pre.as_mut().next = node.next;
-                    match node.next {
-                        None => self.tail = Some(pre),
-                        // Some(node) => node.as_mut().pre = node.pre,
-                        _ => {}
-                    }
-                    self.len -= 1;
-                },
-                _ => {}
+            let mut pre = iter.head.unwrap();
+            unsafe {
+                let cur = pre.as_ref().next.unwrap();
+                let node = Box::from_raw(cur.as_ptr());
+                pre.as_mut().next = node.next;
+                match node.next {
+                    None => self.tail = Some(pre),
+                    _ => {}
+                }
+                self.len -= 1;
             }
         }
     }
