@@ -43,7 +43,9 @@ fn t3() {
     list.add_at_head(1);
 
     list.delete_at_index(2);
+    assert_eq!(list.len(), 2);
     list.add_at_tail(4);
+    assert_eq!(list.len(), 3);
 
     assert_eq!(list.get(2), 4);
 }

@@ -1,4 +1,5 @@
 use core::marker::PhantomData;
+use core::mem;
 use core::ptr::NonNull;
 
 pub struct MyLinkedList {
@@ -57,65 +58,89 @@ impl MyLinkedList {
             return;
         }
 
-        if index == 0 {
-            self.add_at_head(val);
-        } else if index == self.len {
-            self.add_at_tail(val);
-        } else {
-            let mut iter = self.iter_mut();
-            for _ in 0..index - 1 {
-                iter.next();
-            }
-            let mut prev = iter.head.unwrap();
-            let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
-            unsafe {
-                node.as_mut().next = prev.as_ref().next;
-                prev.as_mut().next = Some(node);
-                match node.as_ref().next {
-                    None => self.tail = Some(node),
-                    _ => {}
-                }
-                self.len += 1;
-            }
-        }
+        let mut split = self.split_off(index);
+        split.add_at_head(val);
+        self.append(&mut split);
     }
 
     pub fn delete_at_index(&mut self, index: i32) {
         let index = index as usize;
 
-        if index >= self.len {
+        if index > self.len {
             return;
         }
 
-        if index == 0 {
-            self.delete_at_head();
-        } else {
-            let mut iter = self.iter_mut();
-            for _ in 0..index - 1 {
-                iter.next();
-            }
-            let mut pre = iter.head.unwrap();
-            unsafe {
-                let cur = pre.as_ref().next.unwrap();
-                let node = Box::from_raw(cur.as_ptr());
-                pre.as_mut().next = node.next;
-                match node.next {
-                    None => self.tail = Some(pre),
-                    _ => {}
+        let mut split = self.split_off(index);
+        split.delete_at_head();
+        self.append(&mut split);
+    }
+
+    pub fn append(&mut self, other: &mut Self) {
+        match self.tail {
+            None => mem::swap(self, other),
+            Some(mut tail) => unsafe {
+                if let Some(other_head) = other.head.take() {
+                    tail.as_mut().next = Some(other_head);
+                    self.tail = other.tail.take();
+                    self.len += mem::replace(&mut other.len, 0);
                 }
-                self.len -= 1;
-            }
+            },
         }
     }
 
-    fn delete_at_head(&mut self) {
-        self.head.map(|node| {
-            let node = unsafe { Box::from_raw(node.as_ptr()) };
+    pub fn split_off(&mut self, at: usize) -> Self {
+        assert!(at <= self.len);
+        if at == 0 {
+            return mem::replace(self, Self::new());
+        } else if at == self.len {
+            return Self::new();
+        }
+
+        let mut iter = self.iter_mut();
+        for _ in 0..at - 1 {
+            iter.next();
+        }
+        let split_node = iter.head;
+        self.split_off_after_node(split_node, at)
+    }
+
+    fn split_off_after_node(&mut self, split_node: Option<NonNull<Node>>, at: usize) -> Self {
+        if let Some(mut split_node) = split_node {
+            let second_part_head;
+            let second_part_tail;
+
+            unsafe {
+                second_part_head = split_node.as_mut().next.take();
+                match second_part_head {
+                    None => second_part_tail = None,
+                    _ => second_part_tail = self.tail,
+                }
+            }
+
+            let second_part = Self {
+                head: second_part_head,
+                tail: second_part_tail,
+                len: self.len - at,
+            };
+
+            self.tail = Some(split_node);
+            self.len = at;
+
+            second_part
+        } else {
+            mem::replace(self, Self::new())
+        }
+    }
+
+    pub fn delete_at_head(&mut self) {
+        self.head.map(|node| unsafe {
+            let node = Box::from_raw(node.as_ptr());
             self.head = node.next;
             match self.head {
                 None => self.tail = None,
                 _ => {}
             }
+            self.len -= 1;
             node
         });
     }
@@ -124,8 +149,12 @@ impl MyLinkedList {
         Iter::new(self.head)
     }
 
-    fn iter_mut(&mut self) -> IterMut {
+    pub fn iter_mut(&mut self) -> IterMut {
         IterMut::new(self.head)
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
     }
 }
 
