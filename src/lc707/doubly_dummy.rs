@@ -114,6 +114,42 @@ impl MyLinkedList {
     //     });
     // }
 
+    pub fn pop_front(&mut self) -> Option<i32> {
+        if self.len == 0 {
+            None
+        } else {
+            unsafe {
+                let old = self.head.as_ref().next.unwrap();
+                let mut new = old.as_ref().next.unwrap();
+                self.head.as_mut().next = Some(new);
+                new.as_mut().prev = old.as_ref().prev;
+
+                self.len -= 1;
+
+                let node = Box::from_raw(old.as_ptr());
+                Some(node.val)
+            }
+        }
+    }
+
+    pub fn pop_back(&mut self) -> Option<i32> {
+        if self.len == 0 {
+            None
+        } else {
+            unsafe {
+                let old = self.tail.as_ref().prev.unwrap();
+                let mut new = old.as_ref().prev.unwrap();
+                self.tail.as_mut().prev = Some(new);
+                new.as_mut().next = old.as_ref().next;
+
+                self.len -= 1;
+
+                let node = Box::from_raw(old.as_ptr());
+                Some(node.val)
+            }
+        }
+    }
+
     // pub fn append(&mut self, other: &mut Self) {
     //     match self.tail {
     //         None => mem::swap(self, other),
@@ -343,5 +379,33 @@ impl<'a> IntoIterator for &'a mut MyLinkedList {
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
+    }
+}
+
+// IntoIter
+pub struct IntoIter {
+    list: MyLinkedList,
+}
+
+impl Iterator for IntoIter {
+    type Item = i32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.list.pop_front()
+    }
+}
+
+impl DoubleEndedIterator for IntoIter {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.list.pop_back()
+    }
+}
+
+impl IntoIterator for MyLinkedList {
+    type Item = i32;
+    type IntoIter = IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter { list: self }
     }
 }
