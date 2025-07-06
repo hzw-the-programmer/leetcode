@@ -5,6 +5,8 @@ mod into_iter;
 mod iter;
 mod iter_mut;
 
+use iter_mut::IterMut;
+
 pub struct MyLinkedList {
     head: NonNull<Node>,
     tail: NonNull<Node>,
@@ -42,6 +44,49 @@ impl MyLinkedList {
     }
 
     pub fn add_at_head(&mut self, val: i32) {
+        self.push_front(val);
+    }
+
+    pub fn add_at_tail(&mut self, val: i32) {
+        self.push_back(val);
+    }
+
+    pub fn add_at_index(&mut self, index: i32, val: i32) {
+        let index = index as usize;
+        if let Some(mut predecessor) = self.predecessor_mut(index) {
+            let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+
+            unsafe {
+                let mut old = predecessor.as_ref().next.unwrap();
+                predecessor.as_mut().next = Some(node);
+                node.as_mut().next = Some(old);
+                old.as_mut().prev = Some(node);
+                node.as_mut().prev = Some(predecessor);
+
+                self.len += 1;
+            }
+        } else if index == self.len {
+            self.push_back(val);
+        }
+    }
+
+    pub fn delete_at_index(&mut self, index: i32) {
+        let index = index as usize;
+        if let Some(mut predecessor) = self.predecessor_mut(index) {
+            unsafe {
+                let old = predecessor.as_ref().next.unwrap();
+                let mut new = old.as_ref().next.unwrap();
+                predecessor.as_mut().next = Some(new);
+                new.as_mut().prev = Some(predecessor);
+
+                self.len -= 1;
+
+                let _ = Box::from_raw(old.as_ptr());
+            }
+        }
+    }
+
+    pub fn push_front(&mut self, val: i32) {
         let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
         unsafe {
@@ -50,46 +95,10 @@ impl MyLinkedList {
             node.as_mut().next = Some(old);
             node.as_mut().prev = old.as_ref().prev;
             old.as_mut().prev = Some(node);
+
             self.len += 1;
         }
     }
-
-    pub fn add_at_tail(&mut self, val: i32) {
-        let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
-
-        unsafe {
-            let mut old = self.tail.as_ref().prev.unwrap();
-            self.tail.as_mut().prev = Some(node);
-            node.as_mut().next = Some(self.tail);
-            node.as_mut().prev = Some(old);
-            old.as_mut().next = Some(node);
-            self.len += 1;
-        }
-    }
-
-    // pub fn add_at_index(&mut self, index: i32, val: i32) {
-    //     let index = index as usize;
-
-    //     if index > self.len {
-    //         return;
-    //     }
-
-    //     let mut split = self.split_off(index);
-    //     split.add_at_head(val);
-    //     self.append(&mut split);
-    // }
-
-    // pub fn delete_at_index(&mut self, index: i32) {
-    //     let index = index as usize;
-
-    //     if index > self.len {
-    //         return;
-    //     }
-
-    //     let mut split = self.split_off(index);
-    //     split.delete_at_head();
-    //     self.append(&mut split);
-    // }
 
     pub fn pop_front(&mut self) -> Option<i32> {
         unsafe {
@@ -107,6 +116,20 @@ impl MyLinkedList {
                 let node = Box::from_raw(old.as_ptr());
                 Some(node.val)
             }
+        }
+    }
+
+    pub fn push_back(&mut self, val: i32) {
+        let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+
+        unsafe {
+            let mut old = self.tail.as_ref().prev.unwrap();
+            self.tail.as_mut().prev = Some(node);
+            node.as_mut().next = Some(self.tail);
+            node.as_mut().prev = Some(old);
+            old.as_mut().next = Some(node);
+
+            self.len += 1;
         }
     }
 
@@ -129,83 +152,28 @@ impl MyLinkedList {
         }
     }
 
-    // pub fn append(&mut self, other: &mut Self) {
-    //     match self.tail {
-    //         None => mem::swap(self, other),
-    //         Some(mut tail) => {
-    //             if let Some(mut other_head) = other.head.take() {
-    //                 unsafe {
-    //                     tail.as_mut().next = Some(other_head);
-    //                     other_head.as_mut().prev = Some(tail);
-    //                 }
-
-    //                 self.tail = other.tail.take();
-    //                 self.len += mem::replace(&mut other.len, 0);
-    //             }
-    //         }
-    //     }
-    // }
-
-    // pub fn split_off(&mut self, at: usize) -> Self {
-    //     let len = self.len();
-    //     assert!(at <= len);
-    //     if at == 0 {
-    //         return mem::replace(self, Self::new());
-    //     } else if at == self.len {
-    //         return Self::new();
-    //     }
-
-    //     let split_node = if at - 1 <= len - 1 - (at - 1) {
-    //         let mut iter = self.iter_mut();
-    //         for _ in 0..at - 1 {
-    //             iter.next();
-    //         }
-    //         iter.head
-    //     } else {
-    //         let mut iter = self.iter_mut();
-    //         for _ in 0..len - 1 - (at - 1) {
-    //             iter.next_back();
-    //         }
-    //         iter.tail
-    //     };
-
-    //     self.split_off_after_node(split_node, at)
-    // }
-
     pub fn len(&self) -> usize {
         self.len
     }
 
-    // fn split_off_after_node(&mut self, split_node: Option<NonNull<Node>>, at: usize) -> Self {
-    //     if let Some(mut split_node) = split_node {
-    //         let second_part_head;
-    //         let second_part_tail;
-    //         unsafe {
-    //             second_part_head = split_node.as_mut().next.take();
-    //         }
-    //         if let Some(mut head) = second_part_head {
-    //             unsafe {
-    //                 head.as_mut().prev = None;
-    //             }
-    //             second_part_tail = self.tail;
-    //         } else {
-    //             second_part_tail = None;
-    //         }
+    fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node>> {
+        if index >= self.len {
+            return None;
+        }
 
-    //         let second_part = Self {
-    //             head: second_part_head,
-    //             tail: second_part_tail,
-    //             len: self.len - at,
-    //         };
-
-    //         self.tail = Some(split_node);
-    //         self.len = at;
-
-    //         second_part
-    //     } else {
-    //         mem::replace(self, Self::new())
-    //     }
-    // }
+        let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len);
+        if index < self.len - 1 - index {
+            for _ in 0..index {
+                iter.next();
+            }
+            iter.head
+        } else {
+            for _ in 0..self.len - 1 - index + 2 {
+                iter.next_back();
+            }
+            iter.tail
+        }
+    }
 }
 
 impl Drop for MyLinkedList {

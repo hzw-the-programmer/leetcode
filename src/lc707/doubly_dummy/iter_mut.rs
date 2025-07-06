@@ -3,14 +3,18 @@ use core::marker::PhantomData;
 use core::ptr::NonNull;
 
 pub struct IterMut<'a> {
-    head: Option<NonNull<Node>>,
-    tail: Option<NonNull<Node>>,
+    pub(super) head: Option<NonNull<Node>>,
+    pub(super) tail: Option<NonNull<Node>>,
     len: usize,
     marker: PhantomData<&'a mut Node>,
 }
 
 impl<'a> IterMut<'a> {
-    fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
+    pub(super) fn new(
+        head: Option<NonNull<Node>>,
+        tail: Option<NonNull<Node>>,
+        len: usize,
+    ) -> Self {
         Self {
             head,
             tail,
