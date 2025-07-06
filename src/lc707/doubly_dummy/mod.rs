@@ -1,6 +1,9 @@
-use core::marker::PhantomData;
 // use core::mem;
 use core::ptr::NonNull;
+
+mod into_iter;
+mod iter;
+mod iter_mut;
 
 pub struct MyLinkedList {
     head: NonNull<Node>,
@@ -197,14 +200,6 @@ impl MyLinkedList {
         self.len
     }
 
-    pub fn iter(&self) -> Iter {
-        unsafe { Iter::new(self.head.as_ref().next, self.tail.as_ref().prev, self.len) }
-    }
-
-    pub fn iter_mut(&mut self) -> IterMut {
-        unsafe { IterMut::new(self.head.as_ref().next, self.tail.as_ref().prev, self.len) }
-    }
-
     // fn split_off_after_node(&mut self, split_node: Option<NonNull<Node>>, at: usize) -> Self {
     //     if let Some(mut split_node) = split_node {
     //         let second_part_head;
@@ -259,153 +254,5 @@ impl Node {
             next: None,
             prev: None,
         }
-    }
-}
-
-// Iter
-pub struct Iter<'a> {
-    head: Option<NonNull<Node>>,
-    tail: Option<NonNull<Node>>,
-    len: usize,
-    marker: PhantomData<&'a Node>,
-}
-
-impl<'a> Iter<'a> {
-    fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
-        Self {
-            head,
-            tail,
-            len,
-            marker: PhantomData,
-        }
-    }
-}
-
-impl<'a> Iterator for Iter<'a> {
-    type Item = &'a i32;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.len == 0 {
-            None
-        } else {
-            self.head.map(|node| unsafe {
-                let node = node.as_ref();
-                self.head = node.next;
-                self.len -= 1;
-                &node.val
-            })
-        }
-    }
-}
-
-impl<'a> DoubleEndedIterator for Iter<'a> {
-    fn next_back(&mut self) -> Option<Self::Item> {
-        if self.len == 0 {
-            None
-        } else {
-            self.tail.map(|node| unsafe {
-                let node = node.as_ref();
-                self.tail = node.prev;
-                self.len -= 1;
-                &node.val
-            })
-        }
-    }
-}
-
-impl<'a> IntoIterator for &'a MyLinkedList {
-    type Item = &'a i32;
-    type IntoIter = Iter<'a>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.iter()
-    }
-}
-
-// IterMut
-pub struct IterMut<'a> {
-    head: Option<NonNull<Node>>,
-    tail: Option<NonNull<Node>>,
-    len: usize,
-    marker: PhantomData<&'a mut Node>,
-}
-
-impl<'a> IterMut<'a> {
-    fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
-        Self {
-            head,
-            tail,
-            len,
-            marker: PhantomData,
-        }
-    }
-}
-
-impl<'a> Iterator for IterMut<'a> {
-    type Item = &'a mut i32;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.len == 0 {
-            None
-        } else {
-            self.head.map(|mut node| unsafe {
-                let node = node.as_mut();
-                self.head = node.next;
-                self.len -= 1;
-                &mut node.val
-            })
-        }
-    }
-}
-
-impl<'a> DoubleEndedIterator for IterMut<'a> {
-    fn next_back(&mut self) -> Option<Self::Item> {
-        if self.len == 0 {
-            None
-        } else {
-            self.tail.map(|mut node| unsafe {
-                let node = node.as_mut();
-                self.tail = node.prev;
-                self.len -= 1;
-                &mut node.val
-            })
-        }
-    }
-}
-
-impl<'a> IntoIterator for &'a mut MyLinkedList {
-    type Item = &'a mut i32;
-    type IntoIter = IterMut<'a>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.iter_mut()
-    }
-}
-
-// IntoIter
-pub struct IntoIter {
-    list: MyLinkedList,
-}
-
-impl Iterator for IntoIter {
-    type Item = i32;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.list.pop_front()
-    }
-}
-
-impl DoubleEndedIterator for IntoIter {
-    fn next_back(&mut self) -> Option<Self::Item> {
-        self.list.pop_back()
-    }
-}
-
-impl IntoIterator for MyLinkedList {
-    type Item = i32;
-    type IntoIter = IntoIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        IntoIter { list: self }
     }
 }
