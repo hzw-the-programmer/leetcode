@@ -4,8 +4,6 @@ mod into_iter;
 mod iter;
 mod iter_mut;
 
-use iter_mut::IterMut;
-
 pub struct MyLinkedList {
     head: NonNull<Node>,
     tail: NonNull<Node>,
@@ -64,8 +62,6 @@ impl MyLinkedList {
 
                 self.len += 1;
             }
-        } else if index == self.len {
-            self.push_back(val);
         }
     }
 
@@ -74,13 +70,14 @@ impl MyLinkedList {
         if let Some(mut predecessor) = self.predecessor_mut(index) {
             unsafe {
                 let old = predecessor.as_ref().next.unwrap();
-                let mut new = old.as_ref().next.unwrap();
-                predecessor.as_mut().next = Some(new);
-                new.as_mut().prev = Some(predecessor);
+                if let Some(mut new) = old.as_ref().next {
+                    predecessor.as_mut().next = Some(new);
+                    new.as_mut().prev = Some(predecessor);
 
-                self.len -= 1;
+                    self.len -= 1;
 
-                let _ = Box::from_raw(old.as_ptr());
+                    let _ = Box::from_raw(old.as_ptr());
+                }
             }
         }
     }
@@ -153,25 +150,6 @@ impl MyLinkedList {
 
     pub fn len(&self) -> usize {
         self.len
-    }
-
-    fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node>> {
-        if index >= self.len {
-            return None;
-        }
-
-        let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len + 1);
-        if index < self.len - 1 - index {
-            for _ in 0..index {
-                iter.next();
-            }
-            iter.head
-        } else {
-            for _ in 0..self.len - 1 - index + 2 {
-                iter.next_back();
-            }
-            iter.tail
-        }
     }
 }
 

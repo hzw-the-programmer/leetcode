@@ -3,18 +3,14 @@ use core::marker::PhantomData;
 use core::ptr::NonNull;
 
 pub struct IterMut<'a> {
-    pub(super) head: Option<NonNull<Node>>,
-    pub(super) tail: Option<NonNull<Node>>,
+    head: Option<NonNull<Node>>,
+    tail: Option<NonNull<Node>>,
     len: usize,
     marker: PhantomData<&'a mut Node>,
 }
 
 impl<'a> IterMut<'a> {
-    pub(super) fn new(
-        head: Option<NonNull<Node>>,
-        tail: Option<NonNull<Node>>,
-        len: usize,
-    ) -> Self {
+    fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
         Self {
             head,
             tail,
@@ -68,5 +64,28 @@ impl<'a> IntoIterator for &'a mut MyLinkedList {
 impl MyLinkedList {
     pub fn iter_mut(&mut self) -> IterMut {
         unsafe { IterMut::new(self.head.as_ref().next, self.tail.as_ref().prev, self.len) }
+    }
+}
+
+impl MyLinkedList {
+    pub fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node>> {
+        if index > self.len {
+            return None;
+        }
+
+        let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len + 1);
+        // if index < self.len - 1 - index {
+        if index + 1 < self.len - index {
+            for _ in 0..index {
+                iter.next();
+            }
+            iter.head
+        } else {
+            // for _ in 0..self.len - 1 - index + 2 {
+            for _ in 0..self.len + 2 - 1 - index {
+                iter.next_back();
+            }
+            iter.tail
+        }
     }
 }
