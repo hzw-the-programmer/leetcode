@@ -164,3 +164,18 @@ fn iter_mut_rev() {
 
     assert_eq!(list.iter().copied().collect::<Vec<i32>>(), [2, 3, 4]);
 }
+
+#[test]
+fn mut_ref_into_iter() {
+    let mut list = MyLinkedList::new();
+
+    list.add_at_tail(1);
+    list.add_at_tail(2);
+    list.add_at_tail(3);
+
+    for n in &mut list {
+        *n += 1;
+    }
+
+    assert_eq!(list.iter().copied().collect::<Vec<i32>>(), [2, 3, 4]);
+}
