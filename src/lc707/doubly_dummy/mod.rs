@@ -208,13 +208,15 @@ impl MyLinkedList {
     // }
 }
 
-// impl Drop for MyLinkedList {
-//     fn drop(&mut self) {
-//         while self.get(0) != -1 {
-//             self.delete_at_head()
-//         }
-//     }
-// }
+impl Drop for MyLinkedList {
+    fn drop(&mut self) {
+        while self.pop_front().is_some() {}
+        unsafe {
+            let _ = Box::from_raw(self.head.as_ptr());
+            let _ = Box::from_raw(self.tail.as_ptr());
+        }
+    }
+}
 
 #[derive(Debug)]
 pub struct Node {
