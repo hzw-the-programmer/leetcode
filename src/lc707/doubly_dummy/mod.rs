@@ -91,37 +91,12 @@ impl MyLinkedList {
     //     self.append(&mut split);
     // }
 
-    // pub fn delete_at_head(&mut self) {
-    //     self.head.map(|node| unsafe {
-    //         let node = Box::from_raw(node.as_ptr());
-    //         self.head = node.next;
-    //         match self.head {
-    //             None => self.tail = None,
-    //             Some(head) => (*head.as_ptr()).prev = None,
-    //         }
-    //         self.len -= 1;
-    //         node
-    //     });
-    // }
-
-    // pub fn delete_at_tail(&mut self) {
-    //     self.tail.map(|node| unsafe {
-    //         let node = Box::from_raw(node.as_ptr());
-    //         self.tail = node.prev;
-    //         match self.tail {
-    //             None => self.head = None,
-    //             Some(tail) => (*tail.as_ptr()).next = None,
-    //         }
-    //         self.len -= 1;
-    //         node
-    //     });
-    // }
-
     pub fn pop_front(&mut self) -> Option<i32> {
-        if self.len == 0 {
-            None
-        } else {
-            unsafe {
+        unsafe {
+            // if self.len == 0 {
+            if self.head.as_ref().next == Some(self.tail) {
+                None
+            } else {
                 let old = self.head.as_ref().next.unwrap();
                 let mut new = old.as_ref().next.unwrap();
                 self.head.as_mut().next = Some(new);
@@ -136,10 +111,11 @@ impl MyLinkedList {
     }
 
     pub fn pop_back(&mut self) -> Option<i32> {
-        if self.len == 0 {
-            None
-        } else {
-            unsafe {
+        unsafe {
+            // if self.len == 0 {
+            if self.tail.as_ref().prev == Some(self.head) {
+                None
+            } else {
                 let old = self.tail.as_ref().prev.unwrap();
                 let mut new = old.as_ref().prev.unwrap();
                 self.tail.as_mut().prev = Some(new);
