@@ -165,9 +165,9 @@ impl MyLinkedList {
         unsafe { Iter::new(self.head.as_ref().next, self.tail.as_ref().prev, self.len) }
     }
 
-    // pub fn iter_mut(&mut self) -> IterMut {
-    //     IterMut::new(self.head, self.tail, self.len)
-    // }
+    pub fn iter_mut(&mut self) -> IterMut {
+        unsafe { IterMut::new(self.head.as_ref().next, self.tail.as_ref().prev, self.len) }
+    }
 
     // fn split_off_after_node(&mut self, split_node: Option<NonNull<Node>>, at: usize) -> Self {
     //     if let Some(mut split_node) = split_node {
@@ -287,53 +287,61 @@ impl<'a> IntoIterator for &'a MyLinkedList {
 }
 
 // IterMut
-// pub struct IterMut<'a> {
-//     head: Option<NonNull<Node>>,
-//     tail: Option<NonNull<Node>>,
-//     len: usize,
-//     marker: PhantomData<&'a mut Node>,
-// }
+pub struct IterMut<'a> {
+    head: Option<NonNull<Node>>,
+    tail: Option<NonNull<Node>>,
+    len: usize,
+    marker: PhantomData<&'a mut Node>,
+}
 
-// impl<'a> IterMut<'a> {
-//     fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
-//         Self {
-//             head,
-//             tail,
-//             len,
-//             marker: PhantomData,
-//         }
-//     }
-// }
+impl<'a> IterMut<'a> {
+    fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
+        Self {
+            head,
+            tail,
+            len,
+            marker: PhantomData,
+        }
+    }
+}
 
-// impl<'a> Iterator for IterMut<'a> {
-//     type Item = &'a mut i32;
+impl<'a> Iterator for IterMut<'a> {
+    type Item = &'a mut i32;
 
-//     fn next(&mut self) -> Option<Self::Item> {
-//         self.head.map(|mut node| unsafe {
-//             let node = node.as_mut();
-//             self.head = node.next;
-//             self.len -= 1;
-//             &mut node.val
-//         })
-//     }
-// }
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.len == 0 {
+            None
+        } else {
+            self.head.map(|mut node| unsafe {
+                let node = node.as_mut();
+                self.head = node.next;
+                self.len -= 1;
+                &mut node.val
+            })
+        }
+    }
+}
 
-// impl<'a> IntoIterator for &'a mut MyLinkedList {
-//     type Item = &'a mut i32;
-//     type IntoIter = IterMut<'a>;
+impl<'a> DoubleEndedIterator for IterMut<'a> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.len == 0 {
+            None
+        } else {
+            self.tail.map(|mut node| unsafe {
+                let node = node.as_mut();
+                self.tail = node.prev;
+                self.len -= 1;
+                &mut node.val
+            })
+        }
+    }
+}
 
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.iter_mut()
-//     }
-// }
+impl<'a> IntoIterator for &'a mut MyLinkedList {
+    type Item = &'a mut i32;
+    type IntoIter = IterMut<'a>;
 
-// impl<'a> DoubleEndedIterator for IterMut<'a> {
-//     fn next_back(&mut self) -> Option<Self::Item> {
-//         self.tail.map(|mut node| unsafe {
-//             let node = node.as_mut();
-//             self.tail = node.prev;
-//             self.len -= 1;
-//             &mut node.val
-//         })
-//     }
-// }
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
+    }
+}

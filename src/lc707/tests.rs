@@ -139,15 +139,28 @@ fn get_5() {
     assert_eq!(list.get(5), -1);
 }
 
-// #[test]
-// fn iter_mut() {
-//     let mut list = MyLinkedList::new();
-//     list.add_at_tail(1);
-//     list.add_at_tail(2);
-//     list.add_at_tail(3);
+#[test]
+fn iter_mut() {
+    let mut list = MyLinkedList::new();
 
-//     for n in &mut list {
-//         *n += 1;
-//     }
-//     assert_eq!(list.iter().copied().collect::<Vec<i32>>(), [2, 3, 4]);
-// }
+    list.add_at_tail(1);
+    list.add_at_tail(2);
+    list.add_at_tail(3);
+
+    list.iter_mut().for_each(|n| *n += 1);
+
+    assert_eq!(list.iter().copied().collect::<Vec<i32>>(), [2, 3, 4]);
+}
+
+#[test]
+fn iter_mut_rev() {
+    let mut list = MyLinkedList::new();
+
+    list.add_at_tail(1);
+    list.add_at_tail(2);
+    list.add_at_tail(3);
+
+    list.iter_mut().rev().for_each(|n| *n += 1);
+
+    assert_eq!(list.iter().copied().collect::<Vec<i32>>(), [2, 3, 4]);
+}
