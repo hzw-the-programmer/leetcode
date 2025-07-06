@@ -49,18 +49,18 @@ impl MyLinkedList {
         }
     }
 
-    // pub fn add_at_tail(&mut self, val: i32) {
-    //     let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+    pub fn add_at_tail(&mut self, val: i32) {
+        let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
-    //     unsafe {
-    //         let mut old = self.tail.as_ref().prev.unwrap();
-    //         self.tail.as_mut().prev = Some(node);
-    //         node.as_mut().next = Some(self.tail);
-    //         node.as_mut().prev = Some(old);
-    //         old.as_mut().next = Some(node);
-    //         self.len += 1;
-    //     }
-    // }
+        unsafe {
+            let mut old = self.tail.as_ref().prev.unwrap();
+            self.tail.as_mut().prev = Some(node);
+            node.as_mut().next = Some(self.tail);
+            node.as_mut().prev = Some(old);
+            old.as_mut().next = Some(node);
+            self.len += 1;
+        }
+    }
 
     // pub fn add_at_index(&mut self, index: i32, val: i32) {
     //     let index = index as usize;
