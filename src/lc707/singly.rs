@@ -25,30 +25,34 @@ impl MyLinkedList {
         let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
         unsafe {
+            (*node.as_ptr()).next = self.head;
+            let node = Some(node);
+
             match self.head {
-                None => self.tail = Some(node),
-                Some(head) => (*node.as_ptr()).next = Some(head),
+                None => self.tail = node,
+                Some(_) => {}
             }
 
-            self.head = Some(node);
+            self.head = node;
+            self.len += 1;
         }
-
-        self.len += 1;
     }
 
     pub fn add_at_tail(&mut self, val: i32) {
         let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
         unsafe {
+            (*node.as_ptr()).next = None;
+            let node = Some(node);
+
             match self.tail {
-                None => self.head = Some(node),
-                Some(tail) => (*tail.as_ptr()).next = Some(node),
+                None => self.head = node,
+                Some(tail) => (*tail.as_ptr()).next = node,
             }
 
-            self.tail = Some(node);
+            self.tail = node;
+            self.len += 1;
         }
-
-        self.len += 1;
     }
 
     pub fn add_at_index(&mut self, index: i32, val: i32) {
