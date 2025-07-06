@@ -121,3 +121,11 @@ fn add_at_index() {
     assert_eq!(list.get(1), 1);
     assert_eq!(list.get(2), 2);
 }
+
+#[test]
+fn t6() {
+    let mut list = MyLinkedList::new();
+
+    list.add_at_head(1);
+    list.delete_at_index(0);
+}

@@ -1,4 +1,3 @@
-// use core::mem;
 use core::ptr::NonNull;
 
 mod into_iter;
@@ -161,7 +160,7 @@ impl MyLinkedList {
             return None;
         }
 
-        let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len);
+        let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len + 1);
         if index < self.len - 1 - index {
             for _ in 0..index {
                 iter.next();
