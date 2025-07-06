@@ -107,6 +107,38 @@ fn ref_into_iter() {
     assert_eq!(v, [1, 2, 3]);
 }
 
+#[test]
+fn get_4() {
+    let mut list = MyLinkedList::new();
+    list.add_at_tail(1);
+    list.add_at_tail(2);
+    list.add_at_tail(3);
+    list.add_at_tail(4);
+
+    assert_eq!(list.get(0), 1);
+    assert_eq!(list.get(1), 2);
+    assert_eq!(list.get(2), 3);
+    assert_eq!(list.get(3), 4);
+    assert_eq!(list.get(4), -1);
+}
+
+#[test]
+fn get_5() {
+    let mut list = MyLinkedList::new();
+    list.add_at_tail(1);
+    list.add_at_tail(2);
+    list.add_at_tail(3);
+    list.add_at_tail(4);
+    list.add_at_tail(5);
+
+    assert_eq!(list.get(0), 1);
+    assert_eq!(list.get(1), 2);
+    assert_eq!(list.get(2), 3);
+    assert_eq!(list.get(3), 4);
+    assert_eq!(list.get(4), 5);
+    assert_eq!(list.get(5), -1);
+}
+
 // #[test]
 // fn iter_mut() {
 //     let mut list = MyLinkedList::new();

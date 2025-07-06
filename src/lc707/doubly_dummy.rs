@@ -21,20 +21,22 @@ impl MyLinkedList {
         Self { head, tail, len: 0 }
     }
 
-    // pub fn get(&self, index: i32) -> i32 {
-    //     if index < 0 || index >= self.len as i32 {
-    //         return -1;
-    //     }
+    pub fn get(&self, index: i32) -> i32 {
+        if index < 0 || index >= self.len as i32 {
+            return -1;
+        }
 
-    //     let index = index as usize;
+        let index = index as usize;
 
-    //     if index + 1 < self.len - index {
-    //         self.iter().nth(index).map_or(-1, |&n| n)
-    //     } else {
-    //         let index = self.len - 1 - index;
-    //         self.iter().nth_back(index).map_or(-1, |&n| n)
-    //     }
-    // }
+        if index + 1 < self.len - index {
+            // println!("{index}: nth");
+            self.iter().nth(index).map_or(-1, |&n| n)
+        } else {
+            // println!("{index}: nth_back");
+            let index = self.len - 1 - index;
+            self.iter().nth_back(index).map_or(-1, |&n| n)
+        }
+    }
 
     pub fn add_at_head(&mut self, val: i32) {
         let mut node = NonNull::from(Box::leak(Box::new(Node::new(val))));
