@@ -18,7 +18,18 @@ impl MyLinkedList {
     }
 
     pub fn get(&self, index: i32) -> i32 {
-        self.iter().nth(index as usize).map_or(-1, |&n| n)
+        if index < 0 || index >= self.len as i32 {
+            return -1;
+        }
+
+        let index = index as usize;
+
+        if index + 1 < self.len - index {
+            self.iter().nth(index).map_or(-1, |&n| n)
+        } else {
+            let index = self.len - 1 - index;
+            self.iter().nth_back(index).map_or(-1, |&n| n)
+        }
     }
 
     pub fn add_at_head(&mut self, val: i32) {
@@ -155,7 +166,7 @@ impl MyLinkedList {
     }
 
     pub fn iter(&self) -> Iter {
-        Iter::new(self.head)
+        Iter::new(self.head, self.tail, self.len)
     }
 
     pub fn iter_mut(&mut self) -> IterMut {
@@ -219,15 +230,20 @@ impl Node {
     }
 }
 
+// Iter
 pub struct Iter<'a> {
     head: Option<NonNull<Node>>,
+    tail: Option<NonNull<Node>>,
+    len: usize,
     marker: PhantomData<&'a Node>,
 }
 
 impl<'a> Iter<'a> {
-    fn new(head: Option<NonNull<Node>>) -> Self {
+    fn new(head: Option<NonNull<Node>>, tail: Option<NonNull<Node>>, len: usize) -> Self {
         Self {
             head,
+            tail,
+            len,
             marker: PhantomData,
         }
     }
@@ -238,8 +254,10 @@ impl<'a> Iterator for Iter<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         self.head.map(|node| unsafe {
-            self.head = (*node.as_ptr()).next;
-            &node.as_ref().val
+            let node = node.as_ref();
+            self.head = node.next;
+            self.len -= 1;
+            &node.val
         })
     }
 }
@@ -253,6 +271,18 @@ impl<'a> IntoIterator for &'a MyLinkedList {
     }
 }
 
+impl<'a> DoubleEndedIterator for Iter<'a> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.tail.map(|node| unsafe {
+            let node = node.as_ref();
+            self.tail = node.prev;
+            self.len -= 1;
+            &node.val
+        })
+    }
+}
+
+// IterMut
 pub struct IterMut<'a> {
     head: Option<NonNull<Node>>,
     tail: Option<NonNull<Node>>,
