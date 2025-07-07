@@ -29,14 +29,13 @@ impl MyLinkedList {
         }
 
         let index = index as usize;
-
-        if index + 1 < self.len - index {
+        let rindex = self.len - 1 - index;
+        if index <= rindex {
             // println!("{index}: nth");
             self.iter().nth(index).map_or(-1, |&n| n)
         } else {
             // println!("{index}: nth_back");
-            let index = self.len - 1 - index;
-            self.iter().nth_back(index).map_or(-1, |&n| n)
+            self.iter().nth_back(rindex).map_or(-1, |&n| n)
         }
     }
 
