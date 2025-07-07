@@ -9,11 +9,11 @@
 // mod singly_head;
 // pub use singly_head::MyLinkedList;
 
-mod doubly;
-pub use doubly::MyLinkedList;
+// mod doubly;
+// pub use doubly::MyLinkedList;
 
-// mod doubly_dummy;
-// pub use doubly_dummy::MyLinkedList;
+mod doubly_dummy;
+pub use doubly_dummy::MyLinkedList;
 
 #[cfg(test)]
 mod tests;

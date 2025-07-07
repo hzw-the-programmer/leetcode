@@ -76,6 +76,7 @@ impl MyLinkedList {
         let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len + 1);
         let pre_index = index - 1 + 1;
         let pre_rindex = self.len - 1 - index + 1 + 1;
+
         if pre_index < pre_rindex {
             for _ in 0..pre_index {
                 iter.next();

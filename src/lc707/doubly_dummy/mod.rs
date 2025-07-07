@@ -30,11 +30,10 @@ impl MyLinkedList {
 
         let index = index as usize;
         let rindex = self.len - 1 - index;
+
         if index < rindex {
-            // println!("{index}: nth");
             self.iter().nth(index).map_or(-1, |&n| n)
         } else {
-            // println!("{index}: nth_back");
             self.iter().nth_back(rindex).map_or(-1, |&n| n)
         }
     }
