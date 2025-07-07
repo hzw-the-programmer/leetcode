@@ -72,10 +72,10 @@ impl MyLinkedList {
         let len = self.len;
         assert!(index > 0 && index <= len);
 
+        let mut iter = self.iter_mut();
         let pre_index = index - 1;
         let pre_rindex = len - 1 - index + 1;
 
-        let mut iter = self.iter_mut();
         if pre_index <= pre_rindex {
             for _ in 0..pre_index {
                 iter.next();

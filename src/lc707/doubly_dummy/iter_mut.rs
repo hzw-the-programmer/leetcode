@@ -73,19 +73,16 @@ impl MyLinkedList {
             return None;
         }
 
-        let rindex = self.len - index + 1;
         let mut iter = IterMut::new(Some(self.head), Some(self.tail), self.len + 1);
-        // if index < self.len - 1 - index {
-        // if index + 1 < self.len - index {
-        if index <= rindex {
-            for _ in 0..index {
+        let pre_index = index - 1 + 1;
+        let pre_rindex = self.len - 1 - index + 1 + 1;
+        if pre_index < pre_rindex {
+            for _ in 0..pre_index {
                 iter.next();
             }
             iter.head
         } else {
-            // for _ in 0..self.len - 1 - index + 2 {
-            // for _ in 0..self.len + 2 - 1 - index {
-            for _ in 0..rindex {
+            for _ in 0..pre_rindex {
                 iter.next_back();
             }
             iter.tail
