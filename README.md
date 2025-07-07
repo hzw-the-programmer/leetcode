@@ -119,3 +119,6 @@
 707. Design Linked List (Design, Linked List)
 876. Middle of the Linked List (Linked List, Two Pointers)
 1290. Convert Binary Number in a Linked List to Integer (Linked List, Math)
+
+# Doubly-Linked List
+146. LRU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
