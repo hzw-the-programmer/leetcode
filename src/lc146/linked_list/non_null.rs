@@ -34,30 +34,6 @@ impl<T> LinkedList<T> {
         }
     }
 
-    pub fn move_to_head(&mut self, node: NonNull<Node<T>>) {
-        unsafe {
-            match ((*node.as_ptr()).prev, (*node.as_ptr()).next) {
-                (None, _) => return,
-                (Some(prev), None) => {
-                    (*prev.as_ptr()).next = None;
-                    self.tail = Some(prev);
-                }
-                (Some(prev), Some(next)) => {
-                    (*prev.as_ptr()).next = Some(next);
-                    (*next.as_ptr()).prev = Some(prev);
-                }
-            }
-
-            (*node.as_ptr()).prev = None;
-            (*node.as_ptr()).next = self.head;
-            match self.head {
-                None => unreachable!(),
-                Some(head) => (*head.as_ptr()).prev = Some(node),
-            }
-            self.head = Some(node);
-        }
-    }
-
     pub fn push_front(&mut self, val: T) {
         let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
@@ -92,6 +68,30 @@ impl<T> LinkedList<T> {
 
     pub fn peek_front_node(&self) -> Option<NonNull<Node<T>>> {
         self.head
+    }
+
+    pub fn move_to_head(&mut self, node: NonNull<Node<T>>) {
+        unsafe {
+            match ((*node.as_ptr()).prev, (*node.as_ptr()).next) {
+                (None, _) => return,
+                (Some(prev), None) => {
+                    (*prev.as_ptr()).next = None;
+                    self.tail = Some(prev);
+                }
+                (Some(prev), Some(next)) => {
+                    (*prev.as_ptr()).next = Some(next);
+                    (*next.as_ptr()).prev = Some(prev);
+                }
+            }
+
+            (*node.as_ptr()).prev = None;
+            (*node.as_ptr()).next = self.head;
+            match self.head {
+                None => unreachable!(),
+                Some(head) => (*head.as_ptr()).prev = Some(node),
+            }
+            self.head = Some(node);
+        }
     }
 
     pub fn len(&self) -> usize {
