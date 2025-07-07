@@ -148,6 +148,12 @@ impl<T> LinkedList<T> {
     }
 }
 
+impl<T> Drop for LinkedList<T> {
+    fn drop(&mut self) {
+        while self.pop_back().is_some() {}
+    }
+}
+
 pub struct Iter<'a, T> {
     head: Option<NonNull<Node<T>>>,
     tail: Option<NonNull<Node<T>>>,
