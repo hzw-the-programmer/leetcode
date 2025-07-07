@@ -70,11 +70,14 @@ impl MyLinkedList {
 impl MyLinkedList {
     pub fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node>> {
         let len = self.len;
-        assert!(index > 0 && index <= len);
+        if index == 0 || index > len {
+            return None;
+        }
 
         let mut iter = self.iter_mut();
         let pre_index = index - 1;
-        let pre_rindex = len - 1 - index + 1;
+        // let pre_rindex = len - 1 - index + 1;
+        let pre_rindex = len - index;
 
         if pre_index <= pre_rindex {
             for _ in 0..pre_index {
