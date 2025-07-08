@@ -20,6 +20,7 @@ impl<T> Node<T> {
     }
 }
 
+#[derive(Debug)]
 pub struct LinkedList<T> {
     head: Option<NonNull<Node<T>>>,
     tail: Option<NonNull<Node<T>>>,
@@ -350,5 +351,18 @@ impl<T> FromIterator<T> for LinkedList<T> {
         let mut list = Self::new();
         list.extend(iter.into_iter());
         list
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// PartialEq
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialEq> PartialEq for LinkedList<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.len() == other.len() && self.iter().eq(other)
+    }
+
+    fn ne(&self, other: &Self) -> bool {
+        self.len() != other.len() || self.iter().ne(other)
     }
 }

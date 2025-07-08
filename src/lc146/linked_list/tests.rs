@@ -82,3 +82,13 @@ fn collect() {
     assert_eq!(list.pop_front(), Some(3));
     assert_eq!(list.pop_front(), None);
 }
+
+#[test]
+fn eq() {
+    let list1 = [1, 2, 3].iter().copied().collect::<LinkedList<_>>();
+    let list2 = [1, 2, 3].iter().copied().collect::<LinkedList<_>>();
+    assert_eq!(list1, list2);
+
+    let list3 = [3, 2, 1].iter().copied().collect::<LinkedList<_>>();
+    assert_ne!(list1, list3);
+}
