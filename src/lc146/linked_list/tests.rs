@@ -45,13 +45,7 @@ fn into_iter() {
     list.push_front(2);
     list.push_front(1);
 
-    assert_eq!(list.into_iter().collect::<Vec<_>>(), [1, 2, 3]);
-
-    let mut list = LinkedList::new();
-
-    list.push_front(3);
-    list.push_front(2);
-    list.push_front(1);
+    assert_eq!(list.clone().into_iter().collect::<Vec<_>>(), [1, 2, 3]);
     assert_eq!(list.into_iter().rev().collect::<Vec<_>>(), [3, 2, 1]);
 }
 
