@@ -10,10 +10,11 @@ pub struct LRUCache {
 
 impl LRUCache {
     pub fn new(capacity: i32) -> Self {
+        let capacity = capacity as usize;
         Self {
-            map: HashMap::new(),
+            map: HashMap::with_capacity(capacity + 1),
             list: LinkedList::new(),
-            capacity: capacity as usize,
+            capacity: capacity,
         }
     }
 
