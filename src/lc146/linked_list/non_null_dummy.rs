@@ -41,22 +41,14 @@ impl<T> LinkedList<T> {
     pub fn push_front(&mut self, val: T) {
         let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
-        unsafe {
-            let next = (*self.dummy.as_ptr()).next.unwrap();
-            let prev = (*next.as_ptr()).prev.unwrap();
-
-            self.link(node, prev, next);
-        }
+        self.link_after(self.dummy, node);
     }
 
     pub fn push_back(&mut self, val: T) {
         let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
 
         unsafe {
-            let prev = (*self.dummy.as_ptr()).prev.unwrap();
-            let next = (*prev.as_ptr()).next.unwrap();
-
-            self.link(node, prev, next);
+            self.link_after((*self.dummy.as_ptr()).prev.unwrap(), node);
         }
     }
 
@@ -95,15 +87,8 @@ impl<T> LinkedList<T> {
     }
 
     pub fn move_to_head(&mut self, node: NonNull<Node<T>>) {
-        unsafe {
-            // remove
-            self.unlink(node);
-
-            // add head
-            let next = (*self.dummy.as_ptr()).next.unwrap();
-            let prev = (*next.as_ptr()).prev.unwrap();
-            self.link(node, prev, next);
-        }
+        self.unlink(node);
+        self.link_after(self.dummy, node);
     }
 
     pub fn len(&self) -> usize {
@@ -126,8 +111,10 @@ impl<T> LinkedList<T> {
         }
     }
 
-    fn link(&mut self, node: NonNull<Node<T>>, prev: NonNull<Node<T>>, next: NonNull<Node<T>>) {
+    fn link_after(&mut self, prev: NonNull<Node<T>>, node: NonNull<Node<T>>) {
         unsafe {
+            let next = (*prev.as_ptr()).next.unwrap();
+
             (*node.as_ptr()).next = Some(next);
             (*node.as_ptr()).prev = Some(prev);
 
