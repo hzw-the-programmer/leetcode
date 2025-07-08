@@ -45,9 +45,7 @@ impl<T> LinkedList<T> {
             let next = (*self.dummy.as_ptr()).next.unwrap();
             let prev = (*next.as_ptr()).prev.unwrap();
 
-            Self::link(node, prev, next);
-
-            self.len += 1;
+            self.link(node, prev, next);
         }
     }
 
@@ -58,9 +56,7 @@ impl<T> LinkedList<T> {
             let prev = (*self.dummy.as_ptr()).prev.unwrap();
             let next = (*prev.as_ptr()).next.unwrap();
 
-            Self::link(node, prev, next);
-
-            self.len += 1;
+            self.link(node, prev, next);
         }
     }
 
@@ -71,8 +67,7 @@ impl<T> LinkedList<T> {
 
         unsafe {
             (*self.dummy.as_ptr()).next.map(|node| {
-                Self::unlink(node);
-                self.len -= 1;
+                self.unlink(node);
 
                 let node = Box::from_raw(node.as_ptr());
                 node.val
@@ -87,8 +82,7 @@ impl<T> LinkedList<T> {
 
         unsafe {
             (*self.dummy.as_ptr()).prev.map(|node| {
-                Self::unlink(node);
-                self.len -= 1;
+                self.unlink(node);
 
                 let node = Box::from_raw(node.as_ptr());
                 node.val
@@ -103,12 +97,12 @@ impl<T> LinkedList<T> {
     pub fn move_to_head(&mut self, node: NonNull<Node<T>>) {
         unsafe {
             // remove
-            Self::unlink(node);
+            self.unlink(node);
 
             // add head
             let next = (*self.dummy.as_ptr()).next.unwrap();
             let prev = (*next.as_ptr()).prev.unwrap();
-            Self::link(node, prev, next);
+            self.link(node, prev, next);
         }
     }
 
@@ -120,23 +114,27 @@ impl<T> LinkedList<T> {
         self.len == 0
     }
 
-    fn unlink(node: NonNull<Node<T>>) {
+    fn unlink(&mut self, node: NonNull<Node<T>>) {
         unsafe {
             let prev = (*node.as_ptr()).prev.unwrap();
             let next = (*node.as_ptr()).next.unwrap();
 
             (*prev.as_ptr()).next = Some(next);
             (*next.as_ptr()).prev = Some(prev);
+
+            self.len -= 1;
         }
     }
 
-    fn link(node: NonNull<Node<T>>, prev: NonNull<Node<T>>, next: NonNull<Node<T>>) {
+    fn link(&mut self, node: NonNull<Node<T>>, prev: NonNull<Node<T>>, next: NonNull<Node<T>>) {
         unsafe {
             (*node.as_ptr()).next = Some(next);
             (*node.as_ptr()).prev = Some(prev);
 
             (*prev.as_ptr()).next = Some(node);
             (*next.as_ptr()).prev = Some(node);
+
+            self.len += 1;
         }
     }
 }
