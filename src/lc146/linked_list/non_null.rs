@@ -52,13 +52,45 @@ impl<T> LinkedList<T> {
         }
     }
 
+    pub fn push_back(&mut self, val: T) {
+        let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+
+        unsafe {
+            (*node.as_ptr()).prev = self.tail;
+            (*node.as_ptr()).next = None;
+            let node = Some(node);
+
+            match self.tail {
+                None => self.head = node,
+                Some(tail) => (*tail.as_ptr()).next = node,
+            }
+
+            self.tail = node;
+            self.len += 1;
+        }
+    }
+
+    pub fn pop_front(&mut self) -> Option<T> {
+        self.head.map(|node| unsafe {
+            let node = Box::from_raw(node.as_ptr());
+            self.head = node.next;
+            match self.head {
+                None => self.tail = None,
+                Some(head) => (*head.as_ptr()).prev = None,
+            }
+            self.len -= 1;
+
+            node.val
+        })
+    }
+
     pub fn pop_back(&mut self) -> Option<T> {
         self.tail.map(|node| unsafe {
             let node = Box::from_raw(node.as_ptr());
             self.tail = node.prev;
             match self.tail {
                 None => self.head = None,
-                Some(prev) => (*prev.as_ptr()).next = None,
+                Some(tail) => (*tail.as_ptr()).next = None,
             }
             self.len -= 1;
 
@@ -98,8 +130,8 @@ impl<T> LinkedList<T> {
         self.len
     }
 
-    pub fn iter(&self) -> Iter<T> {
-        Iter::new(self.head, self.tail, self.len)
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
     }
 }
 
@@ -109,6 +141,9 @@ impl<T> Drop for LinkedList<T> {
     }
 }
 
+/////////////////////////////////////////////////////////////////////////
+// Iter
+/////////////////////////////////////////////////////////////////////////
 pub struct Iter<'a, T> {
     head: Option<NonNull<Node<T>>>,
     tail: Option<NonNull<Node<T>>>,
@@ -154,5 +189,122 @@ impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
                 &(*node.as_ptr()).val
             })
         }
+    }
+}
+
+impl<T> LinkedList<T> {
+    pub fn iter(&self) -> Iter<T> {
+        Iter::new(self.head, self.tail, self.len)
+    }
+}
+
+impl<'a, T> IntoIterator for &'a LinkedList<T> {
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// IterMut
+/////////////////////////////////////////////////////////////////////////
+pub struct IterMut<'a, T> {
+    head: Option<NonNull<Node<T>>>,
+    tail: Option<NonNull<Node<T>>>,
+    len: usize,
+    marker: PhantomData<&'a Node<T>>,
+}
+
+impl<'a, T> IterMut<'a, T> {
+    fn new(head: Option<NonNull<Node<T>>>, tail: Option<NonNull<Node<T>>>, len: usize) -> Self {
+        Self {
+            head,
+            tail,
+            len,
+            marker: PhantomData,
+        }
+    }
+}
+
+impl<'a, T> Iterator for IterMut<'a, T> {
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.len == 0 {
+            None
+        } else {
+            self.head.map(|node| unsafe {
+                self.head = (*node.as_ptr()).next;
+                self.len -= 1;
+                &mut (*node.as_ptr()).val
+            })
+        }
+    }
+}
+
+impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.len == 0 {
+            None
+        } else {
+            self.tail.map(|node| unsafe {
+                self.tail = (*node.as_ptr()).prev;
+                self.len -= 1;
+                &mut (*node.as_ptr()).val
+            })
+        }
+    }
+}
+
+impl<T> LinkedList<T> {
+    pub fn iter_mut(&mut self) -> IterMut<T> {
+        IterMut::new(self.head, self.tail, self.len)
+    }
+}
+
+impl<'a, T> IntoIterator for &'a mut LinkedList<T> {
+    type Item = &'a mut T;
+    type IntoIter = IterMut<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// IntoIter
+/////////////////////////////////////////////////////////////////////////
+pub struct IntoIter<T> {
+    list: LinkedList<T>,
+}
+
+impl<T> IntoIter<T> {
+    fn new(list: LinkedList<T>) -> Self {
+        Self { list }
+    }
+}
+
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.list.pop_front()
+    }
+}
+
+impl<T> DoubleEndedIterator for IntoIter<T> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.list.pop_back()
+    }
+}
+
+impl<T> IntoIterator for LinkedList<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter::new(self)
     }
 }
