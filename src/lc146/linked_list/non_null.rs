@@ -1,3 +1,4 @@
+use core::iter::FusedIterator;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
@@ -176,6 +177,14 @@ impl<'a, T> Iterator for Iter<'a, T> {
             })
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.len, Some(self.len))
+    }
+
+    fn last(mut self) -> Option<Self::Item> {
+        self.next_back()
+    }
 }
 
 impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
@@ -191,6 +200,10 @@ impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
         }
     }
 }
+
+impl<'a, T> ExactSizeIterator for Iter<'a, T> {}
+
+impl<'a, T> FusedIterator for Iter<'a, T> {}
 
 impl<T> LinkedList<T> {
     pub fn iter(&self) -> Iter<T> {
