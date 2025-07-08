@@ -308,3 +308,23 @@ impl<T> IntoIterator for LinkedList<T> {
         IntoIter::new(self)
     }
 }
+
+/////////////////////////////////////////////////////////////////////////
+// Extend
+/////////////////////////////////////////////////////////////////////////
+impl<T> Extend<T> for LinkedList<T> {
+    fn extend<I: IntoIterator<Item = T>>(&mut self, iter: I) {
+        iter.into_iter().for_each(|elem| self.push_back(elem));
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// Clone
+/////////////////////////////////////////////////////////////////////////
+impl<T: Clone> Clone for LinkedList<T> {
+    fn clone(&self) -> Self {
+        let mut list = Self::new();
+        list.extend(self.iter().cloned());
+        list
+    }
+}
