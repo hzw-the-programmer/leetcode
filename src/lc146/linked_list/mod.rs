@@ -1,5 +1,8 @@
-mod non_null;
-pub use non_null::{Iter, LinkedList, NodePtr};
+// mod non_null;
+// pub use non_null::{Iter, LinkedList, NodePtr};
+
+mod non_null_dummy;
+pub use non_null_dummy::{Iter, LinkedList, NodePtr};
 
 // mod rc_dummy;
 // pub use rc_dummy::{Iter, LinkedList, NodePtr};
