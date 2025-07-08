@@ -378,3 +378,9 @@ impl<T: PartialOrd> PartialOrd for LinkedList<T> {
         self.iter().partial_cmp(other)
     }
 }
+
+impl<T: Ord> Ord for LinkedList<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.iter().cmp(other)
+    }
+}
