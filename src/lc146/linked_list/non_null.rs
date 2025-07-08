@@ -366,3 +366,5 @@ impl<T: PartialEq> PartialEq for LinkedList<T> {
         self.len() != other.len() || self.iter().ne(other)
     }
 }
+
+impl<T: Eq> Eq for LinkedList<T> {}
