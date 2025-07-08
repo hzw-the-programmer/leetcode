@@ -1,3 +1,4 @@
+use core::cmp::Ordering;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
@@ -19,6 +20,7 @@ impl<T> Node<T> {
     }
 }
 
+#[derive(Debug)]
 pub struct LinkedList<T> {
     dummy: NonNull<Node<T>>,
     len: usize,
@@ -330,5 +332,68 @@ impl<T: Clone + Default> Clone for LinkedList<T> {
         let mut list = Self::new();
         list.extend(self.iter().cloned());
         list
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// FromIterator
+/////////////////////////////////////////////////////////////////////////
+impl<T: Default> FromIterator<T> for LinkedList<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        let mut list = Self::new();
+        list.extend(iter.into_iter());
+        list
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// From
+/////////////////////////////////////////////////////////////////////////
+impl<T: Default, const N: usize> From<[T; N]> for LinkedList<T> {
+    fn from(arr: [T; N]) -> Self {
+        Self::from_iter(arr)
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// PartialEq
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialEq> PartialEq for LinkedList<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.len() == other.len() && self.iter().eq(other)
+    }
+
+    fn ne(&self, other: &Self) -> bool {
+        self.len() != other.len() || self.iter().ne(other)
+    }
+}
+
+impl<T: Eq> Eq for LinkedList<T> {}
+
+/////////////////////////////////////////////////////////////////////////
+// PartialEq
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialEq> PartialEq<&[T]> for LinkedList<T> {
+    fn eq(&self, other: &&[T]) -> bool {
+        self.len() == other.len() && self.iter().eq(*other)
+    }
+
+    fn ne(&self, other: &&[T]) -> bool {
+        self.len() != other.len() || self.iter().ne(*other)
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// PartialOrd
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialOrd> PartialOrd for LinkedList<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.iter().partial_cmp(other)
+    }
+}
+
+impl<T: Ord> Ord for LinkedList<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.iter().cmp(other)
     }
 }
