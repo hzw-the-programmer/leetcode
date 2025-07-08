@@ -325,6 +325,36 @@ impl<T> IntoIterator for LinkedList<T> {
 }
 
 /////////////////////////////////////////////////////////////////////////
+// PartialEq
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialEq> PartialEq for LinkedList<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.len() == other.len() && self.iter().eq(other)
+    }
+
+    fn ne(&self, other: &Self) -> bool {
+        self.len() != other.len() || self.iter().ne(other)
+    }
+}
+
+impl<T: Eq> Eq for LinkedList<T> {}
+
+/////////////////////////////////////////////////////////////////////////
+// PartialOrd
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialOrd> PartialOrd for LinkedList<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.iter().partial_cmp(other)
+    }
+}
+
+impl<T: Ord> Ord for LinkedList<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.iter().cmp(other)
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
 // Extend
 /////////////////////////////////////////////////////////////////////////
 impl<T> Extend<T> for LinkedList<T> {
@@ -356,31 +386,10 @@ impl<T> FromIterator<T> for LinkedList<T> {
 }
 
 /////////////////////////////////////////////////////////////////////////
-// PartialEq
+// From
 /////////////////////////////////////////////////////////////////////////
-impl<T: PartialEq> PartialEq for LinkedList<T> {
-    fn eq(&self, other: &Self) -> bool {
-        self.len() == other.len() && self.iter().eq(other)
-    }
-
-    fn ne(&self, other: &Self) -> bool {
-        self.len() != other.len() || self.iter().ne(other)
-    }
-}
-
-impl<T: Eq> Eq for LinkedList<T> {}
-
-/////////////////////////////////////////////////////////////////////////
-// PartialOrd
-/////////////////////////////////////////////////////////////////////////
-impl<T: PartialOrd> PartialOrd for LinkedList<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.iter().partial_cmp(other)
-    }
-}
-
-impl<T: Ord> Ord for LinkedList<T> {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.iter().cmp(other)
+impl<T, const N: usize> From<[T; N]> for LinkedList<T> {
+    fn from(arr: [T; N]) -> Self {
+        Self::from_iter(arr)
     }
 }

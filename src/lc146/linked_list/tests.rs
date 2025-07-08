@@ -99,3 +99,12 @@ fn partial_ord() {
     let list2 = [1, 2, 3].iter().copied().collect::<LinkedList<_>>();
     assert!(list1 > list2);
 }
+
+#[test]
+fn from_arr() {
+    let mut list: LinkedList<i32> = [1, 2, 3].into();
+    assert_eq!(list.pop_front(), Some(1));
+    assert_eq!(list.pop_front(), Some(2));
+    assert_eq!(list.pop_front(), Some(3));
+    assert_eq!(list.pop_front(), None);
+}
