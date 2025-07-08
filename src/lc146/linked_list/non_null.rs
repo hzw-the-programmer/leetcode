@@ -1,3 +1,4 @@
+use core::cmp::Ordering;
 use core::iter::FusedIterator;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
@@ -368,3 +369,12 @@ impl<T: PartialEq> PartialEq for LinkedList<T> {
 }
 
 impl<T: Eq> Eq for LinkedList<T> {}
+
+/////////////////////////////////////////////////////////////////////////
+// PartialOrd
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialOrd> PartialOrd for LinkedList<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.iter().partial_cmp(other)
+    }
+}

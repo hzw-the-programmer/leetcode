@@ -84,11 +84,18 @@ fn collect() {
 }
 
 #[test]
-fn eq() {
+fn partial_eq() {
     let list1 = [1, 2, 3].iter().copied().collect::<LinkedList<_>>();
     let list2 = [1, 2, 3].iter().copied().collect::<LinkedList<_>>();
     assert_eq!(list1, list2);
 
     let list3 = [3, 2, 1].iter().copied().collect::<LinkedList<_>>();
     assert_ne!(list1, list3);
+}
+
+#[test]
+fn partial_ord() {
+    let list1 = [1, 2, 4].iter().copied().collect::<LinkedList<_>>();
+    let list2 = [1, 2, 3].iter().copied().collect::<LinkedList<_>>();
+    assert!(list1 > list2);
 }
