@@ -341,3 +341,14 @@ impl<T: Clone> Clone for LinkedList<T> {
         list
     }
 }
+
+/////////////////////////////////////////////////////////////////////////
+// FromIterator
+/////////////////////////////////////////////////////////////////////////
+impl<T> FromIterator<T> for LinkedList<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        let mut list = Self::new();
+        list.extend(iter.into_iter());
+        list
+    }
+}
