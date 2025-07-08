@@ -340,6 +340,19 @@ impl<T: PartialEq> PartialEq for LinkedList<T> {
 impl<T: Eq> Eq for LinkedList<T> {}
 
 /////////////////////////////////////////////////////////////////////////
+// PartialEq
+/////////////////////////////////////////////////////////////////////////
+impl<T: PartialEq> PartialEq<&[T]> for LinkedList<T> {
+    fn eq(&self, other: &&[T]) -> bool {
+        self.len() == other.len() && self.iter().eq(*other)
+    }
+
+    fn ne(&self, other: &&[T]) -> bool {
+        self.len() != other.len() || self.iter().ne(*other)
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
 // PartialOrd
 /////////////////////////////////////////////////////////////////////////
 impl<T: PartialOrd> PartialOrd for LinkedList<T> {

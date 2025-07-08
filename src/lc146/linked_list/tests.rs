@@ -102,9 +102,6 @@ fn partial_ord() {
 
 #[test]
 fn from_arr() {
-    let mut list: LinkedList<i32> = [1, 2, 3].into();
-    assert_eq!(list.pop_front(), Some(1));
-    assert_eq!(list.pop_front(), Some(2));
-    assert_eq!(list.pop_front(), Some(3));
-    assert_eq!(list.pop_front(), None);
+    let list: LinkedList<i32> = [1, 2, 3].into();
+    assert_eq!(list, &[1, 2, 3][..]);
 }
