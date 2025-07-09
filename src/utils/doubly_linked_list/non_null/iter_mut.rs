@@ -5,8 +5,8 @@ use core::ptr::NonNull;
 use super::{LinkedList, Node};
 
 pub struct IterMut<'a, T> {
-    head: Option<NonNull<Node<T>>>,
-    tail: Option<NonNull<Node<T>>>,
+    pub(super) head: Option<NonNull<Node<T>>>,
+    pub(super) tail: Option<NonNull<Node<T>>>,
     len: usize,
     marker: PhantomData<&'a Node<T>>,
 }

@@ -10,6 +10,9 @@ mod other_traits_impl;
 mod partial_eq;
 mod partial_ord;
 
+mod index;
+mod split;
+
 pub struct Node<T> {
     pub val: T,
     prev: Option<NonNull<Node<T>>>,
