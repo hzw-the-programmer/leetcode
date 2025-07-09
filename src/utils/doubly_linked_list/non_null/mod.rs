@@ -4,6 +4,8 @@ mod iter;
 pub use iter::Iter;
 mod into_iter;
 mod iter_mut;
+
+mod extend;
 mod other_traits_impl;
 mod partial_eq;
 mod partial_ord;
