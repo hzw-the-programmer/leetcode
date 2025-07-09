@@ -159,10 +159,6 @@ impl<T> LinkedList<T> {
         }
     }
 
-    pub fn link_after_head(&mut self, node: NonNull<Node<T>>) {
-        self.push_front_node(node);
-    }
-
     pub fn push_front_node(&mut self, node: NonNull<Node<T>>) {
         unsafe {
             (*node.as_ptr()).prev = None;

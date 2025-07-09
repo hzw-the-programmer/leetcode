@@ -44,7 +44,7 @@ impl LFUCache {
             self.freq_map
                 .entry(new_freq)
                 .or_insert_with(|| LinkedList::new())
-                .link_after_head(node);
+                .push_front_node(node);
 
             (*node.as_ptr()).val.val
         })
