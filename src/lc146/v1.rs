@@ -1,9 +1,10 @@
+use core::ptr::NonNull;
 use std::collections::HashMap;
 
-use super::{Iter, LinkedList, NodePtr};
+use super::{Iter, LinkedList, Node};
 
 pub struct LRUCache {
-    map: HashMap<i32, NodePtr<(i32, i32)>>,
+    map: HashMap<i32, NonNull<Node<(i32, i32)>>>,
     list: LinkedList<(i32, i32)>,
     capacity: usize,
 }

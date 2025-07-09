@@ -1,7 +1,7 @@
 // 146. LRU Cache
 
 mod linked_list;
-pub use linked_list::{Iter, LinkedList, NodePtr};
+pub use linked_list::{Iter, LinkedList, Node};
 
 mod v1;
 pub use v1::LRUCache;

@@ -3,8 +3,6 @@ use core::iter::FusedIterator;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
-pub type NodePtr<T> = NonNull<Node<T>>;
-
 pub struct Node<T> {
     pub val: T,
     prev: Option<NonNull<Node<T>>>,
