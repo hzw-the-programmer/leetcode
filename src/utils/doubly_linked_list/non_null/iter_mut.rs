@@ -2,14 +2,7 @@ use core::iter::FusedIterator;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
-use super::{LinkedList, Node};
-
-pub struct IterMut<'a, T> {
-    pub(super) head: Option<NonNull<Node<T>>>,
-    pub(super) tail: Option<NonNull<Node<T>>>,
-    len: usize,
-    marker: PhantomData<&'a Node<T>>,
-}
+use super::{IterMut, LinkedList, Node};
 
 impl<'a, T> IterMut<'a, T> {
     fn new(head: Option<NonNull<Node<T>>>, tail: Option<NonNull<Node<T>>>, len: usize) -> Self {

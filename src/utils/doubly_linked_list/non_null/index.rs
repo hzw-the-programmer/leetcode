@@ -4,11 +4,12 @@ use super::{LinkedList, Node};
 
 impl<T> LinkedList<T> {
     pub fn get(&self, index: usize) -> Option<&T> {
-        if index >= self.len {
+        let len = self.len();
+        if index >= len {
             return None;
         }
 
-        let rindex = self.len - 1 - index;
+        let rindex = len - 1 - index;
 
         if index <= rindex {
             self.iter().nth(index)
@@ -42,7 +43,7 @@ impl<T> LinkedList<T> {
     }
 
     pub fn add_at_index(&mut self, index: usize, val: T) {
-        if index > self.len {
+        if index > self.len() {
             return;
         }
 
@@ -52,7 +53,7 @@ impl<T> LinkedList<T> {
     }
 
     pub fn delete_at_index(&mut self, index: usize) {
-        if index >= self.len {
+        if index >= self.len() {
             return;
         }
 
