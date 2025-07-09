@@ -1,11 +1,12 @@
-use core::cmp::Ordering;
-use core::fmt;
 use core::ptr::NonNull;
 
 mod iter;
 pub use iter::Iter;
 mod into_iter;
 mod iter_mut;
+mod other_traits_impl;
+mod partial_eq;
+mod partial_ord;
 
 pub struct Node<T> {
     pub val: T,
@@ -155,97 +156,5 @@ impl<T> LinkedList<T> {
 impl<T> Drop for LinkedList<T> {
     fn drop(&mut self) {
         while self.pop_back().is_some() {}
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// PartialEq
-/////////////////////////////////////////////////////////////////////////
-impl<T: PartialEq> PartialEq for LinkedList<T> {
-    fn eq(&self, other: &Self) -> bool {
-        self.len() == other.len() && self.iter().eq(other)
-    }
-
-    fn ne(&self, other: &Self) -> bool {
-        self.len() != other.len() || self.iter().ne(other)
-    }
-}
-
-impl<T: Eq> Eq for LinkedList<T> {}
-
-/////////////////////////////////////////////////////////////////////////
-// PartialEq
-/////////////////////////////////////////////////////////////////////////
-impl<T: PartialEq> PartialEq<&[T]> for LinkedList<T> {
-    fn eq(&self, other: &&[T]) -> bool {
-        self.len() == other.len() && self.iter().eq(*other)
-    }
-
-    fn ne(&self, other: &&[T]) -> bool {
-        self.len() != other.len() || self.iter().ne(*other)
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// PartialOrd
-/////////////////////////////////////////////////////////////////////////
-impl<T: PartialOrd> PartialOrd for LinkedList<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.iter().partial_cmp(other)
-    }
-}
-
-impl<T: Ord> Ord for LinkedList<T> {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.iter().cmp(other)
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// Extend
-/////////////////////////////////////////////////////////////////////////
-impl<T> Extend<T> for LinkedList<T> {
-    fn extend<I: IntoIterator<Item = T>>(&mut self, iter: I) {
-        iter.into_iter().for_each(|elem| self.push_back(elem));
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// Clone
-/////////////////////////////////////////////////////////////////////////
-impl<T: Clone> Clone for LinkedList<T> {
-    fn clone(&self) -> Self {
-        let mut list = Self::new();
-        list.extend(self.iter().cloned());
-        list
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// FromIterator
-/////////////////////////////////////////////////////////////////////////
-impl<T> FromIterator<T> for LinkedList<T> {
-    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
-        let mut list = Self::new();
-        list.extend(iter.into_iter());
-        list
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// From
-/////////////////////////////////////////////////////////////////////////
-impl<T, const N: usize> From<[T; N]> for LinkedList<T> {
-    fn from(arr: [T; N]) -> Self {
-        Self::from_iter(arr)
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////
-// Debug
-/////////////////////////////////////////////////////////////////////////
-impl<T: fmt::Debug> fmt::Debug for LinkedList<T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_list().entries(self).finish()
     }
 }
