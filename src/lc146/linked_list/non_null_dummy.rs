@@ -1,4 +1,5 @@
 use core::cmp::Ordering;
+use core::fmt;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
@@ -18,7 +19,6 @@ impl<T> Node<T> {
     }
 }
 
-#[derive(Debug)]
 pub struct LinkedList<T> {
     dummy: NonNull<Node<T>>,
     len: usize,
@@ -99,7 +99,7 @@ impl<T> LinkedList<T> {
         self.len == 0
     }
 
-    fn unlink(&mut self, node: NonNull<Node<T>>) {
+    pub fn unlink(&mut self, node: NonNull<Node<T>>) {
         unsafe {
             let prev = (*node.as_ptr()).prev.unwrap();
             let next = (*node.as_ptr()).next.unwrap();
@@ -109,6 +109,10 @@ impl<T> LinkedList<T> {
 
             self.len -= 1;
         }
+    }
+
+    pub fn link_after_head(&mut self, node: NonNull<Node<T>>) {
+        self.link_after(self.dummy, node);
     }
 
     fn link_after(&mut self, prev: NonNull<Node<T>>, node: NonNull<Node<T>>) {
@@ -393,5 +397,14 @@ impl<T: PartialOrd> PartialOrd for LinkedList<T> {
 impl<T: Ord> Ord for LinkedList<T> {
     fn cmp(&self, other: &Self) -> Ordering {
         self.iter().cmp(other)
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// Debug
+/////////////////////////////////////////////////////////////////////////
+impl<T: fmt::Debug> fmt::Debug for LinkedList<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_list().entries(self).finish()
     }
 }

@@ -122,3 +122,4 @@
 
 # Doubly-Linked List
 146. LRU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
+460. LFU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
