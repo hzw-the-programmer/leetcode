@@ -62,15 +62,7 @@ impl<T> LinkedList<T> {
 
     pub fn split_off(&mut self, at: usize) -> Self {
         assert!(at <= self.len);
-        if at == 0 {
-            return mem::replace(self, Self::new());
-        } else if at == self.len {
-            return Self::new();
-        }
-
-        let split_node = self.get_prev_node(at);
-
-        self.split_off_after_node(split_node, at)
+        self.split_off_after_node(self.get_prev_node(at), at)
     }
 
     fn split_off_after_node(&mut self, split_node: Option<NonNull<Node<T>>>, at: usize) -> Self {
