@@ -37,7 +37,48 @@ impl<T> LinkedList<T> {
 
     pub fn push_front(&mut self, val: T) {
         let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+        self.push_front_node(node);
+    }
 
+    pub fn push_back(&mut self, val: T) {
+        let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
+        self.push_back_node(node);
+    }
+
+    pub fn pop_front(&mut self) -> Option<T> {
+        self.head.map(|node| {
+            self.unlink(node);
+            let node = unsafe { Box::from_raw(node.as_ptr()) };
+            node.val
+        })
+    }
+
+    pub fn pop_back(&mut self) -> Option<T> {
+        self.tail.map(|node| {
+            self.unlink(node);
+            let node = unsafe { Box::from_raw(node.as_ptr()) };
+            node.val
+        })
+    }
+
+    pub fn peek_front_node(&self) -> Option<NonNull<Node<T>>> {
+        self.head
+    }
+
+    pub fn move_to_head(&mut self, node: NonNull<Node<T>>) {
+        self.unlink(node);
+        self.push_front_node(node);
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+
+    pub fn push_front_node(&mut self, node: NonNull<Node<T>>) {
         unsafe {
             (*node.as_ptr()).prev = None;
             (*node.as_ptr()).next = self.head;
@@ -53,9 +94,7 @@ impl<T> LinkedList<T> {
         }
     }
 
-    pub fn push_back(&mut self, val: T) {
-        let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
-
+    pub fn push_back_node(&mut self, node: NonNull<Node<T>>) {
         unsafe {
             (*node.as_ptr()).prev = self.tail;
             (*node.as_ptr()).next = None;
@@ -69,70 +108,6 @@ impl<T> LinkedList<T> {
             self.tail = node;
             self.len += 1;
         }
-    }
-
-    pub fn pop_front(&mut self) -> Option<T> {
-        self.head.map(|node| unsafe {
-            let node = Box::from_raw(node.as_ptr());
-            self.head = node.next;
-            match self.head {
-                None => self.tail = None,
-                Some(head) => (*head.as_ptr()).prev = None,
-            }
-            self.len -= 1;
-
-            node.val
-        })
-    }
-
-    pub fn pop_back(&mut self) -> Option<T> {
-        self.tail.map(|node| unsafe {
-            let node = Box::from_raw(node.as_ptr());
-            self.tail = node.prev;
-            match self.tail {
-                None => self.head = None,
-                Some(tail) => (*tail.as_ptr()).next = None,
-            }
-            self.len -= 1;
-
-            node.val
-        })
-    }
-
-    pub fn peek_front_node(&self) -> Option<NonNull<Node<T>>> {
-        self.head
-    }
-
-    pub fn move_to_head(&mut self, node: NonNull<Node<T>>) {
-        unsafe {
-            match ((*node.as_ptr()).prev, (*node.as_ptr()).next) {
-                (None, _) => return,
-                (Some(prev), None) => {
-                    (*prev.as_ptr()).next = None;
-                    self.tail = Some(prev);
-                }
-                (Some(prev), Some(next)) => {
-                    (*prev.as_ptr()).next = Some(next);
-                    (*next.as_ptr()).prev = Some(prev);
-                }
-            }
-
-            (*node.as_ptr()).prev = None;
-            (*node.as_ptr()).next = self.head;
-            match self.head {
-                None => unreachable!(),
-                Some(head) => (*head.as_ptr()).prev = Some(node),
-            }
-            self.head = Some(node);
-        }
-    }
-
-    pub fn len(&self) -> usize {
-        self.len
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.len == 0
     }
 
     pub fn unlink(&mut self, node: NonNull<Node<T>>) {
@@ -156,20 +131,6 @@ impl<T> LinkedList<T> {
                 }
             }
             self.len -= 1;
-        }
-    }
-
-    pub fn push_front_node(&mut self, node: NonNull<Node<T>>) {
-        unsafe {
-            (*node.as_ptr()).prev = None;
-            (*node.as_ptr()).next = self.head;
-            let node = Some(node);
-            match self.head {
-                None => self.tail = node,
-                Some(head) => (*head.as_ptr()).prev = node,
-            }
-            self.head = node;
-            self.len += 1;
         }
     }
 
