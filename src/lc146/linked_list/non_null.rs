@@ -134,6 +134,62 @@ impl<T> LinkedList<T> {
     pub fn is_empty(&self) -> bool {
         self.len == 0
     }
+
+    pub fn unlink(&mut self, node: NonNull<Node<T>>) {
+        unsafe {
+            match ((*node.as_ptr()).prev, (*node.as_ptr()).next) {
+                (None, None) => {
+                    self.head = None;
+                    self.tail = None;
+                }
+                (Some(prev), None) => {
+                    (*prev.as_ptr()).next = None;
+                    self.tail = Some(prev);
+                }
+                (None, Some(next)) => {
+                    (*next.as_ptr()).prev = None;
+                    self.head = Some(next);
+                }
+                (Some(prev), Some(next)) => {
+                    (*prev.as_ptr()).next = Some(next);
+                    (*next.as_ptr()).prev = Some(prev);
+                }
+            }
+            self.len -= 1;
+        }
+    }
+
+    pub fn link_after_head(&mut self, node: NonNull<Node<T>>) {
+        self.push_front_node(node);
+    }
+
+    pub fn push_front_node(&mut self, node: NonNull<Node<T>>) {
+        unsafe {
+            (*node.as_ptr()).prev = None;
+            (*node.as_ptr()).next = self.head;
+            let node = Some(node);
+            match self.head {
+                None => self.tail = node,
+                Some(head) => (*head.as_ptr()).prev = node,
+            }
+            self.head = node;
+            self.len += 1;
+        }
+    }
+
+    pub fn link_after(&mut self, prev: NonNull<Node<T>>, node: NonNull<Node<T>>) {
+        unsafe {
+            (*node.as_ptr()).prev = Some(prev);
+            (*node.as_ptr()).next = (*prev.as_ptr()).next;
+            let node = Some(node);
+            match (*prev.as_ptr()).next {
+                None => self.tail = node,
+                Some(next) => (*next.as_ptr()).prev = node,
+            }
+
+            self.len += 1;
+        }
+    }
 }
 
 impl<T> Drop for LinkedList<T> {
