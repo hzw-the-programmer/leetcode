@@ -36,6 +36,5 @@ mod partial_eq;
 mod partial_ord;
 
 mod index;
-mod split;
 
 mod other_traits_impl;

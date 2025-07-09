@@ -1,3 +1,4 @@
+use core::mem;
 use core::ptr::NonNull;
 
 use super::{LinkedList, Node};
@@ -131,6 +132,23 @@ impl<T> LinkedList<T> {
             }
 
             self.len += 1;
+        }
+    }
+
+    pub fn append(&mut self, other: &mut Self) {
+        match self.tail {
+            None => mem::swap(self, other),
+            Some(mut tail) => {
+                if let Some(mut other_head) = other.head.take() {
+                    unsafe {
+                        tail.as_mut().next = Some(other_head);
+                        other_head.as_mut().prev = Some(tail);
+                    }
+
+                    self.tail = other.tail.take();
+                    self.len += mem::replace(&mut other.len, 0);
+                }
+            }
         }
     }
 }

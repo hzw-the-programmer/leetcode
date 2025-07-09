@@ -1,3 +1,4 @@
+use core::mem;
 use core::ptr::NonNull;
 
 use super::{LinkedList, Node};
@@ -16,6 +17,39 @@ impl<T> LinkedList<T> {
         } else {
             self.iter().nth_back(rindex)
         }
+    }
+
+    pub fn add_at_index(&mut self, index: usize, val: T) {
+        if index > self.len() {
+            return;
+        }
+
+        let mut split = self.split_off(index);
+        split.push_front(val);
+        self.append(&mut split);
+    }
+
+    pub fn delete_at_index(&mut self, index: usize) {
+        if index >= self.len() {
+            return;
+        }
+
+        let mut split = self.split_off(index);
+        split.pop_front();
+        self.append(&mut split);
+    }
+
+    pub fn split_off(&mut self, at: usize) -> Self {
+        assert!(at <= self.len);
+        if at == 0 {
+            return mem::replace(self, Self::new());
+        } else if at == self.len {
+            return Self::new();
+        }
+
+        let split_node = self.predecessor_mut(at);
+
+        self.split_off_after_node(split_node, at)
     }
 
     pub fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node<T>>> {
@@ -42,23 +76,34 @@ impl<T> LinkedList<T> {
         }
     }
 
-    pub fn add_at_index(&mut self, index: usize, val: T) {
-        if index > self.len() {
-            return;
+    fn split_off_after_node(&mut self, split_node: Option<NonNull<Node<T>>>, at: usize) -> Self {
+        if let Some(mut split_node) = split_node {
+            let second_part_head;
+            let second_part_tail;
+            unsafe {
+                second_part_head = split_node.as_mut().next.take();
+            }
+            if let Some(mut head) = second_part_head {
+                unsafe {
+                    head.as_mut().prev = None;
+                }
+                second_part_tail = self.tail;
+            } else {
+                second_part_tail = None;
+            }
+
+            let second_part = Self {
+                head: second_part_head,
+                tail: second_part_tail,
+                len: self.len - at,
+            };
+
+            self.tail = Some(split_node);
+            self.len = at;
+
+            second_part
+        } else {
+            mem::replace(self, Self::new())
         }
-
-        let mut split = self.split_off(index);
-        split.push_front(val);
-        self.append(&mut split);
-    }
-
-    pub fn delete_at_index(&mut self, index: usize) {
-        if index >= self.len() {
-            return;
-        }
-
-        let mut split = self.split_off(index);
-        split.pop_front();
-        self.append(&mut split);
     }
 }
