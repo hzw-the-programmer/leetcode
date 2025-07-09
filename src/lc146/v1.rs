@@ -1,7 +1,7 @@
 use core::ptr::NonNull;
 use std::collections::HashMap;
 
-use super::{Iter, LinkedList, Node};
+use crate::utils::doubly_linked_list::{Iter, LinkedList, Node};
 
 pub struct LRUCache {
     map: HashMap<i32, NonNull<Node<(i32, i32)>>>,
