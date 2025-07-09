@@ -1,3 +1,4 @@
+use core::fmt;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
@@ -33,7 +34,13 @@ mod index;
 
 mod extend;
 
-mod partial_eq;
-mod partial_ord;
+mod eq_ord;
 
-mod other_traits_impl;
+/////////////////////////////////////////////////////////////////////////
+// Debug
+/////////////////////////////////////////////////////////////////////////
+impl<T: fmt::Debug> fmt::Debug for LinkedList<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_list().entries(self).finish()
+    }
+}
