@@ -1,4 +1,4 @@
-use crate::lc146::{LinkedList, Node};
+use crate::utils::doubly_linked_list::{LinkedList, Node};
 use core::ptr::NonNull;
 use std::collections::HashMap;
 
