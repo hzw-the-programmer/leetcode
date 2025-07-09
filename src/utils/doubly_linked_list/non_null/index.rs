@@ -39,19 +39,6 @@ impl<T> LinkedList<T> {
         self.append(&mut split);
     }
 
-    pub fn split_off(&mut self, at: usize) -> Self {
-        assert!(at <= self.len);
-        if at == 0 {
-            return mem::replace(self, Self::new());
-        } else if at == self.len {
-            return Self::new();
-        }
-
-        let split_node = self.predecessor_mut(at);
-
-        self.split_off_after_node(split_node, at)
-    }
-
     pub fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node<T>>> {
         let len = self.len;
         if index == 0 || index > len {
@@ -74,6 +61,19 @@ impl<T> LinkedList<T> {
             }
             iter.tail
         }
+    }
+
+    pub fn split_off(&mut self, at: usize) -> Self {
+        assert!(at <= self.len);
+        if at == 0 {
+            return mem::replace(self, Self::new());
+        } else if at == self.len {
+            return Self::new();
+        }
+
+        let split_node = self.predecessor_mut(at);
+
+        self.split_off_after_node(split_node, at)
     }
 
     fn split_off_after_node(&mut self, split_node: Option<NonNull<Node<T>>>, at: usize) -> Self {

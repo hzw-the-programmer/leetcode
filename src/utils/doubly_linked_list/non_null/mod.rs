@@ -30,11 +30,11 @@ mod iter_mut;
 mod into_iter;
 pub use into_iter::IntoIter;
 
+mod index;
+
 mod extend;
 
 mod partial_eq;
 mod partial_ord;
-
-mod index;
 
 mod other_traits_impl;

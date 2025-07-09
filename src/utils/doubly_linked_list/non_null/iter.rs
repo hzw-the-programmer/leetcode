@@ -22,6 +22,12 @@ impl<'a, T> Iter<'a, T> {
     }
 }
 
+impl<T> LinkedList<T> {
+    pub fn iter(&self) -> Iter<T> {
+        Iter::new(self.head, self.tail, self.len)
+    }
+}
+
 impl<'a, T> Iterator for Iter<'a, T> {
     type Item = &'a T;
 
@@ -63,12 +69,6 @@ impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
 impl<'a, T> ExactSizeIterator for Iter<'a, T> {}
 
 impl<'a, T> FusedIterator for Iter<'a, T> {}
-
-impl<T> LinkedList<T> {
-    pub fn iter(&self) -> Iter<T> {
-        Iter::new(self.head, self.tail, self.len)
-    }
-}
 
 impl<'a, T> IntoIterator for &'a LinkedList<T> {
     type Item = &'a T;

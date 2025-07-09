@@ -12,6 +12,15 @@ impl<T> IntoIter<T> {
     }
 }
 
+impl<T> IntoIterator for LinkedList<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter::new(self)
+    }
+}
+
 impl<T> Iterator for IntoIter<T> {
     type Item = T;
 
@@ -38,12 +47,3 @@ impl<T> DoubleEndedIterator for IntoIter<T> {
 impl<T> ExactSizeIterator for IntoIter<T> {}
 
 impl<T> FusedIterator for IntoIter<T> {}
-
-impl<T> IntoIterator for LinkedList<T> {
-    type Item = T;
-    type IntoIter = IntoIter<T>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        IntoIter::new(self)
-    }
-}

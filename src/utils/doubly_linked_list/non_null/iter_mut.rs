@@ -15,6 +15,12 @@ impl<'a, T> IterMut<'a, T> {
     }
 }
 
+impl<T> LinkedList<T> {
+    pub fn iter_mut(&mut self) -> IterMut<T> {
+        IterMut::new(self.head, self.tail, self.len)
+    }
+}
+
 impl<'a, T> Iterator for IterMut<'a, T> {
     type Item = &'a mut T;
 
@@ -56,12 +62,6 @@ impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
 impl<'a, T> ExactSizeIterator for IterMut<'a, T> {}
 
 impl<'a, T> FusedIterator for IterMut<'a, T> {}
-
-impl<T> LinkedList<T> {
-    pub fn iter_mut(&mut self) -> IterMut<T> {
-        IterMut::new(self.head, self.tail, self.len)
-    }
-}
 
 impl<'a, T> IntoIterator for &'a mut LinkedList<T> {
     type Item = &'a mut T;
