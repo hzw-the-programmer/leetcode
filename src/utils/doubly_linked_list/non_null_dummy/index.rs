@@ -9,17 +9,17 @@ impl<T> LinkedList<T> {
     }
 
     pub fn add_at_index(&mut self, index: usize, val: T) {
-        if let Some(prev) = self.get_prev_node(index) {
+        self.get_prev_node(index).map(|prev| {
             let node = NonNull::from(Box::leak(Box::new(Node::new(val))));
             self.link_after(prev, node);
-        }
+        });
     }
 
     pub fn delete_at_index(&mut self, index: usize) {
-        if let Some(node) = self.get_node(index) {
+        self.get_node(index).map(|node| {
             self.unlink(node);
             let _ = unsafe { Box::from_raw(node.as_ptr()) };
-        }
+        });
     }
 
     pub fn get_node(&self, index: usize) -> Option<NonNull<Node<T>>> {
