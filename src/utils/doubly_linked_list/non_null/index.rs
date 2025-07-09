@@ -5,18 +5,8 @@ use super::{LinkedList, Node};
 
 impl<T> LinkedList<T> {
     pub fn get(&self, index: usize) -> Option<&T> {
-        let len = self.len();
-        if index >= len {
-            return None;
-        }
-
-        let rindex = len - 1 - index;
-
-        if index <= rindex {
-            self.iter().nth(index)
-        } else {
-            self.iter().nth_back(rindex)
-        }
+        self.get_node(index)
+            .map(|node| unsafe { &(*node.as_ptr()).val })
     }
 
     pub fn add_at_index(&mut self, index: usize, val: T) {
@@ -39,27 +29,34 @@ impl<T> LinkedList<T> {
         self.append(&mut split);
     }
 
-    pub fn predecessor_mut(&mut self, index: usize) -> Option<NonNull<Node<T>>> {
-        let len = self.len;
-        if index == 0 || index > len {
+    pub fn get_node(&self, index: usize) -> Option<NonNull<Node<T>>> {
+        let len = self.len();
+        if index >= len {
             return None;
         }
 
-        let mut iter = self.iter_mut();
-        let pre_index = index - 1;
-        // let pre_rindex = len - 1 - index + 1;
-        let pre_rindex = len - index;
+        let rindex = len - 1 - index;
 
-        if pre_index <= pre_rindex {
-            for _ in 0..pre_index {
+        let mut iter = self.iter();
+
+        if index <= rindex {
+            for _ in 0..index {
                 iter.next();
             }
             iter.head
         } else {
-            for _ in 0..pre_rindex {
+            for _ in 0..rindex {
                 iter.next_back();
             }
             iter.tail
+        }
+    }
+
+    pub fn get_prev_node(&self, index: usize) -> Option<NonNull<Node<T>>> {
+        if index == 0 {
+            None
+        } else {
+            self.get_node(index - 1)
         }
     }
 
@@ -71,7 +68,7 @@ impl<T> LinkedList<T> {
             return Self::new();
         }
 
-        let split_node = self.predecessor_mut(at);
+        let split_node = self.get_prev_node(at);
 
         self.split_off_after_node(split_node, at)
     }

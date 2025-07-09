@@ -2,14 +2,7 @@ use core::iter::FusedIterator;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
-use super::{LinkedList, Node};
-
-pub struct Iter<'a, T> {
-    head: Option<NonNull<Node<T>>>,
-    tail: Option<NonNull<Node<T>>>,
-    len: usize,
-    marker: PhantomData<&'a Node<T>>,
-}
+use super::{LinkedList, Node, Iter};
 
 impl<'a, T> Iter<'a, T> {
     fn new(head: Option<NonNull<Node<T>>>, tail: Option<NonNull<Node<T>>>, len: usize) -> Self {

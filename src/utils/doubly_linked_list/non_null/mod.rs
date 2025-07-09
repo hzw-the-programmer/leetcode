@@ -13,19 +13,18 @@ pub struct LinkedList<T> {
     len: usize,
 }
 
-pub struct IterMut<'a, T> {
+mod basics;
+
+mod iter;
+pub struct Iter<'a, T> {
     head: Option<NonNull<Node<T>>>,
     tail: Option<NonNull<Node<T>>>,
     len: usize,
     marker: PhantomData<&'a Node<T>>,
 }
 
-mod basics;
-
-mod iter;
-pub use iter::Iter;
-
 mod iter_mut;
+pub use iter_mut::IterMut;
 
 mod into_iter;
 pub use into_iter::IntoIter;
