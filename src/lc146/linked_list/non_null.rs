@@ -1,4 +1,5 @@
 use core::cmp::Ordering;
+use core::fmt;
 use core::iter::FusedIterator;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
@@ -19,7 +20,6 @@ impl<T> Node<T> {
     }
 }
 
-#[derive(Debug)]
 pub struct LinkedList<T> {
     head: Option<NonNull<Node<T>>>,
     tail: Option<NonNull<Node<T>>>,
@@ -415,5 +415,14 @@ impl<T> FromIterator<T> for LinkedList<T> {
 impl<T, const N: usize> From<[T; N]> for LinkedList<T> {
     fn from(arr: [T; N]) -> Self {
         Self::from_iter(arr)
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// Debug
+/////////////////////////////////////////////////////////////////////////
+impl<T: fmt::Debug> fmt::Debug for LinkedList<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_list().entries(self).finish()
     }
 }
