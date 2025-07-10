@@ -1,8 +1,8 @@
 use crate::lc21::merge_two_lists;
 use crate::utils::singly_linked_list::ListNode;
 
-// time : O(kn * logn)
-// space: O(logn)
+// time : O(L * logk)
+// space: O(logk)
 pub fn merge_k_lists(mut lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
     divide_merge(&mut lists)
 }
