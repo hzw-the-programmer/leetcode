@@ -10,21 +10,46 @@ pub fn merge_k_lists(mut lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNo
 
     while lists.len() > 1 {
         let len = lists.len();
-        let mut merged = Vec::with_capacity((len + 1) >> 1);
 
         for i in 0..len >> 1 {
-            merged.push(merge_two_lists(lists[i].take(), lists[len - 1 - i].take()));
+            lists[i] = merge_two_lists(lists[i].take(), lists[len - 1 - i].take());
         }
 
+        let mut new_len = len >> 1;
         if len & 1 != 0 {
-            merged.push(lists[len >> 1].take());
+            new_len += 1;
         }
 
-        lists = merged;
+        unsafe {
+            lists.set_len(new_len);
+        }
     }
 
     lists[0].take()
 }
+
+// pub fn merge_k_lists(mut lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+//     if lists.len() == 0 {
+//         return None;
+//     }
+
+//     while lists.len() > 1 {
+//         let len = lists.len();
+//         let mut merged = Vec::with_capacity((len + 1) >> 1);
+
+//         for i in 0..len >> 1 {
+//             merged.push(merge_two_lists(lists[i].take(), lists[len - 1 - i].take()));
+//         }
+
+//         if len & 1 != 0 {
+//             merged.push(lists[len >> 1].take());
+//         }
+
+//         lists = merged;
+//     }
+
+//     lists[0].take()
+// }
 
 // pub fn merge_k_lists(mut lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
 //     if lists.len() == 0 {
