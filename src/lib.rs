@@ -31,6 +31,7 @@ pub mod lc21;
 pub mod lc210;
 pub mod lc222;
 pub mod lc226;
+pub mod lc23;
 pub mod lc230;
 pub mod lc234;
 pub mod lc235;
