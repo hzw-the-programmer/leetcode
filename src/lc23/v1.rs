@@ -1,6 +1,8 @@
 use crate::lc21::merge_two_lists;
 use crate::utils::singly_linked_list::ListNode;
 
+// time : O(k^2 * n)
+// space: O(1)
 pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
     let mut res = None;
     for list in lists {
