@@ -3,8 +3,8 @@
 // mod v1;
 // pub use v1::merge_k_lists;
 
-mod divide_merge;
-pub use divide_merge::merge_k_lists;
+mod divide_merge_recursive;
+pub use divide_merge_recursive::merge_k_lists;
 
 #[cfg(test)]
 mod tests;
