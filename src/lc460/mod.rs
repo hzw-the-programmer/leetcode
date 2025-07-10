@@ -1,10 +1,10 @@
 // 460. LFU Cache
 
-// mod v1;
-// pub use v1::LFUCache;
+mod linked_list;
+pub use linked_list::LFUCache;
 
-mod btree_set;
-pub use btree_set::LFUCache;
+// mod btree_set;
+// pub use btree_set::LFUCache;
 
 #[cfg(test)]
 mod tests;
