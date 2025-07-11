@@ -59,14 +59,14 @@ impl User {
     }
 }
 
-struct Twitter {
+pub struct Twitter {
     users: HashMap<i32, User>,
     recent_max: usize,
     time: usize,
 }
 
 impl Twitter {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             users: HashMap::new(),
             recent_max: 10,
@@ -74,7 +74,7 @@ impl Twitter {
         }
     }
 
-    fn post_tweet(&mut self, user_id: i32, tweet_id: i32) {
+    pub fn post_tweet(&mut self, user_id: i32, tweet_id: i32) {
         let user = self.users.entry(user_id).or_insert_with(|| User::new());
 
         if user.tweets.len() == self.recent_max {
@@ -85,7 +85,7 @@ impl Twitter {
         user.tweets.push_front(Tweet::new(tweet_id, self.time));
     }
 
-    fn get_news_feed(&self, user_id: i32) -> Vec<i32> {
+    pub fn get_news_feed(&self, user_id: i32) -> Vec<i32> {
         if let Some(user) = self.users.get(&user_id) {
             let iters = user
                 .followees
@@ -122,7 +122,7 @@ impl Twitter {
         }
     }
 
-    fn follow(&mut self, follower_id: i32, followee_id: i32) {
+    pub fn follow(&mut self, follower_id: i32, followee_id: i32) {
         self.users.entry(followee_id).or_insert_with(|| User::new());
         self.users
             .entry(follower_id)
@@ -131,7 +131,7 @@ impl Twitter {
             .insert(followee_id);
     }
 
-    fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
+    pub fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
         self.users
             .entry(follower_id)
             .or_insert_with(|| User::new())
