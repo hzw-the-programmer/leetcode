@@ -59,5 +59,31 @@ macro_rules! option_array_inner {
 }
 pub use option_array_inner;
 
+#[macro_export]
+macro_rules! parse_json_array {
+    // 处理顶级数组
+    [$($elements:tt),*] => {
+        vec![$(crate::utils::macros::parse_json_element!($elements)),*]
+    };
+}
+pub use parse_json_array;
+
+#[macro_export]
+macro_rules! parse_json_element {
+    // 处理null
+    (null) => {
+        None
+    };
+    // 处理嵌套数组
+    ([$($nums:expr),*]) => {
+        Some(vec![$($nums),*])
+    };
+
+    ($($nums:expr),*) => {
+        Some($($nums),*)
+    };
+}
+pub use parse_json_element;
+
 #[cfg(test)]
 mod tests;

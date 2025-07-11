@@ -1,5 +1,5 @@
 use super::Twitter;
-use crate::utils::macros::{option_array, vec_2d};
+use crate::utils::macros::{parse_json_array, vec_2d};
 
 #[test]
 fn t1() {
@@ -14,16 +14,7 @@ fn t1() {
         "getNewsFeed",
     ];
     let params = vec_2d![[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]];
-    let results = Vec::from(option_array![
-        null,
-        null,
-        vec![5],
-        null,
-        null,
-        vec![6, 5],
-        null,
-        vec![5]
-    ]);
+    let results = parse_json_array![null, null, [5], null, null, [6, 5], null, [5]];
 
     test(ops, params, results);
 }
@@ -90,7 +81,7 @@ fn t2() {
         [1, 2],
         [1]
     ];
-    let results = option_array![
+    let results = parse_json_array![
         null,
         null,
         null,
@@ -114,14 +105,14 @@ fn t2() {
         null,
         null,
         null,
-        vec![222, 204, 200, 201, 205, 11, 333, 94, 2, 101],
+        [222, 204, 200, 201, 205, 11, 333, 94, 2, 101],
         null,
-        vec![211, 222, 233, 208, 204, 202, 200, 213, 201, 203],
+        [211, 222, 233, 208, 204, 202, 200, 213, 201, 203],
         null,
-        vec![222, 204, 200, 201, 205, 11, 333, 94, 2, 101]
+        [222, 204, 200, 201, 205, 11, 333, 94, 2, 101]
     ];
 
-    test(ops, params, Vec::from(results));
+    test(ops, params, results);
 }
 
 fn test(ops: Vec<&str>, params: Vec<Vec<i32>>, results: Vec<Option<Vec<i32>>>) {
