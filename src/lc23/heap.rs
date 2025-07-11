@@ -11,17 +11,16 @@ pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>>
 
     let mut heap = lists
         .into_iter()
-        .map(|node| Reverse(node))
+        .filter(|node| node.is_some())
+        .map(|node| Reverse(node.unwrap()))
         .collect::<BinaryHeap<_>>();
 
-    while let Some(head) = heap.pop() {
-        if let Reverse(Some(mut head)) = head {
-            if head.next.is_some() {
-                heap.push(Reverse(head.next.take()));
-            }
-            *current = Some(head);
-            current = &mut (*current).as_mut().unwrap().next;
+    while let Some(Reverse(mut head)) = heap.pop() {
+        if let Some(node) = head.next.take() {
+            heap.push(Reverse(node));
         }
+        *current = Some(head);
+        current = &mut (*current).as_mut().unwrap().next;
     }
 
     res
