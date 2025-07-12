@@ -1,5 +1,5 @@
 use super::Twitter;
-use crate::utils::macros::{parse_json_array, vec_2d};
+use crate::utils::macros::{option_array, vec_2d};
 
 #[test]
 fn t1() {
@@ -14,7 +14,7 @@ fn t1() {
         "getNewsFeed",
     ];
     let params = vec_2d![[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]];
-    let results = parse_json_array![null, null, [5], null, null, [6, 5], null, [5]];
+    let results = option_array![null, null, [5], null, null, [6, 5], null, [5]];
 
     test(ops, params, results);
 }
@@ -81,7 +81,7 @@ fn t2() {
         [1, 2],
         [1]
     ];
-    let results = parse_json_array![
+    let results = option_array![
         null,
         null,
         null,
