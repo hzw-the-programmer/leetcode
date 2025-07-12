@@ -85,5 +85,63 @@ macro_rules! parse_json_element {
 }
 pub use parse_json_element;
 
+#[macro_export(local_inner_macros)]
+macro_rules! parse_array {
+    ( $( $tt:tt )* ) => {
+        parse_array_internal!(@array [] $( $tt )+)
+    };
+}
+
+#[macro_export]
+macro_rules! parse_array_internal {
+    (@array [$($elems:expr),*]) => {
+        internal_vec![$($elems),*]
+    };
+
+    (@array [$($elems:expr,)*] null $($rest:tt)*) => {
+        parse_array_internal!(@array [$($elems,)* None] $($rest)*)
+    };
+
+    (@array [$($elems:expr,)*] [$($array:expr),*] $($rest:tt)*) => {
+        parse_array_internal!(@array [$($elems,)* Some(internal_vec![$($array),*])] $($rest)*)
+    };
+
+    (@array [$($elems:expr,)*] $next:expr, $($rest:tt)*) => {
+        parse_array_internal!(@array [$($elems,)* Some($next),] $($rest)*)
+    };
+
+    (@array [$($elems:expr,)*] $last:expr) => {
+        parse_array_internal!(@array [$($elems,)* Some($last)])
+    };
+
+    (@array [$($elems:expr),*] , $($rest:tt)*) => {
+        parse_array_internal!(@array [$($elems,)*] $($rest)*)
+    }
+}
+
+#[macro_export]
+macro_rules! internal_vec {
+    ( $( $content:tt )* ) => {
+        vec![ $( $content )* ]
+    }
+}
+
+#[allow(dead_code)]
+fn for_cargo_expand() {
+    assert_eq!(parse_array![1, -2, 3], [Some(1), Some(-2), Some(3)]);
+    assert_eq!(
+        parse_array![1, null, -2, 3],
+        [Some(1), None, Some(-2), Some(3)]
+    );
+    assert_eq!(
+        parse_array![1, null, -2, 3, null],
+        [Some(1), None, Some(-2), Some(3), None]
+    );
+    assert_eq!(
+        parse_array![[1], null, [-2], [3]],
+        [Some(vec![1]), None, Some(vec![-2]), Some(vec![3])]
+    );
+}
+
 #[cfg(test)]
 mod tests;
