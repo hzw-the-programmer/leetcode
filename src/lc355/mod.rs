@@ -87,20 +87,18 @@ impl Twitter {
 
     pub fn get_news_feed(&self, user_id: i32) -> Vec<i32> {
         if let Some(user) = self.users.get(&user_id) {
-            let iters = user
-                .followees
+            let mut heap = BinaryHeap::new();
+
+            user.followees
                 .iter()
                 .filter(|&&id| id != user_id)
                 .map(|id| self.users.get(id).unwrap().tweets.iter())
-                .chain(Some(user.tweets.iter()));
-
-            let mut heap = BinaryHeap::new();
-
-            for mut iter in iters {
-                if let Some(tweet) = iter.next() {
-                    heap.push(HeapItem::new(tweet, iter));
-                }
-            }
+                .chain(Some(user.tweets.iter()))
+                .for_each(|mut iter| {
+                    if let Some(tweet) = iter.next() {
+                        heap.push(HeapItem::new(tweet, iter));
+                    }
+                });
 
             let mut res = vec![];
 
