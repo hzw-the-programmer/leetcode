@@ -21,27 +21,6 @@ impl TreeNode {
     }
 }
 
-pub fn new(val: i32, left: Tree, right: Tree) -> Tree {
-    Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
-}
-pub use new as new_tree;
-
-// pub fn from(arr: &[Option<i32>]) -> Tree {
-//     from_recursive(arr, 0)
-// }
-
-// fn from_recursive(arr: &[Option<i32>], index: usize) -> Tree {
-//     if index < arr.len() && arr[index].is_some() {
-//         new(
-//             arr[index].unwrap(),
-//             from_recursive(arr, 2 * index + 1),
-//             from_recursive(arr, 2 * index + 2),
-//         )
-//     } else {
-//         None
-//     }
-// }
-
 pub fn from_slice(mut values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
     if values.is_empty() || values[0].is_none() {
         return None;
@@ -72,29 +51,37 @@ pub fn from_slice(mut values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
     Some(root)
 }
 
-// #[macro_export]
-// macro_rules! build {
-//     ($($input:tt)*) => {
-//         $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!($($input)*))
-//     };
-// }
-// pub use build;
-
-// #[macro_export]
-// macro_rules! btree {
-//     ($($input:tt)*) => {
-//         $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!([$($input)*]))
-//     };
-// }
-// pub use btree;
-
-#[macro_export]
+#[macro_export(local_inner_macros)]
 macro_rules! btree {
     ($($input:tt)*) => {
-        $crate::utils::binary_tree::from_slice(&$crate::utils::macros::option_array!($($input)*))
+        $crate::utils::binary_tree::from_slice(&option_array!($($input)*))
     };
 }
 pub use btree;
+
+#[cfg(test)]
+mod tests;
+
+pub fn new(val: i32, left: Tree, right: Tree) -> Tree {
+    Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
+}
+pub use new as new_tree;
+
+// pub fn from(arr: &[Option<i32>]) -> Tree {
+//     from_recursive(arr, 0)
+// }
+
+// fn from_recursive(arr: &[Option<i32>], index: usize) -> Tree {
+//     if index < arr.len() && arr[index].is_some() {
+//         new(
+//             arr[index].unwrap(),
+//             from_recursive(arr, 2 * index + 1),
+//             from_recursive(arr, 2 * index + 2),
+//         )
+//     } else {
+//         None
+//     }
+// }
 
 // macro_rules! binary_tree {
 //     ([ $($elem:tt),* ]) => {{
@@ -158,5 +145,18 @@ pub use btree;
 //     };
 // }
 
-#[cfg(test)]
-mod tests;
+// #[macro_export]
+// macro_rules! build {
+//     ($($input:tt)*) => {
+//         $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!($($input)*))
+//     };
+// }
+// pub use build;
+
+// #[macro_export]
+// macro_rules! btree {
+//     ($($input:tt)*) => {
+//         $crate::utils::binary_tree::from(&$crate::utils::binary_tree::option_array!([$($input)*]))
+//     };
+// }
+// pub use btree;
