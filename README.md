@@ -108,6 +108,7 @@
 21. Merge Two Sorted Lists (Recursion, Linked List)
 23. Merge k Sorted Lists (Linked List, Divide and Conquer, Heap(Priority Queue), Merge Sort)
 25. Reverse Nodes in k-Group (Recursion, Linked List)
+61. Rotate List (Linked List, Two Pointers)
 83. Remove Duplicates from Sorted List (Linked List)
 141. Linked List Cycle (Hash Table, Linked List, Two Pointers)
 203. Remove Linked List Elements (Recursion, Linked List)
