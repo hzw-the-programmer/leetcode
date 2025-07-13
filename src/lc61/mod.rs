@@ -3,25 +3,25 @@
 use crate::utils::singly_linked_list::ListNode;
 
 pub fn rotate_right(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
-    let mut count = 0;
+    let mut n = 0;
     let mut current = head.as_ref();
     while let Some(node) = current {
-        count += 1;
+        n += 1;
         current = node.next.as_ref();
     }
 
-    if count == 0 {
+    if n == 0 {
         return None;
     }
 
-    let k = k % count;
+    let k = k % n;
 
     if k == 0 {
         return head;
     }
 
     let mut cur = head.as_mut().unwrap();
-    for _ in 0..count - k - 1 {
+    for _ in 0..n - k - 1 {
         cur = cur.next.as_mut().unwrap();
     }
 
