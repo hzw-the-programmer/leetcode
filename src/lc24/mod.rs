@@ -7,21 +7,16 @@ pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     let mut resp = &mut res;
 
     let mut cur = head;
-    let mut prev = None;
-    while cur.is_some() {
-        if let Some(mut node) = cur.take() {
-            if let Some(mut node2) = node.next.take() {
-                cur = node2.next.take();
-                node.next = prev;
-                node2.next = Some(node);
-                prev = Some(node2);
-            } else {
-                *resp = Some(node);
-                return res;
-            }
+    while let Some(mut node) = cur.take() {
+        if let Some(mut node2) = node.next.take() {
+            cur = node2.next.take();
+            node2.next = Some(node);
+            *resp = Some(node2);
+            resp = &mut (*resp).as_mut().unwrap().next.as_mut().unwrap().next;
+        } else {
+            *resp = Some(node);
+            break;
         }
-        *resp = prev.take();
-        resp = &mut (*resp).as_mut().unwrap().next.as_mut().unwrap().next;
     }
 
     res
