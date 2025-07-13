@@ -22,11 +22,9 @@ pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNo
         }
 
         *resp = prev.take();
-        let mut h = (*resp).as_mut().unwrap();
-        while h.next.is_some() {
-            h = h.next.as_mut().unwrap();
+        for _ in 0..k {
+            resp = &mut (*resp).as_mut().unwrap().next;
         }
-        resp = &mut h.next;
     }
 
     *resp = current;
