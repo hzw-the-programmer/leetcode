@@ -11,6 +11,7 @@ fn t1() {
             list![9, 9, 9, 9],
             list![8, 9, 9, 9, 0, 0, 0, 1],
         ),
+        (list![9, 1, 6], list![0], list![9, 1, 6]),
     ];
 
     for (i, test) in tests.iter().enumerate() {
