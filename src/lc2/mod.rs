@@ -12,7 +12,7 @@ pub fn add_two_numbers(
 
     let (mut list1, mut list2) = (l1, l2);
     loop {
-        match (list1.take(), list2.take()) {
+        match (list1, list2) {
             (None, None) => break,
             (Some(mut node), None) | (None, Some(mut node)) => {
                 node.val += curry;
@@ -24,17 +24,17 @@ pub fn add_two_numbers(
                 if curry == 0 {
                     break;
                 } else {
-                    list1 = (*resp).take();
+                    (list1, list2) = ((*resp).take(), None);
                 }
             }
             (Some(mut node1), Some(mut node2)) => {
-                (list1, list2) = (node1.next.take(), node2.next.take());
-
                 node1.val += node2.val + curry;
                 curry = node1.val / 10;
                 node1.val %= 10;
                 *resp = Some(node1);
                 resp = &mut (*resp).as_mut().unwrap().next;
+
+                (list1, list2) = ((*resp).take(), node2.next.take());
             }
         }
     }
