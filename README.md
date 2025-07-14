@@ -104,6 +104,7 @@
 239. Sliding Window Maximum
 
 # Linked List
+2. Add Two Numbers (Recursion, Linked List, Math)
 19. Remove Nth Node From End of List (Linked List, Two Pointers)
 21. Merge Two Sorted Lists (Recursion, Linked List)
 23. Merge k Sorted Lists (Linked List, Divide and Conquer, Heap(Priority Queue), Merge Sort)
