@@ -114,6 +114,7 @@
 82. Remove Duplicates from Sorted List II (Linked List, Two Pointers)
 83. Remove Duplicates from Sorted List (Linked List)
 86. Partition List (Linked List, Two Pointers)
+92. Reverse Linked List II (Linked List)
 141. Linked List Cycle (Hash Table, Linked List, Two Pointers)
 203. Remove Linked List Elements (Recursion, Linked List)
 206. Reverse Linked List (Recursion, Linked List)

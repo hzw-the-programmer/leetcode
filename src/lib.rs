@@ -62,6 +62,7 @@ pub mod lc82;
 pub mod lc83;
 pub mod lc86;
 pub mod lc876;
+pub mod lc92;
 pub mod lc993;
 pub mod lcr136;
 pub mod lcr152;
