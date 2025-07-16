@@ -12,12 +12,6 @@ impl Node {
     }
 }
 
-enum Find {
-    No,
-    End,
-    Prefix,
-}
-
 pub struct Trie {
     root: Node,
 }
@@ -42,30 +36,24 @@ impl Trie {
     }
 
     pub fn search(&self, word: String) -> bool {
-        match self.find(word) {
-            Find::End => true,
-            _ => false,
-        }
+        self.find(word).map_or(false, |node| node.end)
     }
 
     pub fn starts_with(&self, prefix: String) -> bool {
-        match self.find(prefix) {
-            Find::No => false,
-            _ => true,
-        }
+        self.find(prefix).is_some()
     }
 
-    fn find(&self, word: String) -> Find {
+    fn find(&self, word: String) -> Option<&Node> {
         let mut node = &self.root;
 
         for c in word.chars() {
             let index = c as usize - 'a' as usize;
             if node.children[index].is_none() {
-                return Find::No;
+                return None;
             }
-            node = node.children[index].as_ref().unwrap();
+            node = node.children[index].as_deref().unwrap();
         }
 
-        if node.end { Find::End } else { Find::Prefix }
+        Some(node)
     }
 }
