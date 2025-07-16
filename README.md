@@ -130,6 +130,7 @@
 
 # Doubly-Linked List
 146. LRU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
+155. Min Stack (Stack, Design)
 208. Implement Trie (Prefix Tree) (Design, Trie, Hash Table, String)
 355. Design Twitter (Design, Hash Table, Linked List, Heap(Priority Queue))
 460. LFU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
