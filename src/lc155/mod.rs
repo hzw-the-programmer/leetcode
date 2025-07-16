@@ -31,11 +31,11 @@ impl MinStack {
     }
 
     fn top(&self) -> i32 {
-        self.data.last().map(|&n| n).unwrap()
+        *self.data.last().unwrap()
     }
 
     fn get_min(&self) -> i32 {
-        self.min.last().map(|&n| n).unwrap()
+        *self.min.last().unwrap()
     }
 }
 
