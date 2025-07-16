@@ -1,33 +1,23 @@
-struct Node {
-    children: [Option<Box<Node>>; 26],
-    end: bool,
-}
-
-impl Node {
-    fn new() -> Self {
-        Node {
-            children: [const { None }; 26],
-            end: false,
-        }
-    }
-}
-
 pub struct Trie {
-    root: Node,
+    children: [Option<Box<Trie>>; 26],
+    end: bool,
 }
 
 impl Trie {
     pub fn new() -> Self {
-        Self { root: Node::new() }
+        Self {
+            children: [const { None }; 26],
+            end: false,
+        }
     }
 
     pub fn insert(&mut self, word: String) {
-        let mut node = &mut self.root;
+        let mut node = self;
 
         for c in word.chars() {
             let index = c as usize - 'a' as usize;
             if node.children[index].is_none() {
-                node.children[index] = Some(Box::new(Node::new()));
+                node.children[index] = Some(Box::new(Trie::new()));
             }
             node = node.children[index].as_mut().unwrap();
         }
@@ -43,8 +33,8 @@ impl Trie {
         self.find(prefix).is_some()
     }
 
-    fn find(&self, word: String) -> Option<&Node> {
-        let mut node = &self.root;
+    fn find(&self, word: String) -> Option<&Trie> {
+        let mut node = self;
 
         for c in word.chars() {
             let index = c as usize - 'a' as usize;
