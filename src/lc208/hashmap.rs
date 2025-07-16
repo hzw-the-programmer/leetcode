@@ -16,7 +16,7 @@ impl Trie {
     pub fn insert(&mut self, word: String) {
         let mut node = self;
         for c in word.chars() {
-            node = node.children.entry(c).or_insert_with(|| Trie::new());
+            node = node.children.entry(c).or_insert_with(Trie::new);
         }
         node.end = true;
     }
