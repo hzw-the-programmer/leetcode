@@ -52,6 +52,11 @@ fn t1() {
             ],
             option_array![null, null, null, true, true, false, true, false, false],
         ),
+        (
+            vec!["WordDictionary", "addWord", "addWord", "search"],
+            vec_2d![[], ["abc"], ["ac"], [".."]],
+            option_array![null, null, null, true],
+        ),
     ];
 
     for (i, test) in tests.iter().enumerate() {
