@@ -1,31 +1,24 @@
+#[derive(Default)]
 struct Trie {
     children: [Option<Box<Trie>>; 26],
     end: bool,
 }
 
-impl Trie {
-    fn new() -> Self {
-        Self {
-            children: [const { None }; 26],
-            end: false,
-        }
-    }
-}
-
+#[derive(Default)]
 pub struct WordDictionary {
     root: Trie,
 }
 
 impl WordDictionary {
     pub fn new() -> Self {
-        Self { root: Trie::new() }
+        Default::default()
     }
 
     pub fn add_word(&mut self, word: String) {
         word.chars()
             .map(|c| Self::index(c))
             .fold(&mut self.root, |trie, idx| {
-                trie.children[idx].get_or_insert_with(|| Box::new(Trie::new()))
+                trie.children[idx].get_or_insert_default()
             })
             .end = true;
     }
