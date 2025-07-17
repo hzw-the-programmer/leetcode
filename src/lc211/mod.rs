@@ -24,15 +24,12 @@ impl WordDictionary {
     }
 
     pub fn add_word(&mut self, word: String) {
-        let mut trie = &mut self.root;
-        for c in word.chars() {
-            let index = Self::index(c);
-            if trie.children[index].is_none() {
-                trie.children[index] = Some(Box::new(Trie::new()));
-            }
-            trie = trie.children[index].as_deref_mut().unwrap();
-        }
-        trie.end = true;
+        word.chars()
+            .map(|c| Self::index(c))
+            .fold(&mut self.root, |trie, idx| {
+                trie.children[idx].get_or_insert_with(|| Box::new(Trie::new()))
+            })
+            .end = true;
     }
 
     pub fn search(&self, word: String) -> bool {
