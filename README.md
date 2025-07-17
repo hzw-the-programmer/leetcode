@@ -128,10 +128,11 @@
 876. Middle of the Linked List (Linked List, Two Pointers)
 1290. Convert Binary Number in a Linked List to Integer (Linked List, Math)
 
-# Doubly-Linked List
+# Design
 146. LRU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
 155. Min Stack (Stack, Design)
 208. Implement Trie (Prefix Tree) (Design, Trie, Hash Table, String)
 211. Design Add and Search Words Data Structure (Depth-First Search, Design, Trie, String)
+225. Implement Stack using Queues (Stack, Design, Queue)
 355. Design Twitter (Design, Hash Table, Linked List, Heap(Priority Queue))
 460. LFU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
