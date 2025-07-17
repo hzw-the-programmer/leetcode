@@ -134,5 +134,7 @@
 208. Implement Trie (Prefix Tree) (Design, Trie, Hash Table, String)
 211. Design Add and Search Words Data Structure (Depth-First Search, Design, Trie, String)
 225. Implement Stack using Queues (Stack, Design, Queue)
+232. Implement Queue using Stacks (Stack, Design, Queue)
+295. Find Median from Data Stream (Design, Two Pointers, Data Stream, Sorting, Heap(Priority Queue))
 355. Design Twitter (Design, Hash Table, Linked List, Heap(Priority Queue))
 460. LFU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
