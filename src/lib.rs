@@ -65,6 +65,7 @@ pub mod lc703;
 pub mod lc705;
 pub mod lc706;
 pub mod lc707;
+pub mod lc815;
 pub mod lc82;
 pub mod lc83;
 pub mod lc86;
