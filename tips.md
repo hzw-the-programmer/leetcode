@@ -5,3 +5,5 @@ cargo +nightly miri test lc257
 
 C:\Windows\System32\drivers\etc\hosts
 20.205.243.166 github.com
+
+cargo test lc26::

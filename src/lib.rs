@@ -47,6 +47,7 @@ pub mod lc239;
 pub mod lc24;
 pub mod lc25;
 pub mod lc257;
+pub mod lc26;
 pub mod lc260;
 pub mod lc2641;
 pub mod lc27;
