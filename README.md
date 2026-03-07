@@ -139,3 +139,12 @@
 355. Design Twitter (Design, Hash Table, Linked List, Heap(Priority Queue))
 460. LFU Cache (Design, Hash Table, Linked List, Doubly-Linked List)
 703. Kth Largest Element in a Stream (Tree, Design, Binary Search Tree, Binary Tree, Data Stream, Heap(Priority Queue))
+
+88. Merge Sorted Array (Array, Two Pointers, Sorting)
+27. Remove Element (Array, Two Pointers)
+26. Remove Duplicates from Sorted Array (Array, Two Pointers)
+80. Remove Duplicates from Sorted Array II (Array, Two Pointers)
+169. Majority Element (Array, Hash Table, Divide and Conquer, Counting, Sorting)
+189. Rotate Array (Array, Math, Two Pointers)
+121. Best Time to Buy and Sell Stock (Array, Dynamic Programming)
+122. Best Time to Buy and Sell Stock II (Greedy, Array, Dynamic Programming)
