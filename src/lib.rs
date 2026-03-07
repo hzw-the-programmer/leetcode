@@ -91,7 +91,6 @@ pub mod s1100;
 pub mod s114;
 pub mod s1151;
 pub mod s1176;
-pub mod s122;
 pub mod s134;
 pub mod s1343;
 pub mod s135;
