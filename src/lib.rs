@@ -113,7 +113,6 @@ pub mod s393;
 pub mod s42;
 pub mod s45;
 pub mod s5;
-pub mod s55;
 pub mod s643;
 pub mod s65;
 pub mod s714;
