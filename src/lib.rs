@@ -63,6 +63,7 @@ pub mod lc404;
 pub mod lc450;
 pub mod lc460;
 pub mod lc538;
+pub mod lc55;
 pub mod lc61;
 pub mod lc617;
 pub mod lc622;
