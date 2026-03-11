@@ -4,13 +4,19 @@
 mod tests;
 
 pub fn can_jump(nums: Vec<i32>) -> bool {
-    let mut max = 0 + nums[0] as usize;
+    let n = nums.len();
+    let mut max = 0;
 
-    for i in 1..nums.len() {
+    for i in 0..n {
         if i > max {
             return false;
         }
+
         max = max.max(i + nums[i] as usize);
+
+        if max >= n - 1 {
+            return true;
+        }
     }
 
     true
