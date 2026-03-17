@@ -151,3 +151,4 @@
 55. Jump Game (Greedy, Array, Dynamic Programming)
 45. Jump Game II (Greedy, Array, Dynamic Programming)
 274. H-Index (Array, Counting Sort, Sorting)
+380. Insert Delete GetRandom O(1) (Design, Array, Hash Table, Math, Randomized)

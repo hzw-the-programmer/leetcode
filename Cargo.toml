@@ -1,3 +1,6 @@
 [package]
 name = "leetcode"
 edition = "2024"
+
+[dependencies]
+rand = "0.10.0"

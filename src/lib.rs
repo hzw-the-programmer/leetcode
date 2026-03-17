@@ -60,6 +60,7 @@ pub mod lc295;
 pub mod lc297;
 pub mod lc331;
 pub mod lc355;
+pub mod lc380;
 pub mod lc404;
 pub mod lc45;
 pub mod lc450;
