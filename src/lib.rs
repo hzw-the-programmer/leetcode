@@ -47,6 +47,7 @@ pub mod lc234;
 pub mod lc235;
 pub mod lc236;
 pub mod lc237;
+pub mod lc238;
 pub mod lc239;
 pub mod lc24;
 pub mod lc25;
