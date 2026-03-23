@@ -3,7 +3,7 @@
 pub fn int_to_roman(num: i32) -> String {
     let num = num as usize;
     let thousands = ["", "M", "MM", "MMM"];
-    let hundreds = ["", "C", "CC", "CC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
+    let hundreds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
     let tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
     let ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
     format!(
