@@ -158,3 +158,4 @@
 13. Roman to Integer (Hash Table, Math, String)
 12. Integer to Roman (Hash Table, Math, String)
 42. Trapping Rain Water (Stack, Array, Two Pointers, Dynamic Programming, Monotonic Stack)
+14. Longest Common Prefix (Trie, Array, String)
