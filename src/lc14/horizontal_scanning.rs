@@ -1,19 +1,33 @@
 pub fn longest_common_prefix(strs: Vec<String>) -> String {
-    if strs.is_empty() {
-        return String::new();
-    }
-
-    let mut prefix = strs[0].clone();
-    for s in &strs[1..] {
-        while !s.starts_with(&prefix) {
-            prefix.pop();
-            if prefix.is_empty() {
-                return String::new();
-            }
-        }
-    }
-    prefix
+    strs.iter().skip(1).fold(
+        strs.get(0).unwrap_or(&String::new()).clone(),
+        |prefix, s| {
+            prefix
+                .chars()
+                .zip(s.chars())
+                .take_while(|(a, b)| a == b)
+                .map(|(a, _)| a)
+                .collect()
+        },
+    )
 }
+
+// pub fn longest_common_prefix(strs: Vec<String>) -> String {
+//     if strs.is_empty() {
+//         return String::new();
+//     }
+
+//     let mut prefix = strs[0].clone();
+//     for s in &strs[1..] {
+//         while !s.starts_with(&prefix) {
+//             prefix.pop();
+//             if prefix.is_empty() {
+//                 return String::new();
+//             }
+//         }
+//     }
+//     prefix
+// }
 
 // pub fn longest_common_prefix(strs: Vec<String>) -> String {
 //     if strs.is_empty() {
